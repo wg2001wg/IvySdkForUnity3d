@@ -23,6 +23,11 @@ public sealed class RiseSdk {
 	public const string M_PASSLEVEL = "passlevel";
 	public const string M_CUSTOM = "custom";
 
+	public const int SNS_EVENT_LOGIN = 1;
+	public const int SNS_EVENT_INVITE = 2;
+	public const int SNS_EVENT_CHALLENGE = 3;
+	public const int SNS_EVENT_LIKE = 4;
+
 	public void SetPaymentSystemValid(bool valid) {
 		paymentSystemValid = valid;
 	}
@@ -172,4 +177,58 @@ public sealed class RiseSdk {
       _class.CallStatic("closeNativeAds", tag);
     }
   }
+
+	public void Login(){
+		if (_class != null) {
+			_class.CallStatic ("login");
+		}
+	}
+
+	public bool IsLogin() {
+		if (_class != null) {
+			return _class.CallStatic<bool> ("isLogin");
+		} else {
+			return false;
+		}
+	}
+
+	public void Logout() {
+		if (_class != null) {
+			_class.CallStatic ("logout");
+		}
+	}
+
+	public void Invite() {
+		if (_class != null) {
+			_class.CallStatic ("invite");
+		}
+	}
+
+	public void Challenge(string title, string message) {
+		if (_class != null) {
+			_class.CallStatic ("challenge", title, message);
+		}
+	}
+
+	public string Me() {
+		if (_class != null) {
+			return _class.CallStatic<string> ("me");
+		} else {
+			return "{}";
+		}
+	}
+
+	public string GetFriends() {
+		if (_class != null) {
+			return _class.CallStatic<string> ("friends");
+		} else {
+			return "[]";
+		}
+	}
+
+	public void Like() {
+		if (_class != null) {
+			_class.CallStatic ("like");
+		}
+	}
 }

@@ -19,6 +19,14 @@ public class Demo : MonoBehaviour
 		"Show MoreGame", //11
 		"Show FreeCoin", //12
 		"Share", //13
+		"Login", //14
+		"Is Login", //15
+		"Log out", //16
+		"Like", //17
+		"Invite", //18
+		"Challenge", //19
+		"Me", //20
+		"Friends", //21
 	};
 
 	// Use this for initialization
@@ -30,13 +38,14 @@ public class Demo : MonoBehaviour
 
 	void InitListeners() {
 		// Set get free coin event
-		RiseSdkListener.GetRewardAdSuccessEvent -= GetFreeCoin;
-		RiseSdkListener.GetRewardAdSuccessEvent += GetFreeCoin;
+		RiseSdkListener.OnRewardAdEvent -= GetFreeCoin;
+		RiseSdkListener.OnRewardAdEvent += GetFreeCoin;
 		// On payment result
-		RiseSdkListener.OnPaymentSuccessEvent -= OnPaymentSuccess;
-		RiseSdkListener.OnPaymentSuccessEvent += OnPaymentSuccess;
-		RiseSdkListener.OnPaymentFailureEvent -= OnPaymentFailure;
-		RiseSdkListener.OnPaymentFailureEvent += OnPaymentFailure;
+		RiseSdkListener.OnPaymentEvent -= OnPaymentResult;
+		RiseSdkListener.OnPaymentEvent += OnPaymentResult;
+
+		RiseSdkListener.OnSNSEvent -= OnSNSEvent;
+		RiseSdkListener.OnSNSEvent += OnSNSEvent;
 	}
 	
 	// Update is called once per frame
@@ -51,7 +60,7 @@ public class Demo : MonoBehaviour
 	{
 		GUI.skin = guiSkin;
 		float w = Screen.width * .46f;
-		float h = Screen.height * .12f;
+		float h = Screen.height * .06f;
 		float x = 0, y = 0;
 		for (int i=0; i<titles.Length; i++) {
 			int l = ((int)i / 2) + 1;
@@ -111,24 +120,88 @@ public class Demo : MonoBehaviour
 		case 13:
 			RiseSdk.Instance.Share();
 			break;
+
+		case 14:
+			RiseSdk.Instance.Login ();
+			break;
+
+		case 15:
+			Debug.LogError("is login: " + RiseSdk.Instance.IsLogin ());
+			break;
+
+		case 16:
+			RiseSdk.Instance.Logout ();
+			break;
+
+		case 17:
+			RiseSdk.Instance.Like ();
+			break;
+
+		case 19:
+			RiseSdk.Instance.Challenge ("your see", "speed coming...");
+			break;
+
+		case 18:
+			RiseSdk.Instance.Invite ();
+			break;
+
+		case 20:
+			string mestring = RiseSdk.Instance.Me ();
+			object me = MiniJSON.jsonDecode (mestring);
+			if (me == null) {
+				Debug.LogError ("me is null");
+			} else {
+				Debug.LogError ("me is: " + me);
+			}
+			break;
+
+		case 21:
+			string friendstring = RiseSdk.Instance.GetFriends ();
+			object friends = MiniJSON.jsonDecode (friendstring);
+			Debug.LogError ("friends are: " + friends);
+			break;
 		}
 	}
 
-	private void OnPaymentSuccess(int billingId) {
-		// payment success, do something
-		switch(billingId) {
-		case 1:// the first billing Id success 
+	void OnPaymentResult(bool success, int billId) {
+		if (success) {
+			switch (billId) {
+			case 1:// the first billing Id success 
+				break;
+			case 2:// the second billing Id success
+				break;
+			case 3:
+				break;
+			}
+			Debug.LogError("On billing success : " + billId);
+		} else {
+			switch (billId) {
+			case 1:
+				break;
+			}
+			Debug.LogError("On billing failure : " + billId);
+		}
+	}
+
+	void OnSNSEvent(bool success, int eventType, int extra) {
+		switch (eventType) {
+		case RiseSdk.SNS_EVENT_LOGIN:
+			Debug.LogError ("login: " + success);
 			break;
-		case 2:// the second billing Id success
+
+		case RiseSdk.SNS_EVENT_INVITE:
+			Debug.LogError ("invite: " + success);
 			break;
-		case 3:
+
+		case RiseSdk.SNS_EVENT_LIKE:
+			Debug.LogError ("like success? " + success);
+			break;
+
+		case RiseSdk.SNS_EVENT_CHALLENGE:
+			int friendsCount = extra;
+			Debug.LogError ("challenge: " + friendsCount);
 			break;
 		}
-		Debug.LogError("On billing success : " + billingId);
-	}
-	
-	private void OnPaymentFailure(int billingId) {
-		Debug.LogError("On billing failure : " + billingId);
 	}
 
 	// Get Free coin handler

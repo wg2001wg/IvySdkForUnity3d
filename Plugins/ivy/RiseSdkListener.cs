@@ -6,9 +6,14 @@ using UnityEngine;
 
 public class RiseSdkListener : MonoBehaviour
 {
-	public static event Action<int> GetRewardAdSuccessEvent;
-	public static event Action<int> OnPaymentSuccessEvent;
-	public static event Action<int> OnPaymentFailureEvent;
+	// <rewardId>
+	public static event Action<int> OnRewardAdEvent;
+
+	// <success, billId>
+	public static event Action<bool, int> OnPaymentEvent;
+
+	// <success, event type, extra data>
+	public static event Action<bool, int, int> OnSNSEvent;
 
 	private static RiseSdkListener _instance;
 	private static RiseSdk riseSdk;
@@ -33,7 +38,6 @@ public class RiseSdkListener : MonoBehaviour
 		}
 	}
 
-#region MonoBehaviour
 	void OnApplicationPause (bool pauseStatus)
 	{
 		if (pauseStatus) {
@@ -59,29 +63,56 @@ public class RiseSdkListener : MonoBehaviour
 			riseSdk.OnStart ();
 	}
 
-#endregion
-#region Receive Massage Call Back
+	public void onReceiveReward(string rewardId) {
+		int id = int.Parse(rewardId);
+		if (OnRewardAdEvent.GetInvocationList ().Length > 0) {
+			OnRewardAdEvent (id);
+		}
+	}
 
-public void onReceiveReward(string rewardId) {
-  int id = int.Parse(rewardId);
-  if (GetRewardAdSuccessEvent.GetInvocationList ().Length > 0)
-    GetRewardAdSuccessEvent (id);
-}
+	public void onPaymentSuccess(string billId) {
+		int id = int.Parse(billId);
+		if (OnPaymentEvent.GetInvocationList ().Length > 0) {
+			OnPaymentEvent (true, id);
+		}
+	}
+		
+	public void onPaymentFail(string billId) {
+		int id = int.Parse(billId);
+		if (OnPaymentEvent.GetInvocationList ().Length > 0) {
+			OnPaymentEvent (false, id);
+		}
+	}
 
-public void onPaymentSuccess(string billId) {
-  int id = int.Parse(billId);
-  if (OnPaymentSuccessEvent.GetInvocationList ().Length > 0)
-    OnPaymentSuccessEvent (id);
-}
+	public void onPaymentSystemValid(string dummy) {
+		riseSdk.SetPaymentSystemValid(true);
+	}
 
-public void onPaymentFail(string billId) {
-  int id = int.Parse(billId);
-  if (OnPaymentFailureEvent.GetInvocationList ().Length > 0)
-    OnPaymentFailureEvent (id);
-}
+	public void onReceiveLoginResult(string result) {
+		int success = int.Parse (result);
+		if (OnSNSEvent.GetInvocationList ().Length > 0) {
+			OnSNSEvent (success == 0, RiseSdk.SNS_EVENT_LOGIN, 0);
+		}
+	}
 
-public void onPaymentSystemValid(string dummy) {
-  riseSdk.SetPaymentSystemValid(true);
-}
-#endregion
+	public void onReceiveInviteResult(string result) {
+		int success = int.Parse (result);
+		if (OnSNSEvent.GetInvocationList ().Length > 0) {
+			OnSNSEvent (success == 0, RiseSdk.SNS_EVENT_INVITE, 0);
+		}
+	}
+
+	public void onReceiveLikeResult(string result) {
+		int success = int.Parse (result);
+		if (OnSNSEvent.GetInvocationList ().Length > 0) {
+			OnSNSEvent (success == 0, RiseSdk.SNS_EVENT_LIKE, 0);
+		}
+	}
+
+	public void onReceiveChallengeResult(string result) {
+		int count = int.Parse (result);
+		if (OnSNSEvent.GetInvocationList ().Length > 0) {
+			OnSNSEvent (count > 0, RiseSdk.SNS_EVENT_CHALLENGE, count);
+		}
+	}
 }
