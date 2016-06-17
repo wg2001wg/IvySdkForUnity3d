@@ -209,7 +209,7 @@ public class Demo : MonoBehaviour
 		switch(rewardId) {
 		case 1:
 			// you can add random golds, eg. 10
-			player.gold += 10;
+			//player.gold += 10;
 			break;
 		}
 		Debug.LogError ("free coin: " + rewardId);
