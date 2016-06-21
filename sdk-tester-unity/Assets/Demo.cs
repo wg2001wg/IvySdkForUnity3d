@@ -27,6 +27,11 @@ public class Demo : MonoBehaviour
 		"Challenge", //19
 		"Me", //20
 		"Friends", //21
+		"Submit Score", //22
+		"Load LeaderBoard", //23
+		"Load Global",//24
+		"Show Native", //25
+		"Hide Native", //26
 	};
 
 	// Use this for initialization
@@ -46,6 +51,9 @@ public class Demo : MonoBehaviour
 
 		RiseSdkListener.OnSNSEvent -= OnSNSEvent;
 		RiseSdkListener.OnSNSEvent += OnSNSEvent;
+
+		RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
+		RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
 	}
 	
 	// Update is called once per frame
@@ -160,6 +168,26 @@ public class Demo : MonoBehaviour
 			object friends = MiniJSON.jsonDecode (friendstring);
 			Debug.LogError ("friends are: " + friends);
 			break;
+
+		case 22:
+			RiseSdk.Instance.SubmitScore ("endless", 1234, "userName: haha");
+			break;
+
+		case 23:
+			RiseSdk.Instance.LoadFriendLeaderBoard ("endless", 1, 32, "");
+			break;
+
+		case 24:
+			RiseSdk.Instance.LoadGlobalLeaderBoard ("endless", 1, 32);
+			break;
+
+		case 25:
+			RiseSdk.Instance.ShowNativeAd ("lock_pre", 20);
+			break;
+
+		case 26:
+			RiseSdk.Instance.HideNativeAd ("lock_pre");
+			break;
 		}
 	}
 
@@ -213,5 +241,21 @@ public class Demo : MonoBehaviour
 			break;
 		}
 		Debug.LogError ("free coin: " + rewardId);
+	}
+
+	void OnLeaderBoardResult(bool submit, bool success, string leaderBoardId, string extraData) {
+		if (submit) {
+			if (success) {
+				Debug.LogError ("submit to leader board success: " + leaderBoardId);
+			} else {
+				Debug.LogError ("submit to leader board failure: " + leaderBoardId);
+			}
+		} else {
+			if (success) {
+				Debug.LogError ("load leader board " + leaderBoardId + " success: " + extraData);
+			} else {
+				Debug.LogError ("load leader board failure " + leaderBoardId);
+			}
+		}
 	}
 }

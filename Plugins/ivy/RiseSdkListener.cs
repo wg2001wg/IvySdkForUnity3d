@@ -6,14 +6,17 @@ using UnityEngine;
 
 public class RiseSdkListener : MonoBehaviour
 {
-	// <rewardId>
+	/// <rewardId>
 	public static event Action<int> OnRewardAdEvent;
 
-	// <success, billId>
+	/// <success, billId>
 	public static event Action<bool, int> OnPaymentEvent;
 
-	// <success, event type, extra data>
+	/// <success, event type, extra data>
 	public static event Action<bool, int, int> OnSNSEvent;
+
+	/// <submit or load, success, leader board id, extra data>
+	public static event Action<bool, bool, string, string> OnLeaderBoardEvent;
 
 	private static RiseSdkListener _instance;
 	private static RiseSdk riseSdk;
@@ -113,6 +116,30 @@ public class RiseSdkListener : MonoBehaviour
 		int count = int.Parse (result);
 		if (OnSNSEvent.GetInvocationList ().Length > 0) {
 			OnSNSEvent (count > 0, RiseSdk.SNS_EVENT_CHALLENGE, count);
+		}
+	}
+		
+	public void onSubmitSuccess(String leaderBoardTag) {
+		if (OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
+			OnLeaderBoardEvent (true, true, leaderBoardTag, "");
+		}
+	}
+
+	public void onSubmitFailure(String leaderBoardTag) {
+		if (OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
+			OnLeaderBoardEvent (true, false, leaderBoardTag, "");
+		}
+	}
+
+	public void onLoadSuccess(String leaderBoardTag, String data) {
+		if (OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
+			OnLeaderBoardEvent (false, true, leaderBoardTag, data);
+		}
+	}
+
+	public void onLoadFailure(String leaderBoardTag) {
+		if (OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
+			OnLeaderBoardEvent (false, false, leaderBoardTag, "");
 		}
 	}
 }

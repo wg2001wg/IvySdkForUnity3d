@@ -166,17 +166,25 @@ public sealed class RiseSdk {
 		_class.CallStatic("rate");
 	}
 
-  public void ShowNativeAds(string tag, int yPercent) {
+  public void ShowNativeAd(string tag, int yPercent) {
     if (_class != null) {
-      _class.CallStatic("showNativeAds", tag, yPercent);
+      _class.CallStatic("showNative", tag, yPercent);
     }
   }
 
-  public void CloseNativeAds(string tag) {
+  public void HideNativeAd(string tag) {
     if (_class != null) {
-      _class.CallStatic("closeNativeAds", tag);
+      _class.CallStatic("hideNative", tag);
     }
   }
+
+	public bool HasNativeAd(string tag) {
+		if (_class != null) {
+			return _class.CallStatic<bool> ("hasNative", tag);
+		} else {
+			return false;
+		}
+	}
 
 	public void Login(){
 		if (_class != null) {
@@ -229,6 +237,24 @@ public sealed class RiseSdk {
 	public void Like() {
 		if (_class != null) {
 			_class.CallStatic ("like");
+		}
+	}
+
+	public void SubmitScore(string leaderBoardId, long score, string extra) {
+		if (_class != null) {
+			_class.CallStatic ("submitScore", leaderBoardId, score, extra);
+		}
+	}
+
+	public void LoadFriendLeaderBoard(string leaderBoardId, int start, int end, string friends) {
+		if (_class != null) {
+			_class.CallStatic ("loadLeaderBoard", leaderBoardId, start, end, friends);
+		}
+	}
+
+	public void LoadGlobalLeaderBoard(string leaderBoardId, int start, int end) {
+		if (_class != null) {
+			_class.CallStatic ("loadGlobalLeaderBoard", leaderBoardId, start, end);
 		}
 	}
 }
