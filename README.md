@@ -228,5 +228,6 @@ if (RiseSdk.Instance.HasNativeAd ("loading")) {
 }
 ```
 
-###### 9, Congratulations, it's done. when you run your game in your android phone or emulator, your will see some toast information like this:
+###### 9, Congratulations, done.
+when you run your game in your android phone or emulator, your will see some toast information like this:
 <center>![toast](assets/risesdk-unity-1fcfc.png)</center>
