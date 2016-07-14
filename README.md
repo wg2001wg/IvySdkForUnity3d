@@ -53,7 +53,7 @@ RiseSdk.Instance.TrackEvent ("your category", "your action", "your label", 1);
 string data = RiseSdk.Instance.GetExtraData ();
 ```
 
-###### 4, In-App billing
+## 4, In-App billing
 * When you want to use google checkout, then you should do this:
 ```js
 void InitListeners() {
