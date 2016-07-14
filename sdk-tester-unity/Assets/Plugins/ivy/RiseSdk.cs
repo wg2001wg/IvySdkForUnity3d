@@ -28,6 +28,12 @@ public sealed class RiseSdk {
 	public const int SNS_EVENT_CHALLENGE = 3;
 	public const int SNS_EVENT_LIKE = 4;
 
+	public const int SERVER_RESULT_RECEIVE_GAME_DATA = 1;
+	public const int SERVER_RESULT_SAVE_USER_DATA = 2;
+	public const int SERVER_RESULT_RECEIVE_USER_DATA = 3;
+	public const int SERVER_RESULT_VERIFY_CODE = 4;
+	public const int SERVER_RESULT_SALES_CLICK = 5;
+
 	public void SetPaymentSystemValid(bool valid) {
 		paymentSystemValid = valid;
 	}
@@ -255,6 +261,36 @@ public sealed class RiseSdk {
 	public void LoadGlobalLeaderBoard(string leaderBoardId, int start, int end) {
 		if (_class != null) {
 			_class.CallStatic ("loadGlobalLeaderBoard", leaderBoardId, start, end);
+		}
+	}
+
+	public void LoadGameData(int version) {
+		if (_class != null) {
+			_class.CallStatic ("loadExtra", version);
+		}
+	}
+
+	public void LoadUserData() {
+		if (_class != null) {
+			_class.CallStatic ("loadData");
+		}
+	}
+
+	public void SaveUserData(string data) {
+		if (_class != null) {
+			_class.CallStatic ("saveData", data);
+		}
+	}
+
+	public void VerifyCode(string code) {
+		if (_class != null) {
+			_class.CallStatic ("verifyCode", code);
+		}
+	}
+
+	public void ShowSales(int saleId) {
+		if (_class != null) {
+			_class.CallStatic ("showSales", saleId);
 		}
 	}
 }

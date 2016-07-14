@@ -7,7 +7,7 @@ using UnityEngine;
 public class RiseSdkListener : MonoBehaviour
 {
 	/// <rewardId>
-	public static event Action<int> OnRewardAdEvent;
+	public static event Action<bool, int> OnRewardAdEvent;
 
 	/// <success, billId>
 	public static event Action<bool, int> OnPaymentEvent;
@@ -17,6 +17,8 @@ public class RiseSdkListener : MonoBehaviour
 
 	/// <submit or load, success, leader board id, extra data>
 	public static event Action<bool, bool, string, string> OnLeaderBoardEvent;
+
+	public static event Action<int, bool, string> OnReceiveServerResult;
 
 	private static RiseSdkListener _instance;
 	private static RiseSdk riseSdk;
@@ -66,10 +68,12 @@ public class RiseSdkListener : MonoBehaviour
 			riseSdk.OnStart ();
 	}
 
-	public void onReceiveReward(string rewardId) {
-		int id = int.Parse(rewardId);
+	public void onReceiveReward(string data) {
+		string[] results = data.Split ('|');
+		bool success = int.Parse (results [0]) == 0;
+		int id = int.Parse(results[1]);
 		if (OnRewardAdEvent.GetInvocationList ().Length > 0) {
-			OnRewardAdEvent (id);
+			OnRewardAdEvent (success, id);
 		}
 	}
 
@@ -119,27 +123,37 @@ public class RiseSdkListener : MonoBehaviour
 		}
 	}
 		
-	public void onSubmitSuccess(String leaderBoardTag) {
+	public void onSubmitSuccess(string leaderBoardTag) {
 		if (OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
 			OnLeaderBoardEvent (true, true, leaderBoardTag, "");
 		}
 	}
 
-	public void onSubmitFailure(String leaderBoardTag) {
+	public void onSubmitFailure(string leaderBoardTag) {
 		if (OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
 			OnLeaderBoardEvent (true, false, leaderBoardTag, "");
 		}
 	}
 
-	public void onLoadSuccess(String leaderBoardTag, String data) {
+	public void onLoadSuccess(string data) {
+		string[] results = data.Split ('|');
 		if (OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
-			OnLeaderBoardEvent (false, true, leaderBoardTag, data);
+			OnLeaderBoardEvent (false, true, results[0], results[1]);
 		}
 	}
 
-	public void onLoadFailure(String leaderBoardTag) {
+	public void onLoadFailure(string leaderBoardTag) {
 		if (OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
 			OnLeaderBoardEvent (false, false, leaderBoardTag, "");
+		}
+	}
+
+	public void onServerResult(string data) {
+		string[] results = data.Split ('|');
+		int resultCode = int.Parse (results [0]);
+		bool success = int.Parse (results [1]) == 0;
+		if (OnReceiveServerResult.GetInvocationList ().Length > 0) {
+			OnReceiveServerResult (resultCode, success, results[2]);
 		}
 	}
 }

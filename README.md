@@ -1,10 +1,10 @@
 # RiseSDK for Unity3D
 
-###### 1, Add dependencies
+## 1, Add dependencies
 Copy the folder named Plugins into your Unity3D project Assets folder
 ![Copy](assets/risesdk-unity-8c095.png)
 
-###### 2, Initialize
+## 2, Initialize
 Call the Init function in a gameObject's Awake function in your initialize scene
 ```js
 void Awake() {
@@ -16,7 +16,7 @@ void Awake() {
 }
 ```
 
-###### 3, ADs
+## 3, ADs
 * Call the functions in need
 ```js
 // show start ad when you want
@@ -81,7 +81,7 @@ void OnPaymentResult(bool success, int billId) {
 RiseSdk.Instance.Pay(billId);
 ```
 
-###### 5, Reward Ads
+## 5, Reward Ads
 * when you want to use reward ad, then you should do:
 ```js
 void InitListeners() {
@@ -89,20 +89,22 @@ void InitListeners() {
   RiseSdkListener.OnRewardAdEvent += GetFreeCoin;
 }
 
-void GetFreeCoin (int rewardId){
-  switch(rewardId) {
-    case 1:
-    // you can add random golds, eg. 10
-    player.gold += 10;
-    break;
-  }
-  Debug.LogError ("free coin: " + rewardId);
-}
+void GetFreeCoin (bool success, int rewardId){
+		if (success) {
+			switch(rewardId) {
+			case 1:
+				// you can add random golds, eg. 10
+				//player.gold += 10;
+				break;
+			}
+			Debug.LogError ("success: free coin: " + rewardId);
+		} else {
+			Debug.LogError ("fails: free coin: " + rewardId);
+		}
+	}
 ```
 * and now you can call
 ```js
-// show reward ad
-RiseSdk.Instance.ShowRewardAd(rewardId);
 
 // determine whether exists reward ad
 bool yes = RiseSdk.Instance.HasRewardAd();
@@ -111,10 +113,13 @@ if (yes) {
 } else {
   setRewardButtonDisable();
 }
+
+// show reward ad
+RiseSdk.Instance.ShowRewardAd(rewardId);
 ...
 ```
 
-###### 6, SNS
+## 6, SNS
 * When you want to use SNS, eg. facebook to login, you should do this:
 ```js
 void InitListeners() {
@@ -174,7 +179,7 @@ string friendstring = RiseSdk.Instance.GetFriends ();
 object friends = MiniJSON.jsonDecode (friendstring);
 ```
 
-###### 7, Leaderboard
+## 7, Leaderboard
 When you want to use leaderboard, you should do this:
 * Define leaderboard call back
 ```js
@@ -211,7 +216,7 @@ RiseSdk.Instance.LoadFriendLeaderBoard ("endless", 1, 32, "friend_1,friend_2");
 RiseSdk.Instance.LoadGlobalLeaderBoard ("endless", 1, 32);
 ```
 
-###### 8, Native Ads
+## 8, Native Ads
 When you want to show some ads in your loading stage or pause game stage, you can use this type of ad. This Ad will show in screen position that measured by percentage of the screen height that you want. see blow:
 ```js
 // show native ad in screen with y position of 45 percent of screen height
@@ -228,6 +233,85 @@ if (RiseSdk.Instance.HasNativeAd ("loading")) {
 }
 ```
 
-###### 9, Congratulations, done.
+## 9, Server Data
+When you want to use these functions with our servers
+* store player data
+* sales promotion
+* notice, extra game data
+
+you can do these
+* init server result listener
+```js
+void InitListeners() {
+		RiseSdkListener.OnReceiveServerResult -= OnServerResult;
+		RiseSdkListener.OnReceiveServerResult += OnServerResult;
+}
+
+void OnServerResult(int resultCode, bool success, string data) {
+		switch (resultCode) {
+		case RiseSdk.SERVER_RESULT_RECEIVE_GAME_DATA:
+			if (success) {
+        // you can see the data format from:
+        // http://restartad.com/cloud/server/Mobile.sv.php?v=1&a=data&appid=13&version=1
+				Debug.LogError ("load extra: " + data);
+			} else {
+				Debug.LogError ("load extra fails");
+			}
+			break;
+
+		case RiseSdk.SERVER_RESULT_SALES_CLICK:
+			if (success) {
+        int saleId = int.Parse(data);
+				Debug.LogError ("sales click");
+			} else {
+				// do nothing...
+			}
+			break;
+
+		case RiseSdk.SERVER_RESULT_VERIFY_CODE:
+			if (success) {
+				Debug.LogError ("verify code success: " + data);
+			} else {
+				// fails
+			}
+			break;
+
+      ...
+		}
+	}
+```
+
+the resultCode are defined in RiseSdk, they are below:
+```csharp
+public const int SERVER_RESULT_RECEIVE_GAME_DATA = 1;
+public const int SERVER_RESULT_SAVE_USER_DATA = 2;
+public const int SERVER_RESULT_RECEIVE_USER_DATA = 3;
+public const int SERVER_RESULT_VERIFY_CODE = 4;
+public const int SERVER_RESULT_SALES_CLICK = 5;
+```
+* now you can do what you want:
+```csharp
+// save user data
+string userData = ...
+RiseSdk.Instance.SaveUserData(userData);
+
+// load user data now, you will receive the result in function you have defined that named OnServerResult
+RiseSdk.Instance.LoadUserData();
+
+// load game data, you will receive the result in function OnServerResult
+int VERSION = 1;// the default value of VERSION is 1
+RiseSdk.Instance.LoadGameData(VERSION);
+
+// show sales promotion, if the player clicked the sales, you will receive SERVER_RESULT_SALES_CLICK in function OnServerResult
+// the saleId is defined by the Operator, contact your group leader for more details
+int saleId = ...
+RiseSdk.Instance.ShowSales(saleId);
+
+// verify the activity code, you will receive the result in function OnServerResult, the code is provided by the player
+string code = ...
+RiseSdk.Instance.VerifyCode(code);
+```
+
+## 10, Congratulations, done.
 when you run your game in your android phone or emulator, your will see some toast information like this:
 <center>![toast](assets/risesdk-unity-1fcfc.png)</center>

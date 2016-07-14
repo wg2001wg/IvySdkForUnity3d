@@ -32,6 +32,8 @@ public class Demo : MonoBehaviour
 		"Load Global",//24
 		"Show Native", //25
 		"Hide Native", //26
+		"Load Game Data", //27
+		"Show Sales", //28
 	};
 
 	// Use this for initialization
@@ -54,6 +56,9 @@ public class Demo : MonoBehaviour
 
 		RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
 		RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
+
+		RiseSdkListener.OnReceiveServerResult -= OnServerResult;
+		RiseSdkListener.OnReceiveServerResult += OnServerResult;
 	}
 	
 	// Update is called once per frame
@@ -188,6 +193,14 @@ public class Demo : MonoBehaviour
 		case 26:
 			RiseSdk.Instance.HideNativeAd ("lock_pre");
 			break;
+
+		case 27:
+			RiseSdk.Instance.LoadGameData (1);
+			break;
+
+		case 28:
+			RiseSdk.Instance.ShowSales (1);
+			break;
 		}
 	}
 
@@ -233,14 +246,18 @@ public class Demo : MonoBehaviour
 	}
 
 	// Get Free coin handler
-	void GetFreeCoin (int rewardId){
-		switch(rewardId) {
-		case 1:
-			// you can add random golds, eg. 10
-			//player.gold += 10;
-			break;
+	void GetFreeCoin (bool success, int rewardId){
+		if (success) {
+			switch(rewardId) {
+			case 1:
+				// you can add random golds, eg. 10
+				//player.gold += 10;
+				break;
+			}
+			Debug.LogError ("success: free coin: " + rewardId);
+		} else {
+			Debug.LogError ("fails: free coin: " + rewardId);
 		}
-		Debug.LogError ("free coin: " + rewardId);
 	}
 
 	void OnLeaderBoardResult(bool submit, bool success, string leaderBoardId, string extraData) {
@@ -256,6 +273,34 @@ public class Demo : MonoBehaviour
 			} else {
 				Debug.LogError ("load leader board failure " + leaderBoardId);
 			}
+		}
+	}
+
+	void OnServerResult(int resultCode, bool success, string data) {
+		switch (resultCode) {
+		case RiseSdk.SERVER_RESULT_RECEIVE_GAME_DATA:
+			if (success) {
+				Debug.LogError ("load extra: " + data);
+			} else {
+				Debug.LogError ("load extra fails");
+			}
+			break;
+
+		case RiseSdk.SERVER_RESULT_SALES_CLICK:
+			if (success) {
+				Debug.LogError ("sales click");
+			} else {
+				// do nothing...
+			}
+			break;
+
+		case RiseSdk.SERVER_RESULT_VERIFY_CODE:
+			if (success) {
+				Debug.LogError ("verify code success: " + data);
+			} else {
+				// fails
+			}
+			break;
 		}
 	}
 }
