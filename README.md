@@ -6,7 +6,7 @@ Copy the folder named Plugins into your Unity3D project Assets folder
 
 ## 2, Initialize
 Call the Init function in a gameObject's Awake function in your initialize scene
-```js
+```csharp
 void Awake() {
   RiseSdk.Instance.Init();
   // when you want to use IAP or reward ad
@@ -18,7 +18,7 @@ void Awake() {
 
 ## 3, ADs
 * Call the functions in need
-```js
+```csharp
 // show start ad when you want
 RiseSdk.Instance.ShowAd(RiseSdk.M_START);
 
@@ -55,35 +55,48 @@ string data = RiseSdk.Instance.GetExtraData ();
 
 ## 4, In-App billing
 * When you want to use google checkout, then you should do this:
-```js
+```csharp
 void InitListeners() {
   RiseSdkListener.OnPaymentEvent -= OnPaymentResult;
   RiseSdkListener.OnPaymentEvent += OnPaymentResult;
 }
 
-void OnPaymentResult(bool success, int billId) {
-		if (success) {
+void OnPaymentResult(int resultCode, int billId) {
+		switch (resultCode) {
+		case RiseSdk.PAYMENT_RESULT_SUCCESS:
 			switch (billId) {
 			case 1:// the first billing Id success
 				break;
 			case 2:// the second billing Id success
 				break;
+			case 3:
+				break;
 			}
 			Debug.LogError("On billing success : " + billId);
-		} else {
+			break;
+
+		case RiseSdk.PAYMENT_RESULT_FAILS:
+			switch (billId) {
+			case 1:
+				break;
+			}
 			Debug.LogError("On billing failure : " + billId);
+			break;
+
+		case RiseSdk.PAYMENT_RESULT_CANCEL:
+			break;
 		}
-	}
+}
 ```
 
 * then call Pay function to launch payment flow
-```js
+```csharp
 RiseSdk.Instance.Pay(billId);
 ```
 
 ## 5, Reward Ads
 * when you want to use reward ad, then you should do:
-```js
+```csharp
 void InitListeners() {
   RiseSdkListener.OnRewardAdEvent -= GetFreeCoin;
   RiseSdkListener.OnRewardAdEvent += GetFreeCoin;
@@ -104,7 +117,7 @@ void GetFreeCoin (bool success, int rewardId){
 	}
 ```
 * and now you can call
-```js
+```csharp
 
 // determine whether exists reward ad
 bool yes = RiseSdk.Instance.HasRewardAd();
@@ -121,7 +134,7 @@ RiseSdk.Instance.ShowRewardAd(rewardId);
 
 ## 6, SNS
 * When you want to use SNS, eg. facebook to login, you should do this:
-```js
+```csharp
 void InitListeners() {
   RiseSdkListener.OnSNSEvent -= OnSNSEvent;
   RiseSdkListener.OnSNSEvent += OnSNSEvent;
@@ -149,7 +162,7 @@ void OnSNSEvent(bool success, int eventType, int extra) {
 	}
 ```
 * and then you can do this:
-```js
+```csharp
 // when you want to login
 RiseSdk.Instance.Login();
 
@@ -182,7 +195,7 @@ object friends = MiniJSON.jsonDecode (friendstring);
 ## 7, Leaderboard
 When you want to use leaderboard, you should do this:
 * Define leaderboard call back
-```js
+```csharp
 void InitListeners() {
   RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
   RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
@@ -205,7 +218,7 @@ void OnLeaderBoardResult(bool submit, bool success, string leaderBoardId, string
 	}
 ```
 * and you can use leaderboard now, do this:
-```js
+```csharp
 // submit score to the leaderboard named "endless", the extra data is your game data that you want to sumbit
 RiseSdk.Instance.SubmitScore ("endless", 1234, "{userName: haha}");
 
@@ -218,7 +231,7 @@ RiseSdk.Instance.LoadGlobalLeaderBoard ("endless", 1, 32);
 
 ## 8, Native Ads
 When you want to show some ads in your loading stage or pause game stage, you can use this type of ad. This Ad will show in screen position that measured by percentage of the screen height that you want. see blow:
-```js
+```csharp
 // show native ad in screen with y position of 45 percent of screen height
 RiseSdk.Instance.ShowNativeAd ("loading", 45);
 
@@ -241,7 +254,7 @@ When you want to use these functions with our servers
 
 you can do these
 * init server result listener
-```js
+```csharp
 void InitListeners() {
 		RiseSdkListener.OnReceiveServerResult -= OnServerResult;
 		RiseSdkListener.OnReceiveServerResult += OnServerResult;

@@ -10,6 +10,10 @@ public sealed class RiseSdk {
 	private AndroidJavaClass _class = null;
     private bool paymentSystemValid = false;
 
+	public const int PAYMENT_RESULT_SUCCESS = 1;
+	public const int PAYMENT_RESULT_FAILS = 2;
+	public const int PAYMENT_RESULT_CANCEL = 3;
+
 	public const int POS_BANNER_LEFT_TOP = 1;
 	public const int POS_BANNER_MIDDLE_TOP = 3;
 	public const int POS_BANNER_RIGHT_TOP = 6;

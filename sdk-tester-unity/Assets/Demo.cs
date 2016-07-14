@@ -204,8 +204,9 @@ public class Demo : MonoBehaviour
 		}
 	}
 
-	void OnPaymentResult(bool success, int billId) {
-		if (success) {
+	void OnPaymentResult(int resultCode, int billId) {
+		switch (resultCode) {
+		case RiseSdk.PAYMENT_RESULT_SUCCESS:
 			switch (billId) {
 			case 1:// the first billing Id success 
 				break;
@@ -215,12 +216,18 @@ public class Demo : MonoBehaviour
 				break;
 			}
 			Debug.LogError("On billing success : " + billId);
-		} else {
+			break;
+
+		case RiseSdk.PAYMENT_RESULT_FAILS:
 			switch (billId) {
 			case 1:
 				break;
 			}
 			Debug.LogError("On billing failure : " + billId);
+			break;
+
+		case RiseSdk.PAYMENT_RESULT_CANCEL:
+			break;
 		}
 	}
 

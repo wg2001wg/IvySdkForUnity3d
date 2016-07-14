@@ -10,7 +10,7 @@ public class RiseSdkListener : MonoBehaviour
 	public static event Action<bool, int> OnRewardAdEvent;
 
 	/// <success, billId>
-	public static event Action<bool, int> OnPaymentEvent;
+	public static event Action<int, int> OnPaymentEvent;
 
 	/// <success, event type, extra data>
 	public static event Action<bool, int, int> OnSNSEvent;
@@ -80,14 +80,21 @@ public class RiseSdkListener : MonoBehaviour
 	public void onPaymentSuccess(string billId) {
 		int id = int.Parse(billId);
 		if (OnPaymentEvent.GetInvocationList ().Length > 0) {
-			OnPaymentEvent (true, id);
+			OnPaymentEvent (RiseSdk.PAYMENT_RESULT_SUCCESS, id);
 		}
 	}
 		
 	public void onPaymentFail(string billId) {
 		int id = int.Parse(billId);
 		if (OnPaymentEvent.GetInvocationList ().Length > 0) {
-			OnPaymentEvent (false, id);
+			OnPaymentEvent (RiseSdk.PAYMENT_RESULT_FAILS, id);
+		}
+	}
+
+	public void onPaymentCanceled(string bill) {
+		int id = int.Parse (bill);
+		if (OnPaymentEvent.GetInvocationList ().Length > 0) {
+			OnPaymentEvent (RiseSdk.PAYMENT_RESULT_CANCEL, id);
 		}
 	}
 
