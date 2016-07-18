@@ -32,11 +32,23 @@ public sealed class RiseSdk {
 	public const int SNS_EVENT_CHALLENGE = 3;
 	public const int SNS_EVENT_LIKE = 4;
 
+	public const int CONFIG_KEY_APP_ID = 1;
+	public const int CONFIG_KEY_LEADER_BOARD_URL = 2;
+	public const int CONFIG_KEY_API_VERSION = 3;
+	public const int CONFIG_KEY_SCREEN_WIDTH = 4;
+	public const int CONFIG_KEY_SCREEN_HEIGHT = 5;
+	public const int CONFIG_KEY_LANGUAGE = 6;
+	public const int CONFIG_KEY_COUNTRY = 7;
+	public const int CONFIG_KEY_VERSION_CODE = 8;
+	public const int CONFIG_KEY_VERSION_NAME = 9;
+	public const int CONFIG_KEY_PACKAGE_NAME = 10;
+	/*
 	public const int SERVER_RESULT_RECEIVE_GAME_DATA = 1;
 	public const int SERVER_RESULT_SAVE_USER_DATA = 2;
 	public const int SERVER_RESULT_RECEIVE_USER_DATA = 3;
 	public const int SERVER_RESULT_VERIFY_CODE = 4;
 	public const int SERVER_RESULT_SALES_CLICK = 5;
+	*/
 
 	public void SetPaymentSystemValid(bool valid) {
 		paymentSystemValid = valid;
@@ -250,6 +262,23 @@ public sealed class RiseSdk {
 		}
 	}
 
+	public string GetConfig(int configId){
+		if (_class != null) {
+			return _class.CallStatic<string> ("getConfig", configId);
+		} else {
+			return "0";
+		}
+	}
+
+	public string CacheUrl(string url) {
+		if (_class != null) {
+			return _class.CallStatic<string> ("cacheUrl", url);
+		} else {
+			return "";
+		}
+	}
+
+	/*
 	public void SubmitScore(string leaderBoardId, long score, string extra) {
 		if (_class != null) {
 			_class.CallStatic ("submitScore", leaderBoardId, score, extra);
@@ -296,5 +325,5 @@ public sealed class RiseSdk {
 		if (_class != null) {
 			_class.CallStatic ("showSales", saleId);
 		}
-	}
+	}*/
 }

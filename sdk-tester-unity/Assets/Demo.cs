@@ -34,6 +34,8 @@ public class Demo : MonoBehaviour
 		"Hide Native", //26
 		"Load Game Data", //27
 		"Show Sales", //28
+		"cache url", //29
+		"load config", //30
 	};
 
 	// Use this for initialization
@@ -54,11 +56,11 @@ public class Demo : MonoBehaviour
 		RiseSdkListener.OnSNSEvent -= OnSNSEvent;
 		RiseSdkListener.OnSNSEvent += OnSNSEvent;
 
-		RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
-		RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
+		//RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
+		//RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
 
-		RiseSdkListener.OnReceiveServerResult -= OnServerResult;
-		RiseSdkListener.OnReceiveServerResult += OnServerResult;
+		//RiseSdkListener.OnReceiveServerResult -= OnServerResult;
+		//RiseSdkListener.OnReceiveServerResult += OnServerResult;
 	}
 	
 	// Update is called once per frame
@@ -173,7 +175,7 @@ public class Demo : MonoBehaviour
 			object friends = MiniJSON.jsonDecode (friendstring);
 			Debug.LogError ("friends are: " + friends);
 			break;
-
+			/*
 		case 22:
 			RiseSdk.Instance.SubmitScore ("endless", 1234, "userName: haha");
 			break;
@@ -185,6 +187,7 @@ public class Demo : MonoBehaviour
 		case 24:
 			RiseSdk.Instance.LoadGlobalLeaderBoard ("endless", 1, 32);
 			break;
+			*/
 
 		case 25:
 			RiseSdk.Instance.ShowNativeAd ("lock_pre", 20);
@@ -193,13 +196,22 @@ public class Demo : MonoBehaviour
 		case 26:
 			RiseSdk.Instance.HideNativeAd ("lock_pre");
 			break;
-
+			/*
 		case 27:
 			RiseSdk.Instance.LoadGameData (1);
 			break;
 
 		case 28:
 			RiseSdk.Instance.ShowSales (1);
+			break;
+			*/
+
+		case 29:
+			RiseSdk.Instance.CacheUrl ("http://img4.imgtn.bdimg.com/it/u=3087502007,2322343371&fm=21&gp=0.jpg");
+			break;
+
+		case 30:
+			Debug.LogError ("app id is " + RiseSdk.Instance.GetConfig(RiseSdk.CONFIG_KEY_APP_ID));
 			break;
 		}
 	}
@@ -267,6 +279,7 @@ public class Demo : MonoBehaviour
 		}
 	}
 
+	/*
 	void OnLeaderBoardResult(bool submit, bool success, string leaderBoardId, string extraData) {
 		if (submit) {
 			if (success) {
@@ -310,4 +323,5 @@ public class Demo : MonoBehaviour
 			break;
 		}
 	}
+	*/
 }
