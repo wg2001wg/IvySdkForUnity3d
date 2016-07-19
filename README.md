@@ -17,6 +17,14 @@ void Awake() {
 ```
 
 ## 3, ADs
+This module will make these things done:
+* show banner
+* close banner
+* show full screen ad
+* make the player to share the game to his friends
+* let the player to give your game a 5-star-rating
+* track the player's behaviors for analytics
+
 * Call the functions in need
 ```csharp
 // show start ad when you want
@@ -51,6 +59,25 @@ RiseSdk.Instance.TrackEvent ("your category", "your action", "your label", 1);
 
 // get server data for your game if needed
 string data = RiseSdk.Instance.GetExtraData ();
+```
+* Notice
+POS_BANNER* and M_* are defined in namespace RiseSdk
+you should NOT define these again
+```csharp
+//position for showBanner
+public const int POS_BANNER_LEFT_TOP = 1;
+public const int POS_BANNER_MIDDLE_TOP = 3;
+public const int POS_BANNER_RIGHT_TOP = 6;
+public const int POS_BANNER_MIDDLE_MIDDLE = 5;
+public const int POS_BANNER_LEFT_BOTTOM = 2;
+public const int POS_BANNER_MIDDLE_BOTTOM = 4;
+public const int POS_BANNER_RIGHT_BOTTOM = 7;
+
+// tag for showAd
+public const string M_START = "start";
+public const string M_PAUSE = "pause";
+public const string M_PASSLEVEL = "passlevel";
+public const string M_CUSTOM = "custom";
 ```
 
 ## 4, In-App billing
@@ -95,6 +122,8 @@ RiseSdk.Instance.Pay(billId);
 ```
 
 ## 5, Reward Ads
+Reward Ad is a video ad that when the player saw it, you will give him some golds/items/diamonds etc.
+
 * when you want to use reward ad, then you should do:
 ```csharp
 void InitListeners() {
@@ -133,6 +162,15 @@ RiseSdk.Instance.ShowRewardAd(rewardId);
 ```
 
 ## 6, SNS
+This module can make these things done:
+* login with facebook
+* logout
+* like your facebook page
+* let the player invite his friends
+* let the player challenge his friends
+* get friends list
+* get player's profile
+
 * When you want to use SNS, eg. facebook to login, you should do this:
 ```csharp
 void InitListeners() {
@@ -192,44 +230,7 @@ string friendstring = RiseSdk.Instance.GetFriends ();
 object friends = MiniJSON.jsonDecode (friendstring);
 ```
 
-## 7, Leaderboard
-When you want to use leaderboard, you should do this:
-* Define leaderboard call back
-```csharp
-void InitListeners() {
-  RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
-  RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
-}
-
-void OnLeaderBoardResult(bool submit, bool success, string leaderBoardId, string extraData) {
-		if (submit) {
-			if (success) {
-				Debug.LogError ("submit to leader board success: " + leaderBoardId);
-			} else {
-				Debug.LogError ("submit to leader board failure: " + leaderBoardId);
-			}
-		} else {
-			if (success) {
-				Debug.LogError ("load leader board " + leaderBoardId + " success: " + extraData);
-			} else {
-				Debug.LogError ("load leader board failure " + leaderBoardId);
-			}
-		}
-	}
-```
-* and you can use leaderboard now, do this:
-```csharp
-// submit score to the leaderboard named "endless", the extra data is your game data that you want to sumbit
-RiseSdk.Instance.SubmitScore ("endless", 1234, "{userName: haha}");
-
-// load first 32 records of the friends leaderboard
-RiseSdk.Instance.LoadFriendLeaderBoard ("endless", 1, 32, "friend_1,friend_2");
-
-// load first 32 records of the leaderboard for all player
-RiseSdk.Instance.LoadGlobalLeaderBoard ("endless", 1, 32);
-```
-
-## 8, Native Ads
+## 7, Native Ads
 When you want to show some ads in your loading stage or pause game stage, you can use this type of ad. This Ad will show in screen position that measured by percentage of the screen height that you want. see blow:
 ```csharp
 // show native ad in screen with y position of 45 percent of screen height
@@ -246,85 +247,33 @@ if (RiseSdk.Instance.HasNativeAd ("loading")) {
 }
 ```
 
-## 9, Server Data
-When you want to use these functions with our servers
-* store player data
-* sales promotion
-* notice, extra game data
+## 8, Misc
+* download something and cache it (async)
+* get system configurations
 
-you can do these
-* init server result listener
 ```csharp
-void InitListeners() {
-		RiseSdkListener.OnReceiveServerResult -= OnServerResult;
-		RiseSdkListener.OnReceiveServerResult += OnServerResult;
-}
+// download a bitmap and cache it
+string path = RiseSdk.Instance.CacheUrl("http://img.google.com/xxxxxx.png");
+// do your works, you can query the path whether exists or not after 5 seconds
 
-void OnServerResult(int resultCode, bool success, string data) {
-		switch (resultCode) {
-		case RiseSdk.SERVER_RESULT_RECEIVE_GAME_DATA:
-			if (success) {
-        // you can see the data format from:
-        // http://restartad.com/cloud/server/Mobile.sv.php?v=1&a=data&appid=13&version=1
-				Debug.LogError ("load extra: " + data);
-			} else {
-				Debug.LogError ("load extra fails");
-			}
-			break;
+// get system configurations
+string config = RiseSdk.Instance.GetConfig(RiseSdk.CONFIG_KEY_APP_ID);
+int appId = int.Parse(config);
 
-		case RiseSdk.SERVER_RESULT_SALES_CLICK:
-			if (success) {
-        int saleId = int.Parse(data);
-				Debug.LogError ("sales click");
-			} else {
-				// do nothing...
-			}
-			break;
-
-		case RiseSdk.SERVER_RESULT_VERIFY_CODE:
-			if (success) {
-				Debug.LogError ("verify code success: " + data);
-			} else {
-				// fails
-			}
-			break;
-
-      ...
-		}
-	}
+// the configurations are defined in namespace RiseSdk
+// you should NOT define these again
+public const int CONFIG_KEY_APP_ID = 1;
+public const int CONFIG_KEY_LEADER_BOARD_URL = 2;
+public const int CONFIG_KEY_API_VERSION = 3;
+public const int CONFIG_KEY_SCREEN_WIDTH = 4;
+public const int CONFIG_KEY_SCREEN_HEIGHT = 5;
+public const int CONFIG_KEY_LANGUAGE = 6;
+public const int CONFIG_KEY_COUNTRY = 7;
+public const int CONFIG_KEY_VERSION_CODE = 8;
+public const int CONFIG_KEY_VERSION_NAME = 9;
+public const int CONFIG_KEY_PACKAGE_NAME = 10;
 ```
 
-the resultCode are defined in RiseSdk, they are below:
-```csharp
-public const int SERVER_RESULT_RECEIVE_GAME_DATA = 1;
-public const int SERVER_RESULT_SAVE_USER_DATA = 2;
-public const int SERVER_RESULT_RECEIVE_USER_DATA = 3;
-public const int SERVER_RESULT_VERIFY_CODE = 4;
-public const int SERVER_RESULT_SALES_CLICK = 5;
-```
-* now you can do what you want:
-```csharp
-// save user data
-string userData = ...
-RiseSdk.Instance.SaveUserData(userData);
-
-// load user data now, you will receive the result in function you have defined that named OnServerResult
-RiseSdk.Instance.LoadUserData();
-
-// load game data, you will receive the result in function OnServerResult
-int VERSION = 1;// the default value of VERSION is 1
-RiseSdk.Instance.LoadGameData(VERSION);
-
-// show sales promotion, if the player clicked the sales, you will receive SERVER_RESULT_SALES_CLICK in function OnServerResult
-// the saleId is defined by the Operator, contact your group leader for more details
-int saleId = ...
-RiseSdk.Instance.ShowSales(saleId);
-
-// verify the activity code, you will receive the result in function OnServerResult, the code is provided by the player
-string code = ...
-RiseSdk.Instance.VerifyCode(code);
-```
-
-## 10, Congratulations, done.
+## 9, Congratulations, done.
 when you run your game in your android phone or emulator, your will see some toast information like this:
 <center>![toast](assets/risesdk-unity-1fcfc.png)</center>
