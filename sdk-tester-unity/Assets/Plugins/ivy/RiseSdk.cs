@@ -278,6 +278,26 @@ public sealed class RiseSdk {
 		}
 	}
 
+	public bool HasApp(string packageName) {
+		if (_class == null) {
+			return false;
+		} else {
+			return _class.CallStatic<bool> ("hasApp", packageName);
+		}
+	}
+
+	public void LaunchApp(string packageName) {
+		if (_class != null) {
+			_class.CallStatic ("launchApp", packageName);
+		}
+	}
+
+	public void GetApp(string packageName) {
+		if (_class != null) {
+			_class.CallStatic ("getApp", packageName);
+		}
+	}
+
 	/*
 	public void SubmitScore(string leaderBoardId, long score, string extra) {
 		if (_class != null) {
