@@ -250,6 +250,9 @@ if (RiseSdk.Instance.HasNativeAd ("loading")) {
 ## 8, Misc
 * download something and cache it (async)
 * get system configurations
+* query whether installed an app or not
+* launch an app
+* goto play store for an app
 
 ```csharp
 // download a bitmap and cache it
@@ -272,6 +275,16 @@ public const int CONFIG_KEY_COUNTRY = 7;
 public const int CONFIG_KEY_VERSION_CODE = 8;
 public const int CONFIG_KEY_VERSION_NAME = 9;
 public const int CONFIG_KEY_PACKAGE_NAME = 10;
+
+// query an app whether installed or not
+string appPackageName = "com.yes.good";
+if (RiseSdk.Instance.HasApp(appPackageName)) {
+  // launch this app
+  RiseSdk.Instance.LaunchApp(appPackageName);
+} else {
+  // goto play store for this app
+  RiseSdk.Instance.GetApp(appPackageName);
+}
 ```
 
 ## 9, Congratulations, done.
