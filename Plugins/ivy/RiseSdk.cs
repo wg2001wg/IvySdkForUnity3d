@@ -298,6 +298,20 @@ public sealed class RiseSdk {
 		}
 	}
 
+	public string GetConfig(string packageName, int configId) {
+		if (_class != null) {
+			return _class.CallStatic<string> ("getConfig", packageName, configId);
+		} else {
+			return "";
+		}
+	}
+
+	public void Alert(string title, string message) {
+		if (_class != null) {
+			_class.CallStatic ("alert", title, message);
+		}
+	}
+
 	/*
 	public void SubmitScore(string leaderBoardId, long score, string extra) {
 		if (_class != null) {

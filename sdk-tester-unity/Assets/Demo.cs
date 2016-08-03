@@ -36,6 +36,7 @@ public class Demo : MonoBehaviour
 		"Show Sales", //28
 		"cache url", //29
 		"load config", //30
+		"Alert", //31
 	};
 
 	// Use this for initialization
@@ -212,6 +213,10 @@ public class Demo : MonoBehaviour
 
 		case 30:
 			Debug.LogError ("app id is " + RiseSdk.Instance.GetConfig(RiseSdk.CONFIG_KEY_APP_ID));
+			break;
+
+		case 31:
+			RiseSdk.Instance.Alert ("haha", "Very good");
 			break;
 		}
 	}
