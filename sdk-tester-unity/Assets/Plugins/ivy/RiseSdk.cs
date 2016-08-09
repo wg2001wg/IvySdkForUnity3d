@@ -278,6 +278,12 @@ public sealed class RiseSdk {
 		}
 	}
 
+	public void CacheUrl(int tag, string url) {
+		if (_class != null) {
+			_class.CallStatic ("cacheUrl", tag, url);
+		} 
+	}
+
 	public bool HasApp(string packageName) {
 		if (_class == null) {
 			return false;

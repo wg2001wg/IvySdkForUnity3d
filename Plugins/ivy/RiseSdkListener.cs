@@ -15,6 +15,8 @@ public class RiseSdkListener : MonoBehaviour
 	/// <success, event type, extra data>
 	public static event Action<bool, int, int> OnSNSEvent;
 
+	public static event Action<bool, int, string> OnCacheUrlResult;
+
 	/// <submit or load, success, leader board id, extra data>
 	public static event Action<bool, bool, string, string> OnLeaderBoardEvent;
 
@@ -161,6 +163,20 @@ public class RiseSdkListener : MonoBehaviour
 		bool success = int.Parse (results [1]) == 0;
 		if (OnReceiveServerResult.GetInvocationList ().Length > 0) {
 			OnReceiveServerResult (resultCode, success, results[2]);
+		}
+	}
+
+	public void onCacheUrlResult(string data) {
+		//tag,success,name
+		string[] results = data.Split('|');
+		int tag = int.Parse (results [0]);
+		bool success = int.Parse (results [1]) == 0;
+		if (OnCacheUrlResult.GetInvocationList ().Length > 0) {
+			if (success) {
+				OnCacheUrlResult (true, tag, results [2]);
+			} else {
+				OnCacheUrlResult (false, tag, "");
+			}
 		}
 	}
 }

@@ -4,6 +4,33 @@
 Copy the folder named Plugins into your Unity3D project Assets folder
 ![Copy](assets/risesdk-unity-8c095.png)
 
+* if you use proguard to obfuscate your java source code, you should add these rules to your proguard rules file:
+```java
+-keep class com.risesdk.client.** {
+    <methods>;
+}
+
+-keep class android.support.** {
+    *;
+}
+
+-keep class com.risecore.async.** {
+    public *;
+}
+
+-keep class com.risecore.common.** {
+    public *;
+}
+
+-keep class com.risecore.network.** {
+    public *;
+}
+
+-keep class com.risecore.view.** {
+    public *;
+}
+```
+
 ## 2, Initialize
 Call the Init function in a gameObject's Awake function in your initialize scene
 ```csharp
@@ -254,11 +281,34 @@ if (RiseSdk.Instance.HasNativeAd ("loading")) {
 * launch an app
 * goto play store for an app
 
+Download a bitmap and cache it (without callback)
 ```csharp
-// download a bitmap and cache it
 string path = RiseSdk.Instance.CacheUrl("http://img.google.com/xxxxxx.png");
 // do your works, you can query the path whether exists or not after 5 seconds
+```
 
+If you want to cache an url and let the system give you a callback, you can do this
+* define callback
+```csharp
+const int TAG_BITMAP = 1;
+void InitListeners() {
+  RiseSdkListener.OnCacheUrlResult -= OnCacheUrl;
+  RiseSdkListener.OnCacheUrlResult += OnCacheUrl;
+}
+
+void OnCacheUrl(bool result, int tag, string path) {
+		Debug.LogError ("cache url result " + result + " tag " + tag + " path: " + path);
+}
+```
+
+* download
+```csharp
+RiseSdk.Instance.CacheUrl(TAG_BITMAP, "http://img.google.com/xxxxxx.png");
+// the result will be called in function OnCacheUrl
+```
+
+* other misc
+```csharp
 // get system configurations
 string config = RiseSdk.Instance.GetConfig(RiseSdk.CONFIG_KEY_APP_ID);
 int appId = int.Parse(config);

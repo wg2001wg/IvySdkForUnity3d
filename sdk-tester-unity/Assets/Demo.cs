@@ -37,6 +37,7 @@ public class Demo : MonoBehaviour
 		"cache url", //29
 		"load config", //30
 		"Alert", //31
+		"Cache Url With Tag", //32
 	};
 
 	// Use this for initialization
@@ -57,11 +58,18 @@ public class Demo : MonoBehaviour
 		RiseSdkListener.OnSNSEvent -= OnSNSEvent;
 		RiseSdkListener.OnSNSEvent += OnSNSEvent;
 
+		RiseSdkListener.OnCacheUrlResult -= OnCacheUrl;
+		RiseSdkListener.OnCacheUrlResult += OnCacheUrl;
+
 		//RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
 		//RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
 
 		//RiseSdkListener.OnReceiveServerResult -= OnServerResult;
 		//RiseSdkListener.OnReceiveServerResult += OnServerResult;
+	}
+
+	void OnCacheUrl(bool result, int tag, string path) {
+		Debug.LogError ("cache url result " + result + " tag " + tag + " path: " + path);
 	}
 	
 	// Update is called once per frame
@@ -217,6 +225,10 @@ public class Demo : MonoBehaviour
 
 		case 31:
 			RiseSdk.Instance.Alert ("haha", "Very good");
+			break;
+
+		case 32:
+			RiseSdk.Instance.CacheUrl (1, "http://img4.imgtn.bdimg.com/it/u=3087502007,2322343371&fm=21&gp=0.jpg");
 			break;
 		}
 	}
