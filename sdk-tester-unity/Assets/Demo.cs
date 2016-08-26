@@ -61,11 +61,18 @@ public class Demo : MonoBehaviour
 		RiseSdkListener.OnCacheUrlResult -= OnCacheUrl;
 		RiseSdkListener.OnCacheUrlResult += OnCacheUrl;
 
+		RiseSdkListener.OnReceiveServerExtra -= OnReceiveServerExtra;
+		RiseSdkListener.OnReceiveServerExtra += OnReceiveServerExtra;
+
 		//RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
 		//RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
 
 		//RiseSdkListener.OnReceiveServerResult -= OnServerResult;
 		//RiseSdkListener.OnReceiveServerResult += OnServerResult;
+	}
+
+	void OnReceiveServerExtra(string data) {
+		Debug.LogError ("receive server result" + data);
 	}
 
 	void OnCacheUrl(bool result, int tag, string path) {

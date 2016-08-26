@@ -22,6 +22,8 @@ public class RiseSdkListener : MonoBehaviour
 
 	public static event Action<int, bool, string> OnReceiveServerResult;
 
+	public static event Action<string> OnReceiveServerExtra;
+
 	private static RiseSdkListener _instance;
 	private static RiseSdk riseSdk;
 
@@ -177,6 +179,12 @@ public class RiseSdkListener : MonoBehaviour
 			} else {
 				OnCacheUrlResult (false, tag, "");
 			}
+		}
+	}
+
+	public void onReceiveServerExtra(string data) {
+		if (OnReceiveServerExtra.GetInvocationList ().Length > 0) {
+			OnReceiveServerExtra (data);
 		}
 	}
 }
