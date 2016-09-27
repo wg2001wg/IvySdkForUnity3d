@@ -64,11 +64,18 @@ public class Demo : MonoBehaviour
 		RiseSdkListener.OnReceiveServerExtra -= OnReceiveServerExtra;
 		RiseSdkListener.OnReceiveServerExtra += OnReceiveServerExtra;
 
+		RiseSdkListener.OnReceiveNotificationData -= OnNotificationData;
+		RiseSdkListener.OnReceiveNotificationData += OnNotificationData;
+
 		//RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
 		//RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
 
 		//RiseSdkListener.OnReceiveServerResult -= OnServerResult;
 		//RiseSdkListener.OnReceiveServerResult += OnServerResult;
+	}
+
+	void OnNotificationData(string data) {
+		Debug.LogError ("receive notification data: " + data);
 	}
 
 	void OnReceiveServerExtra(string data) {

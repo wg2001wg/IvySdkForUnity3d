@@ -24,6 +24,8 @@ public class RiseSdkListener : MonoBehaviour
 
 	public static event Action<string> OnReceiveServerExtra;
 
+	public static event Action<string> OnReceiveNotificationData;
+
 	private static RiseSdkListener _instance;
 	private static RiseSdk riseSdk;
 
@@ -185,6 +187,12 @@ public class RiseSdkListener : MonoBehaviour
 	public void onReceiveServerExtra(string data) {
 		if (OnReceiveServerExtra.GetInvocationList ().Length > 0) {
 			OnReceiveServerExtra (data);
+		}
+	}
+
+	public void onReceiveNotificationData(string data) {
+		if (OnReceiveNotificationData.GetInvocationList ().Length > 0) {
+			OnReceiveNotificationData (data);
 		}
 	}
 }
