@@ -129,7 +129,7 @@ public class Demo : MonoBehaviour
 			RiseSdk.Instance.ShowAd(RiseSdk.M_CUSTOM);
 			break;
 		case 4:
-			RiseSdk.Instance.ShowBanner(RiseSdk.POS_BANNER_MIDDLE_BOTTOM);
+			RiseSdk.Instance.ShowBanner("default", RiseSdk.POS_BANNER_MIDDLE_BOTTOM);
 			break;
 		case 5:
 			RiseSdk.Instance.CloseBanner();
@@ -153,7 +153,7 @@ public class Demo : MonoBehaviour
 			RiseSdk.Instance.ShowMore();
 			break;
 		case 12:
-			RiseSdk.Instance.ShowRewardAd(1);
+			RiseSdk.Instance.ShowRewardAd("default", 1);
 			break;
 		case 13:
 			RiseSdk.Instance.Share();

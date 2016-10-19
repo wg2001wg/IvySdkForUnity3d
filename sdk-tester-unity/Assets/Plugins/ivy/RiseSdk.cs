@@ -71,7 +71,7 @@ public sealed class RiseSdk {
 		#if UNITY_ANDROID
 		try {
 			RiseSdkListener.Instance.enabled = true;
-			_class = new AndroidJavaClass("com.risesdk.client.Unity");
+			_class = new AndroidJavaClass("com.android.client.Unity");
 			if(_class != null) {
 				AndroidJNIHelper.debug = true;
 				using(AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer")) {
@@ -85,6 +85,11 @@ public sealed class RiseSdk {
 			_class = null;
 		}
 		#endif
+	}
+
+	public void ShowBanner(string tag, int pos) {
+		if(_class != null)
+			_class.CallStatic("showBanner", tag, pos);
 	}
 
 	public void ShowBanner(int pos) {
@@ -113,9 +118,20 @@ public sealed class RiseSdk {
 		return false;
 	}
 
+	public bool HasRewardAd(string tag) {
+		if(_class != null)
+			return _class.CallStatic<bool>("hasRewardAd", tag);
+		return false;
+	}
+
 	public void ShowRewardAd(int rewardId) {
 		if(_class != null)
 			_class.CallStatic("showRewardAd", rewardId);
+	}
+
+	public void ShowRewardAd(string tag, int rewardId) {
+		if(_class != null)
+			_class.CallStatic("showRewardAd", tag, rewardId);
 	}
 
 	public void OnResume() {
