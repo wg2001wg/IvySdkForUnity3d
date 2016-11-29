@@ -89,7 +89,6 @@ public sealed class RiseSdk
                     {
                         _class.CallStatic("onCreate", context);
                     }
-                    ;
                 }
             }
         }
