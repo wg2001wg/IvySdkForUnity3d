@@ -1,4 +1,5 @@
 # RiseSDK for Unity3D
+## Version: 3.2
 
 ## 1, Add dependencies
 Copy the folder named Plugins into your Unity3D project Assets folder
