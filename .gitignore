@@ -1,4 +1,5 @@
 obj
 *.apk
 gen/
+sdk-tester-unity/Temp
 

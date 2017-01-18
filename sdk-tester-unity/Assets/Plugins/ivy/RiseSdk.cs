@@ -341,6 +341,14 @@ public sealed class RiseSdk {
         }
     }
 
+    public bool IsNetworkConnected () {
+        if (_class != null) {
+            return _class.CallStatic<bool> ("isNetworkConnected");
+        }
+        return false;
+    }
+
+#region Umeng
     /**
      * 设置玩家等级
      * @param level
@@ -363,13 +371,13 @@ public sealed class RiseSdk {
         }
     }
 
-    public void UM_onEventValue (string eventId, Dictionary<string, string> eventLabelMap) {
+    public void UM_onEventValue (string eventId, Dictionary<string, string> mapStr) {
         if (_class != null) {
             AndroidJavaObject map = null;
-            if (eventLabelMap != null) {
+            if (mapStr != null) {
                 try {
                     map = new AndroidJavaObject ("java.util.Map");
-                    foreach (KeyValuePair<string, string> pair in eventLabelMap) {
+                    foreach (KeyValuePair<string, string> pair in mapStr) {
                         map.Call<string> ("put", pair.Key, pair.Value);
                     }
                 } catch (System.Exception ex) {
@@ -500,6 +508,7 @@ public sealed class RiseSdk {
             _class.CallStatic ("UM_bonus", itemName, number, price, trigger);
         }
     }
+#endregion
 
     /*
 	public void SubmitScore(string leaderBoardId, long score, string extra) {
