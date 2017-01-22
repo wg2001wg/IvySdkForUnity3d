@@ -4,6 +4,9 @@ using UnityEngine;
 
 #endregion
 
+/// <summary>
+/// SDK接口回调类
+/// </summary>
 public class RiseSdkListener : MonoBehaviour {
     /// <rewardId>
     public static event Action<bool, int> OnRewardAdEvent;

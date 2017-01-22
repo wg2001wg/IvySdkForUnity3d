@@ -239,6 +239,7 @@ public class Demo : MonoBehaviour
 
 		case 31:
 			RiseSdk.Instance.Alert ("haha", "Very good");
+            RiseSdk.Instance.Pay (0);
 			break;
 
 		case 32:
