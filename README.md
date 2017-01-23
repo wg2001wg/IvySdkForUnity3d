@@ -1,7 +1,8 @@
 # RiseSDK for Unity3D
-## Version: 3.2
+## Version: 3.3
 
 ## 1, Add dependencies
+完全复制Plugins文件夹到你的Unity工程Assets目录下
 Copy the folder named Plugins into your Unity3D project Assets folder
 ![Copy](assets/risesdk-unity-8c095.png)
 
@@ -83,8 +84,87 @@ RiseSdk.Instance.Share();
 // show more game to the player
 RiseSdk.Instance.ShowMore();
 
-// track events
+// Google Analytics events
 RiseSdk.Instance.TrackEvent ("your category", "your action", "your label", 1);
+
+** 友盟统计相关接口
+* 统计玩家等级
+```csharp
+int level = 1; //玩家等级
+RiseSdk.Instance.UM_setPlayerLevel(level);//统计玩家等级
+```
+* 统计进入某页面
+```csharp
+String pageName = "Shop"; 
+RiseSdk.Instance.UM_onPageStart(pageName);//统计进入商店页面
+```
+* 统计离开某页面
+```csharp
+String pageName = "Shop";
+RiseSdk.Instance.UM_onPageEnd(pageName);//统计离开商店页面
+```  
+* 统计事件名称
+```csharp
+String eventId = "EnterGame"; //事件名称
+RiseSdk.Instance.UM_onEvent(eventId);
+```
+* 统计事件标签操作
+```csharp
+String eventId = "EnterGame"; //事件名称
+String eventLabel = "eventLable";//事件的某个操作标签
+RiseSdk.Instance.UM_onEvent(eventId, eventLabel);
+```
+* 统计事件详细分组内容
+```csharp
+HashMap<String, String> map = new HashMap<>(); //事件详细分组内容
+map.put("openGift", "roll");
+int value = 1;//计数统计值，比如持续时间，每次付款金额
+RiseSdk.Instance.UM_onEventValue("EnterGame", map, value);
+```
+* 统计关卡开始
+```csharp
+String level = "Level" + 5;//level ,开始哪个关卡
+RiseSdk.Instance.UM_startLevel(level);
+```
+* 统计关卡失败
+```csharp
+String level = "Level" + 5); //level ,哪个关卡失败
+RiseSdk.Instance.UM_failLevel(level);
+```
+* 关卡结束
+```csharp
+String level = "Level" + (new Random().nextInt(30) + 10); //level,完成哪个关卡
+RiseSdk.Instance.UM_finishLevel(level);
+```
+* 游戏内付统计
+```csharp
+double money = 5.0; //内付的金额
+String itemName = "钻石"; //内付购买的商品名称
+int number = 10;//内付购买的商品数量
+double price = 99.0;//内付购买的商品价格
+RiseSdk.Instance.UM_pay(money,itemName,number,price);
+```
+* 购买道具统计
+```csharp
+String itemName = "血瓶"; //购买游戏中道具名称
+int number = 10;//购买道具数量
+double price = 99.0;//购买道具价格
+RiseSdk.Instance.UM_buy(itemName,count,price); 
+```
+* 使用道具统计
+```csharp
+String itemName = "血瓶"; //使用道具名称
+int count = 10;//使用道具数量
+double price = 99.0;//使用道具价格
+RiseSdk.Instance.UM_use(itemName,count,price); 
+```
+* 额外奖励统计
+```csharp
+String itemName = "血瓶"; //奖励道具名称
+int number = 5;//奖励道具数量
+double price = 99.0;//奖励道具价格
+int trigger = 1;//触发奖励的事件, 取值在 1~10 之间，“1”已经被预先定义为“系统奖励”， 2~10 需要在网站设置含义
+RiseSdk.Instance.UM_bonus(itemName,number,price,trigger);
 
 // get server data for your game if needed
 string data = RiseSdk.Instance.GetExtraData ();
@@ -342,3 +422,84 @@ if (RiseSdk.Instance.HasApp(appPackageName)) {
 ## 9, Congratulations, done.
 when you run your game in your android phone or emulator, your will see some toast information like this:
 <center>![toast](assets/risesdk-unity-1fcfc.png)</center>
+
+** 我们额外还提供以下接口：
+* 判断网络是否连接
+```csharp
+boolean isNetworkConnected = RiseSdk.Instance.isNetworkConnected();
+```
+* 弹出android原生toast提示
+```csharp
+String messageContent="我是toast消息内容";
+RiseSdk.Instance.toast(messageContent);
+```
+* 弹出android原生alert dialog
+```csharp
+String title = "我是标题";
+String message = "我是内容";
+RiseSdk.Instance.alert(title,message);
+```
+* 游戏，应用程序退出
+```csharp
+AndroidSdk.onQuit();
+```
+* 缓存文件
+```csharp
+String url = "http://xxxx.png";//文件下载连接
+String path = RiseSdk.Instance.cacheUrl(url); //返回保存文件的绝对路径（/sdcard/0/.cache/383292918283483291）
+```
+
+* 如果你想缓存一个url并且让系统给你一个回调，你应该这样做：
+* 定义回调函数
+```csharp
+const int TAG_PNG = 1;
+void OnCacheUrlResult(bool success, int tag, string path) {
+  switch(tag) {
+    case TAG_PNG:
+      Debug.Log ("download png result, success ? " + success + ", path: " + path);
+    break;
+  }
+}
+
+// 在初始化的时候注册你的回调函数
+ void Awake () {
+  ...
+  RiseSdkListener.OnCacheUrlResult -= OnCacheUrlResult;
+  RiseSdkListener.OnCacheUrlResult += OnCacheUrlResult;
+  ...
+}
+```
+
+* 如果你想在玩家对广告进行操作后做处理，你可以添加广告事件的监听：
+* 定义回调函数
+```csharp
+void OnAdResult (RiseSdk.AdEventType type) {
+  switch(type) {
+    case RiseSdk.AdEventType.FullAdClosed: //大屏广告被关闭
+      Debug.Log ("OnAdResult, FullAdClosed");
+    break;
+	case RiseSdk.AdEventType.FullAdClicked: //大屏广告被点击
+      Debug.Log ("OnAdResult, FullAdClicked");
+    break;
+	case RiseSdk.AdEventType.VideoAdClosed: //视频广告被关闭
+	  Debug.Log ("OnAdResult, VideoAdClosed");
+    break;
+	case RiseSdk.AdEventType.BannerAdClicked: //bannner广告被点击
+	  Debug.Log ("OnAdResult, BannerAdClicked");
+    break;
+	case RiseSdk.AdEventType.CrossAdClicked: //交叉推广广告被点击
+	  Debug.Log ("OnAdResult, CrossAdClicked");
+    break;
+  }
+}
+
+// 在初始化的时候注册你的回调函数
+ void Awake () {
+  ...
+  RiseSdkListener.OnAdEvent -= OnAdResult;
+  RiseSdkListener.OnAdEvent += OnAdResult;
+  ...
+}
+```
+
+## 10，RiseSdkApi中有对接口的详细注释，如您看过RiseSdkApi后还有不明白之处，可发送邮件到appdev@ivymobile.com，我们会尽快给您回复！谢谢！

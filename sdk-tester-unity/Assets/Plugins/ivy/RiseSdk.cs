@@ -130,6 +130,32 @@ public sealed class RiseSdk {
     /// 获取应用的包名参数常量
     /// </summary>
     public const int CONFIG_KEY_PACKAGE_NAME = 10;
+
+    /// <summary>
+    /// 广告事件类型
+    /// </summary>
+    public enum AdEventType:int {
+        /// <summary>
+        /// 大屏广告被关闭
+        /// </summary>
+        FullAdClosed,
+        /// <summary>
+        /// 大屏广告被点击
+        /// </summary>
+        FullAdClicked,
+        /// <summary>
+        /// 视频广告被关闭
+        /// </summary>
+        VideoAdClosed,
+        /// <summary>
+        /// bannner广告被点击
+        /// </summary>
+        BannerAdClicked,
+        /// <summary>
+        /// 交叉推广广告被点击
+        /// </summary>
+        CrossAdClicked
+    }
     /*
 	public const int SERVER_RESULT_RECEIVE_GAME_DATA = 1;
 	public const int SERVER_RESULT_SAVE_USER_DATA = 2;
@@ -139,7 +165,7 @@ public sealed class RiseSdk {
 	*/
 
     /// <summary>
-    /// 配置计费系统的可用状态，SDK自动调用
+    /// 配置计费系统的可用状态，SDK自动调用。
     /// </summary>
     /// <param name="valid">要配置的状态</param>
     public void SetPaymentSystemValid (bool valid) {
@@ -147,7 +173,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 单例对象
+    /// 单例对象。
     /// </summary>
     public static RiseSdk Instance {
         get {
@@ -161,7 +187,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 初始化SDK，最好在第一个场景加载时初始化
+    /// 初始化SDK，最好在第一个场景加载时初始化。
     /// </summary>
     public void Init () {
         if (_class != null)
@@ -186,7 +212,13 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 显示bannner广告
+    /// 显示bannner广告。
+    /// 如果有需要可以添加bannner广告被点击的回调：
+    /// RiseSdkListener.OnAdEvent += 
+    /// (
+    /// RiseSdk.AdEventType type//广告事件类型，需要判断是否为RiseSdk.AdEventType.BannerAdClicked
+    /// ) 
+    /// => {to do something};
     /// </summary>
     /// <param name="tag">bannner广告tag</param>
     /// <param name="pos">bannner显示的位置，如：POS_BANNER_MIDDLE_BOTTOM为在底部居中显示</param>
@@ -199,7 +231,13 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 显示bannner广告
+    /// 显示bannner广告。
+    /// 如果有需要可以添加bannner广告被点击的回调：
+    /// RiseSdkListener.OnAdEvent += 
+    /// (
+    /// RiseSdk.AdEventType type//广告事件类型，需要判断是否为RiseSdk.AdEventType.BannerAdClicked
+    /// ) 
+    /// => {to do something};
     /// </summary>
     /// <param name="pos">bannner显示的位置，如：POS_BANNER_MIDDLE_BOTTOM为在底部居中显示</param>
     public void ShowBanner (int pos) {
@@ -211,7 +249,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 关闭广告
+    /// 关闭banner广告。
     /// </summary>
     public void CloseBanner () {
 #if UNITY_EDITOR
@@ -222,7 +260,15 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 显示大屏广告
+    /// 显示大屏广告。
+    /// 如果有需要可以添加大屏广告被点击和被关闭的回调：
+    /// RiseSdkListener.OnAdEvent += 
+    /// (
+    /// RiseSdk.AdEventType type//广告事件类型，需要判断是否为
+    /// //RiseSdk.AdEventType.FullAdClosed（大屏广告被关闭）
+    /// //或RiseSdk.AdEventType.FullAdClicked（大屏广告被点击）
+    /// ) 
+    /// => {to do something};
     /// </summary>
     /// <param name="tag">大屏广告弹出时机，如：M_PAUSE为游戏暂停时弹出</param>
     public void ShowAd (String tag) {
@@ -234,7 +280,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 更多游戏接口，跳到推广的游戏列表界面
+    /// 更多游戏接口，跳到推广的游戏列表界面。
     /// </summary>
     public void ShowMore () {
 #if UNITY_EDITOR
@@ -245,7 +291,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 检测视频广告是否加载完成
+    /// 检测视频广告是否加载完成。
     /// </summary>
     /// <returns>true完成，false失败</returns>
     public bool HasRewardAd () {
@@ -258,7 +304,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 检测视频广告是否加载完成
+    /// 检测视频广告是否加载完成。
     /// </summary>
     /// <param name="tag">视频广告tag</param>
     /// <returns>true完成，false失败</returns>
@@ -272,7 +318,20 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 显示视频广告
+    /// 显示视频广告。
+    /// 该接口的回调方法为：
+    /// RiseSdkListener.OnRewardAdEvent += 
+    /// (
+    /// bool success,//是否成功显示视频广告
+    /// int rewardId//视频广告调用时机
+    /// ) 
+    /// => {to do something};
+    /// 如果有需要可以添加视频广告被关闭的回调：
+    /// RiseSdkListener.OnAdEvent += 
+    /// (
+    /// RiseSdk.AdEventType type//广告事件类型，需要判断是否为RiseSdk.AdEventType.VideoAdClosed
+    /// ) 
+    /// => {to do something};
     /// </summary>
     /// <param name="rewardId">客户端自己配置的视频广告调用时机</param>
     public void ShowRewardAd (int rewardId) {
@@ -284,7 +343,14 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 显示视频广告
+    /// 显示视频广告。
+    /// 该接口的回调方法为：
+    /// RiseSdkListener.OnRewardAdEvent += 
+    /// (
+    /// bool success,//是否成功显示视频广告
+    /// int rewardId//视频广告调用时机
+    /// ) 
+    /// => {to do something};
     /// </summary>
     /// <param name="tag">视频广告tag</param>
     /// <param name="rewardId">客户端自己配置的视频广告调用时机</param>
@@ -297,7 +363,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 游戏获得焦点，SDK自动调用
+    /// 游戏获得焦点，SDK自动调用。
     /// </summary>
     public void OnResume () {
         if (_class != null)
@@ -305,7 +371,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 游戏失去焦点，SDK自动调用
+    /// 游戏失去焦点，SDK自动调用。
     /// </summary>
     public void OnPause () {
         if (_class != null)
@@ -313,7 +379,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 游戏打开，SDK自动调用
+    /// 游戏打开，SDK自动调用。
     /// </summary>
     public void OnStart () {
         if (_class != null)
@@ -321,7 +387,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 游戏退出，SDK自动调用
+    /// 游戏退出，SDK自动调用。
     /// </summary>
     public void OnStop () {
         if (_class != null)
@@ -329,7 +395,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 游戏销毁，SDK自动调用
+    /// 游戏销毁，SDK自动调用。
     /// </summary>
     public void OnDestroy () {
         if (_class != null)
@@ -337,7 +403,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 需要退出游戏时调用
+    /// 需要退出游戏时调用。
     /// </summary>
     public void OnExit () {
         if (_class != null)
@@ -345,7 +411,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 检测计费点是否存在
+    /// 检测计费点是否存在。
     /// </summary>
     /// <param name="billingId">计费点id</param>
     public void HasPaid (int billingId) {
@@ -355,7 +421,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 检测计费是否可用
+    /// 检测计费是否可用。
     /// </summary>
     /// <returns>true可用，false不可用</returns>
     public bool IsPayEnabled () {
@@ -363,14 +429,14 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 支付接口，对计费点进行支付
+    /// 支付接口，对计费点进行支付。
     /// 该接口的回调方法为：
     /// RiseSdkListener.OnPaymentEvent += 
     /// (
     /// int result,//计费结果，如：PAYMENT_RESULT_SUCCESS为计费成功
     /// int billId//计费点id
     /// ) 
-    /// => {//to do something};
+    /// => {to do something};
     /// </summary>
     /// <param name="billingId">计费点id</param>
     public void Pay (int billingId) {
@@ -383,7 +449,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 分享游戏
+    /// 分享游戏。
     /// </summary>
     public void Share () {
 #if UNITY_EDITOR
@@ -395,7 +461,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 获取自定义数据，该接口最好在SDK初始化完成后3秒或以上再调用
+    /// 获取自定义json数据，该接口最好在SDK初始化完成后3秒或以上再调用。
     /// </summary>
     /// <returns>返回后台配置的自定义json数据，如：{"x":"x", "x":8, "x":{x}, "x":[x]}</returns>
     public string GetExtraData () {
@@ -405,7 +471,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 统计数据到GoooglePlay后台
+    /// 统计数据到Google Analytics。
     /// </summary>
     /// <param name="category">需要统计的数据分类名称</param>
     /// <param name="action">需要统计的数据属性名称</param>
@@ -421,7 +487,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 跳转到游戏评分界面
+    /// 跳转到游戏评分界面。
     /// </summary>
     public void Rate () {
 #if UNITY_EDITOR
@@ -433,7 +499,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 显示Native广告，暂时不对外开放
+    /// 显示Native广告，暂时不对外开放。
     /// </summary>
     /// <param name="tag"></param>
     /// <param name="yPercent"></param>
@@ -447,7 +513,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 隐藏Native广告
+    /// 隐藏Native广告。
     /// </summary>
     /// <param name="tag">广告tag</param>
     public void HideNativeAd (string tag) {
@@ -457,7 +523,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 检测Native广告是否加载成功
+    /// 检测Native广告是否加载成功。
     /// </summary>
     /// <param name="tag">广告tag</param>
     /// <returns>true成功， false失败</returns>
@@ -470,7 +536,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 登陆faceboook账户
+    /// 登陆faceboook账户。
     /// 该接口的回调方法为：
     /// RiseSdkListener.OnSNSEvent += 
     /// (
@@ -478,7 +544,7 @@ public sealed class RiseSdk {
     /// int eventType,//事件类型，需要判断是否为SNS_EVENT_LOGIN
     /// int data//无数据返回
     /// ) 
-    /// => {//to do something};
+    /// => {to do something};
     /// </summary>
     public void Login () {
 #if UNITY_EDITOR
@@ -490,7 +556,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 检测faceboook是否已经登陆
+    /// 检测faceboook是否已经登陆。
     /// </summary>
     /// <returns>true已登陆， false未登陆</returns>
     public bool IsLogin () {
@@ -502,7 +568,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 登出faceboook账户
+    /// 登出faceboook账户。
     /// </summary>
     public void Logout () {
 #if UNITY_EDITOR
@@ -514,7 +580,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 邀请faceboook好友安装游戏
+    /// 邀请faceboook好友安装游戏。
     /// 该接口的回调方法为：
     /// RiseSdkListener.OnSNSEvent += 
     /// (
@@ -522,7 +588,7 @@ public sealed class RiseSdk {
     /// int eventType,//事件类型，这里需要判断是否为SNS_EVENT_INVITE
     /// int data//无数据返回
     /// ) 
-    /// => {//to do something};
+    /// => {to do something};
     /// </summary>
     public void Invite () {
 #if UNITY_EDITOR
@@ -534,7 +600,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 向faceboook好友发起挑战，
+    /// 向faceboook好友发起挑战。
     /// 该接口的回调方法为：
     /// RiseSdkListener.OnSNSEvent += 
     /// (
@@ -542,7 +608,7 @@ public sealed class RiseSdk {
     /// int eventType,//事件类型，这里需要判断是否为SNS_EVENT_CHALLENGE
     /// int data//成功挑战的好友数量
     /// ) 
-    /// => {//to do something};
+    /// => {to do something};
     /// </summary>
     /// <param name="title">挑战标题</param>
     /// <param name="message">挑战内容</param>
@@ -556,7 +622,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 获取我的faceboook个人信息
+    /// 获取我的faceboook个人信息。
     /// </summary>
     /// <returns>
     /// 返回json数据，格式为：
@@ -578,7 +644,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 获取faceook朋友信息列表
+    /// 获取faceook朋友信息列表。
     /// </summary>
     /// <returns>
     /// 返回json数据，格式为：
@@ -612,7 +678,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// facebook点赞接口
+    /// facebook点赞接口。
     /// 该接口的回调方法为：
     /// RiseSdkListener.OnSNSEvent += 
     /// (
@@ -620,7 +686,7 @@ public sealed class RiseSdk {
     /// int eventType,//事件类型，这里需要判断是否为SNS_EVENT_LIKE
     /// int data//无数据返回
     /// ) 
-    /// => {//to do something};
+    /// => {to do something};
     /// </summary>
     public void Like () {
 #if UNITY_EDITOR
@@ -632,7 +698,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 获取后台配置信息和Unity无法直接获取的一些信息
+    /// 获取后台配置信息和Unity无法直接获取的一些信息。
     /// </summary>
     /// <param name="configId">需要获取的信息类型，如：CONFIG_KEY_VERSION_CODE为获取游戏的版本号</param>
     /// <returns>返回请求的信息</returns>
@@ -648,7 +714,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 下载文件
+    /// 下载文件，该接口无回调方法，直接返回文件保存路径。
     /// </summary>
     /// <param name="url">需要下载的文件的url地址</param>
     /// <returns>返回该文件保存在本地的绝对路径</returns>
@@ -664,7 +730,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 下载文件
+    /// 下载文件。
     /// 该接口的回调方法为：
     /// RiseSdkListener.OnCacheUrlResult += 
     /// (
@@ -672,10 +738,10 @@ public sealed class RiseSdk {
     /// int tag,//客户端添加的tag
     /// string data//文件保存在本地的绝对路径
     /// ) 
-    /// => {//to do something};
+    /// => {to do something};
     /// </summary>
     /// <param name="tag">客户端添加的tag</param>
-    /// <param name="url">返回该文件保存在本地的绝对路径</param>
+    /// <param name="url">需要下载的文件的url地址</param>
     public void CacheUrl (int tag, string url) {
 #if UNITY_EDITOR
         RiseAd.Instance.Toast ("CacheUrl, tag: " + tag + ", url: " + url);
@@ -686,7 +752,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 检测本机是否安装了app
+    /// 检测本机是否安装了app。
     /// </summary>
     /// <param name="packageName">需要检测的app的包名</param>
     /// <returns>true已安装， false未安装</returns>
@@ -699,7 +765,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 打开本机上已安装的app
+    /// 打开本机上已安装的app。
     /// </summary>
     /// <param name="packageName">需要打开的app的包名</param>
     public void LaunchApp (string packageName) {
@@ -709,7 +775,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 前往商店下载app
+    /// 前往商店下载app。
     /// </summary>
     /// <param name="packageName">需要下载的app的包名</param>
     public void GetApp (string packageName) {
@@ -719,7 +785,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 获取指定app的后台配置信息和Unity无法直接获取的一些信息
+    /// 获取指定app的后台配置信息和Unity无法直接获取的一些信息。
     /// </summary>
     /// <param name="packageName"></param>
     /// <param name="configId">需要获取的信息类型，如：CONFIG_KEY_VERSION_CODE为获取游戏的版本号</param>
@@ -736,7 +802,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 系统的确认对话框
+    /// 系统的确认对话框。
     /// </summary>
     /// <param name="title">对话框标题</param>
     /// <param name="message">对话框内容</param>
@@ -750,7 +816,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 系统的toast提示信息
+    /// 系统的toast提示信息。
     /// </summary>
     /// <param name="message">提示内容</param>
     public void Toast (string message) {
@@ -763,7 +829,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 检测网络是否可用
+    /// 检测网络是否可用。
     /// </summary>
     /// <returns>true可用， false不可用</returns>
     public bool IsNetworkConnected () {
@@ -775,7 +841,7 @@ public sealed class RiseSdk {
 
     #region Umeng
     /// <summary>
-    /// 友盟统计，设置玩家等级
+    /// 友盟统计，设置玩家等级。
     /// </summary>
     /// <param name="level">等级</param>
     public void UM_setPlayerLevel (int level) {
@@ -788,7 +854,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，自定义事件统计
+    /// 友盟统计，自定义事件统计。
     /// </summary>
     /// <param name="eventId">事件id，要与在友盟后台添加的保持一致</param>
     public void UM_onEvent (String eventId) {
@@ -801,7 +867,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，自定义事件统计
+    /// 友盟统计，自定义事件统计。
     /// </summary>
     /// <param name="eventId">事件id，要与在友盟后台添加的保持一致</param>
     /// <param name="eventLabel">事件标签</param>
@@ -815,7 +881,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，自定义事件统计
+    /// 友盟统计，自定义事件统计。
     /// </summary>
     /// <param name="eventId">事件id，要与在友盟后台添加的保持一致</param>
     /// <param name="mapStr">要统计的事件标签的键值对</param>
@@ -837,7 +903,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，进入某页面
+    /// 友盟统计，进入某页面。
     /// </summary>
     /// <param name="pageName">页面名称</param>
     public void UM_onPageStart (String pageName) {
@@ -850,7 +916,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，离开某页面
+    /// 友盟统计，离开某页面。
     /// </summary>
     /// <param name="pageName">页面名称</param>
     public void UM_onPageEnd (String pageName) {
@@ -863,7 +929,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，关卡开始
+    /// 友盟统计，关卡开始。
     /// </summary>
     /// <param name="level">关卡名称</param>
     public void UM_startLevel (String level) {
@@ -876,7 +942,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，关卡失败
+    /// 友盟统计，关卡失败。
     /// </summary>
     /// <param name="level">关卡名称</param>
     public void UM_failLevel (String level) {
@@ -889,7 +955,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，关卡胜利或结束
+    /// 友盟统计，关卡胜利或结束。
     /// </summary>
     /// <param name="level">关卡名称</param>
     public void UM_finishLevel (String level) {
@@ -902,7 +968,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，游戏内付统计
+    /// 友盟统计，游戏内付统计。
     /// </summary>
     /// <param name="money">内付的金额</param>
     /// <param name="itemName">内付购买的商品名称</param>
@@ -929,7 +995,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，购买道具统计
+    /// 友盟统计，购买道具统计。
     /// </summary>
     /// <param name="itemName">购买游戏中道具名称</param>
     /// <param name="count">购买道具数量</param>
@@ -944,7 +1010,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，使用道具统计
+    /// 友盟统计，使用道具统计。
     /// </summary>
     /// <param name="itemName">使用道具名称</param>
     /// <param name="number">使用道具数量</param>
@@ -959,7 +1025,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 友盟统计，额外奖励统计
+    /// 友盟统计，额外奖励统计。
     /// </summary>
     /// <param name="itemName">奖励道具名称</param>
     /// <param name="number">奖励道具数量</param>

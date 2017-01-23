@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HelpTOC>
+
+  <HelpTOCNode Id="dd684532-f4ff-4f61-8ccd-7113573e5745" Title="( Default Namespace )" Url="html/96f28dfd-2c23-c332-ac2f-6930f1f93bf9.htm">
+    <HelpTOCNode Id="c47f01ac-b759-4165-8ae1-1cad65ba8b38" Title="RiseSdk Class" Url="html/71d8ba3a-ced0-481e-fa71-d3e9026c4e3e.htm">
+      <HelpTOCNode Id="53fc8746-5024-448e-afc1-45a8baeec54a" Title="RiseSdk Fields" Url="html/89ab10ff-c005-de18-4ed2-6ec0fb8c1704.htm">
+        <HelpTOCNode Title="CONFIG_KEY_API_VERSION Field" Url="html/c08f0d05-5f31-fd84-9371-879947c759a7.htm" />
+        <HelpTOCNode Title="CONFIG_KEY_APP_ID Field" Url="html/b1e728cc-1fc1-bcc0-1066-5147d068d3fe.htm" />
+        <HelpTOCNode Title="CONFIG_KEY_COUNTRY Field" Url="html/cfb46dcb-6d61-3863-38cd-ac95983c012c.htm" />
+        <HelpTOCNode Title="CONFIG_KEY_LANGUAGE Field" Url="html/b365522f-2ee1-0a1b-bcf0-410c51073a0c.htm" />
+        <HelpTOCNode Title="CONFIG_KEY_LEADER_BOARD_URL Field" Url="html/09d3b59e-e3f9-1db7-0f1f-a4542918b21a.htm" />
+        <HelpTOCNode Title="CONFIG_KEY_PACKAGE_NAME Field" Url="html/d59cd5a4-9e77-bdeb-9d6f-d5460f4ababa.htm" />
+        <HelpTOCNode Title="CONFIG_KEY_SCREEN_HEIGHT Field" Url="html/be60c2b5-56a7-b6ad-0c33-ed78a625a258.htm" />
+        <HelpTOCNode Title="CONFIG_KEY_SCREEN_WIDTH Field" Url="html/6ea340bd-8eb5-2ec1-c96b-7076abc07ed0.htm" />
+        <HelpTOCNode Title="CONFIG_KEY_VERSION_CODE Field" Url="html/de15b443-0d0c-de86-78c3-527c61c03823.htm" />
+        <HelpTOCNode Title="CONFIG_KEY_VERSION_NAME Field" Url="html/e09aa8b6-e51e-8417-cc57-c3237db8cf5a.htm" />
+        <HelpTOCNode Title="M_CUSTOM Field" Url="html/e331cf56-fd8b-353e-6e10-205c1d007a6b.htm" />
+        <HelpTOCNode Title="M_PASSLEVEL Field" Url="html/d2c91679-bc02-2dfb-54db-dd939a6c13de.htm" />
+        <HelpTOCNode Title="M_PAUSE Field" Url="html/37e7af29-e440-de54-6b77-a6a1f0ac550c.htm" />
+        <HelpTOCNode Title="M_START Field" Url="html/8ba529b3-5b19-1ce3-47b0-06be875f473b.htm" />
+        <HelpTOCNode Title="PAYMENT_RESULT_CANCEL Field" Url="html/87c3fbd8-57de-0b37-04e2-12e432b1a3e8.htm" />
+        <HelpTOCNode Title="PAYMENT_RESULT_FAILS Field" Url="html/708c9867-f88f-3299-a5f3-f09aa797a22b.htm" />
+        <HelpTOCNode Title="PAYMENT_RESULT_SUCCESS Field" Url="html/d1ffd35e-6f98-b929-decc-12e72b3ef937.htm" />
+        <HelpTOCNode Title="POS_BANNER_LEFT_BOTTOM Field" Url="html/7f7c8322-3607-767f-3903-3e47046f9f3e.htm" />
+        <HelpTOCNode Title="POS_BANNER_LEFT_TOP Field" Url="html/5e01c7ce-6038-b99e-7480-c2da960f8fee.htm" />
+        <HelpTOCNode Title="POS_BANNER_MIDDLE_BOTTOM Field" Url="html/d4e995ac-0ed9-26b3-fb1e-3b5c59c3fefc.htm" />
+        <HelpTOCNode Title="POS_BANNER_MIDDLE_MIDDLE Field" Url="html/73b29555-27ef-9f40-1c5c-74ad4a1e82b1.htm" />
+        <HelpTOCNode Title="POS_BANNER_MIDDLE_TOP Field" Url="html/701d395f-8911-5c1e-7f92-9360b67f43dd.htm" />
+        <HelpTOCNode Title="POS_BANNER_RIGHT_BOTTOM Field" Url="html/7e20e998-6e29-731b-7cd9-04592092e054.htm" />
+        <HelpTOCNode Title="POS_BANNER_RIGHT_TOP Field" Url="html/0072101d-3300-86bd-21a3-a0cddd48e090.htm" />
+        <HelpTOCNode Title="SNS_EVENT_CHALLENGE Field" Url="html/50570f3b-5552-9204-393b-3d7b15e51397.htm" />
+        <HelpTOCNode Title="SNS_EVENT_INVITE Field" Url="html/5d6a43ee-2817-c5f8-844a-495bd3aecc40.htm" />
+        <HelpTOCNode Title="SNS_EVENT_LIKE Field" Url="html/0fd56683-3f17-0c89-f3ea-1929133168da.htm" />
+        <HelpTOCNode Title="SNS_EVENT_LOGIN Field" Url="html/7ad980a6-6ae5-ac4e-8f66-290f5f734213.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="05b3372d-a748-430a-aff3-4f7a60655591" Title="RiseSdk Methods" Url="html/4d155616-e6ae-0eb3-c622-37e591395c16.htm">
+        <HelpTOCNode Title="Alert Method " Url="html/d2d7be06-b5c6-42c3-dd7c-0de7d257cf65.htm" />
+        <HelpTOCNode Id="8f336fe7-5289-436f-9e7f-4d07487d7c4e" Title="CacheUrl Method " Url="html/a402b558-9307-8a48-4fc8-7e0dc9454c3e.htm">
+          <HelpTOCNode Title="CacheUrl Method (String)" Url="html/b97ab7e6-d5fb-486d-499b-83e041d9b237.htm" />
+          <HelpTOCNode Title="CacheUrl Method (Int32, String)" Url="html/bc38397b-6352-131d-60cd-78e349bf7c10.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="Challenge Method " Url="html/2b63af22-0198-5c27-cc6f-d9afc0cdac70.htm" />
+        <HelpTOCNode Title="CloseBanner Method " Url="html/64291f91-963e-20c9-71e6-a8fd3a12c458.htm" />
+        <HelpTOCNode Title="GetApp Method " Url="html/09f7ae10-7a65-f25b-c039-edade14fd5b5.htm" />
+        <HelpTOCNode Id="dd16d81c-ea28-4c28-b408-ee191a39d7b1" Title="GetConfig Method " Url="html/d6c331a6-b5c3-bfb4-0dec-b84515026604.htm">
+          <HelpTOCNode Title="GetConfig Method (Int32)" Url="html/3d9b45bb-9fd7-5c9d-b5c0-0775e04a3b27.htm" />
+          <HelpTOCNode Title="GetConfig Method (String, Int32)" Url="html/126e7097-eb87-5b4c-016e-bcda325ee68c.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="GetExtraData Method " Url="html/e3f4b367-2827-f2b1-abc2-94c32e851536.htm" />
+        <HelpTOCNode Title="GetFriends Method " Url="html/2b42e918-fce9-c217-8a71-37d94d293757.htm" />
+        <HelpTOCNode Title="HasApp Method " Url="html/4599e34d-5a7a-f4bf-875f-5cd77897e045.htm" />
+        <HelpTOCNode Title="HasNativeAd Method " Url="html/84e4f0be-cd54-eb0a-938f-7a50c2f6b94b.htm" />
+        <HelpTOCNode Title="HasPaid Method " Url="html/2084b708-756c-7698-a166-394b71161384.htm" />
+        <HelpTOCNode Id="530bee29-8550-4b36-a04d-af3b6edef2c0" Title="HasRewardAd Method " Url="html/0938da11-4f85-beb8-d53d-54e537c34481.htm">
+          <HelpTOCNode Title="HasRewardAd Method " Url="html/24b9c312-997f-f77d-5916-5dfceab99f0f.htm" />
+          <HelpTOCNode Title="HasRewardAd Method (String)" Url="html/2170b0e6-e416-c44e-d639-124f8ed416f9.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="HideNativeAd Method " Url="html/245af6db-40d1-ee03-385e-01f0a6a86484.htm" />
+        <HelpTOCNode Title="Init Method " Url="html/342330a3-f99c-1074-3a4f-302f9ea396eb.htm" />
+        <HelpTOCNode Title="Invite Method " Url="html/03083d17-4dfd-a461-0188-e650ec53359d.htm" />
+        <HelpTOCNode Title="IsLogin Method " Url="html/63df6e74-122e-6430-69b0-9457a50186e9.htm" />
+        <HelpTOCNode Title="IsNetworkConnected Method " Url="html/be286a35-3873-6ca1-5730-2e1f48579c5b.htm" />
+        <HelpTOCNode Title="IsPayEnabled Method " Url="html/a941563c-6859-1af4-16b8-cf1308373769.htm" />
+        <HelpTOCNode Title="LaunchApp Method " Url="html/37d1731e-570c-d2f6-4779-f6670a5b99a5.htm" />
+        <HelpTOCNode Title="Like Method " Url="html/4b84e365-fae0-ca50-9090-b77e0fa0a715.htm" />
+        <HelpTOCNode Title="Login Method " Url="html/90984705-7797-0440-63d3-57002abc9c11.htm" />
+        <HelpTOCNode Title="Logout Method " Url="html/154ecfe0-3eac-f169-43c3-55ca19b6fbb8.htm" />
+        <HelpTOCNode Title="Me Method " Url="html/b933f2e7-102e-7509-3ac4-34e024ec6695.htm" />
+        <HelpTOCNode Title="OnDestroy Method " Url="html/40825c6e-ab7b-7196-d1e3-20a77a023a6c.htm" />
+        <HelpTOCNode Title="OnExit Method " Url="html/f46b60ec-df1f-0bde-534f-e3b576232ad9.htm" />
+        <HelpTOCNode Title="OnPause Method " Url="html/50a1856e-bea6-5a0b-38fc-cea8bb047fd8.htm" />
+        <HelpTOCNode Title="OnResume Method " Url="html/0d7a4f53-c91c-0fb7-470a-09b9953060b5.htm" />
+        <HelpTOCNode Title="OnStart Method " Url="html/6cd9b214-7d61-89e4-f872-d4a05a113e5e.htm" />
+        <HelpTOCNode Title="OnStop Method " Url="html/9ebf4618-c3e2-4482-a0b5-a3f3c2e15c08.htm" />
+        <HelpTOCNode Title="Pay Method " Url="html/da840f82-2321-dff0-a5cf-661681045196.htm" />
+        <HelpTOCNode Title="Rate Method " Url="html/6da66c67-1431-88b0-ffea-142fe6bf5475.htm" />
+        <HelpTOCNode Title="SetPaymentSystemValid Method " Url="html/4e19617c-ec63-a926-ef94-6eb1219a21fc.htm" />
+        <HelpTOCNode Title="Share Method " Url="html/b289f174-d779-cff1-4882-a1dc26a77cce.htm" />
+        <HelpTOCNode Title="ShowAd Method " Url="html/f4ead105-602b-9dce-e81d-0e46ca439e7b.htm" />
+        <HelpTOCNode Id="a2a9f057-de1e-48ed-a596-8b22e74b415e" Title="ShowBanner Method " Url="html/5167aefc-a925-cdc3-5743-c604c7f958d2.htm">
+          <HelpTOCNode Title="ShowBanner Method (Int32)" Url="html/6a8192e1-19e6-0e89-7ac9-55b07495995c.htm" />
+          <HelpTOCNode Title="ShowBanner Method (String, Int32)" Url="html/19c32427-0d37-d6f3-44d3-4b97f7d2e0fc.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="ShowMore Method " Url="html/ee7f3357-7018-1367-a64d-4ad55b58d21b.htm" />
+        <HelpTOCNode Title="ShowNativeAd Method " Url="html/56b68b60-a3fd-77a6-713a-87b09f7785ba.htm" />
+        <HelpTOCNode Id="7e7e77cd-cb4f-46f6-9383-a934f6b08952" Title="ShowRewardAd Method " Url="html/3f06679a-4a8f-02b4-0af1-c3f2f8410930.htm">
+          <HelpTOCNode Title="ShowRewardAd Method (Int32)" Url="html/5cb670f8-df8b-e753-4d87-274a07b583c5.htm" />
+          <HelpTOCNode Title="ShowRewardAd Method (String, Int32)" Url="html/cc528b33-b3fe-6528-b6bb-5f3d67b99822.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="Toast Method " Url="html/0ef93d7d-0b75-f75a-609f-21af6c9bcc20.htm" />
+        <HelpTOCNode Title="TrackEvent Method " Url="html/1ac43221-a96d-3daa-ad81-3702a666f389.htm" />
+        <HelpTOCNode Title="UM_bonus Method " Url="html/83ea3ead-5e19-7cda-2828-48cb01fd01be.htm" />
+        <HelpTOCNode Title="UM_buy Method " Url="html/d4a12861-8de8-5a3f-17ce-70314c19c1da.htm" />
+        <HelpTOCNode Title="UM_failLevel Method " Url="html/8aca47c7-5753-96a4-f302-b0315c3b891c.htm" />
+        <HelpTOCNode Title="UM_finishLevel Method " Url="html/607eb340-851d-eadb-4931-ad4ab6095ba7.htm" />
+        <HelpTOCNode Id="8a40258d-c035-406a-b9f6-20b9bfea49ba" Title="UM_onEvent Method " Url="html/5b0a00df-2a08-19c3-dff7-1284e61c6958.htm">
+          <HelpTOCNode Title="UM_onEvent Method (String)" Url="html/3a364714-773a-6a6a-8097-dafe3c570673.htm" />
+          <HelpTOCNode Title="UM_onEvent Method (String, String)" Url="html/4c886fac-f57f-762c-3f20-3aed185e5bed.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Title="UM_onEventValue Method " Url="html/5a06a204-916a-c4a7-7d5a-a8fff3877108.htm" />
+        <HelpTOCNode Title="UM_onPageEnd Method " Url="html/6607322d-c79e-222f-d995-793ba5d1e533.htm" />
+        <HelpTOCNode Title="UM_onPageStart Method " Url="html/77d476ea-726c-5b4e-6f7c-a4537f129724.htm" />
+        <HelpTOCNode Title="UM_pay Method " Url="html/7e581553-8cf7-9890-f7ae-6063bdde2862.htm" />
+        <HelpTOCNode Title="UM_setPlayerLevel Method " Url="html/06c8dcbe-9640-b31e-2dc9-c2cb8dc99d4b.htm" />
+        <HelpTOCNode Title="UM_startLevel Method " Url="html/a7e4dcd6-03a0-ae34-d16b-82f35dc10ab9.htm" />
+        <HelpTOCNode Title="UM_use Method " Url="html/efae015b-8d0e-9836-42a0-96ed1693eb3c.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="3dc9a052-64a8-457f-b30d-18e601b750c1" Title="RiseSdk Properties" Url="html/35b70f0e-dc2a-0ba6-371b-a8e12c8a5775.htm">
+        <HelpTOCNode Title="Instance Property " Url="html/73f0e796-f39f-b830-921e-648ac6bc9c2e.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Title="RiseSdk.AdEventType Enumeration" Url="html/deac8fba-354d-bcb0-e8ce-d80c98eb8e97.htm" />
+    <HelpTOCNode Id="6ffc0aaf-105f-4eea-ba5c-78fd990dd3cb" Title="RiseSdkListener Class" Url="html/011eb43e-7fa0-f208-4edc-d27d38ddddf8.htm">
+      <HelpTOCNode Title="RiseSdkListener Constructor " Url="html/8bbca26d-8b24-815f-682f-3bbac200759d.htm" />
+      <HelpTOCNode Id="b132c527-a046-4485-9cbf-8a35692c1079" Title="RiseSdkListener Methods" Url="html/15bbdb4e-1cb2-1fce-ae2c-038bf580720c.htm">
+        <HelpTOCNode Title="onBannerAdClicked Method " Url="html/63521509-a40e-1634-54ea-fdad39de3d52.htm" />
+        <HelpTOCNode Title="onCacheUrlResult Method " Url="html/e3200a73-defb-2fb2-b65f-2912444c6228.htm" />
+        <HelpTOCNode Title="onCrossAdClicked Method " Url="html/02b34e8b-10b3-4f7c-ea34-eb4524cb6062.htm" />
+        <HelpTOCNode Title="onFullAdClicked Method " Url="html/b4d29cea-4bc9-8181-64c3-98ca7684905f.htm" />
+        <HelpTOCNode Title="onFullAdClosed Method " Url="html/73a14c90-3718-c618-73f2-ff14ce2cc9fe.htm" />
+        <HelpTOCNode Title="onLoadFailure Method " Url="html/9ea33943-480e-262a-45bf-024d7dc109ac.htm" />
+        <HelpTOCNode Title="onLoadSuccess Method " Url="html/1efbfe46-1fb8-1edd-3535-6f6cd5614c12.htm" />
+        <HelpTOCNode Title="onPaymentCanceled Method " Url="html/1047585f-b2fc-4a02-3c1e-8a26f7cb117c.htm" />
+        <HelpTOCNode Title="onPaymentFail Method " Url="html/982e9c72-6e8e-a437-4a89-6aa9e3361c3b.htm" />
+        <HelpTOCNode Title="onPaymentSuccess Method " Url="html/368250d4-4fa7-bcc9-70db-33e77db690bd.htm" />
+        <HelpTOCNode Title="onPaymentSystemValid Method " Url="html/e7c0fb45-0e5f-0807-88ce-296b3c57e946.htm" />
+        <HelpTOCNode Title="onReceiveChallengeResult Method " Url="html/466b6400-270a-0110-d3e7-0ef8ab50a9f1.htm" />
+        <HelpTOCNode Title="onReceiveInviteResult Method " Url="html/f2d131d4-6470-17ab-de45-911f02965107.htm" />
+        <HelpTOCNode Title="onReceiveLikeResult Method " Url="html/0e49fe5a-b55b-8cbd-0a35-d80feca062ea.htm" />
+        <HelpTOCNode Title="onReceiveLoginResult Method " Url="html/14e21f6f-f04b-a25c-9184-2a96add98141.htm" />
+        <HelpTOCNode Title="onReceiveNotificationData Method " Url="html/42d8888b-919f-4938-776c-58376f60a7cf.htm" />
+        <HelpTOCNode Title="onReceiveReward Method " Url="html/571cf16a-b236-1642-dd1d-f47fe3db8431.htm" />
+        <HelpTOCNode Title="onReceiveServerExtra Method " Url="html/1948f274-f8b4-fdbe-c26e-e8edda5a5acc.htm" />
+        <HelpTOCNode Title="onServerResult Method " Url="html/1503cba5-8a25-a2f5-1141-f8f6694fef1c.htm" />
+        <HelpTOCNode Title="onSubmitFailure Method " Url="html/c7c3ce0e-a57b-d3a0-3067-ffca65e910af.htm" />
+        <HelpTOCNode Title="onSubmitSuccess Method " Url="html/95d1f27f-9717-2b09-e8c3-0a556f8629b2.htm" />
+        <HelpTOCNode Title="onVideoAdClosed Method " Url="html/54b360a6-2063-808b-ae1e-8675e485340f.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="2526f598-b831-4425-b019-6ed722d3bc75" Title="RiseSdkListener Properties" Url="html/186fc372-0187-3789-20a4-97a7d0f68a56.htm">
+        <HelpTOCNode Title="Instance Property " Url="html/d1502845-df43-4932-a5a3-b32c507b359c.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="a541e071-951a-4be7-9585-151ad9bfe04e" Title="RiseSdkListener Events" Url="html/f22710b6-c84b-35ec-e59e-75d59a977110.htm">
+        <HelpTOCNode Title="OnCacheUrlResult Event" Url="html/36b179a9-0b17-67a7-5306-f757f0f47c61.htm" />
+        <HelpTOCNode Title="OnLeaderBoardEvent Event" Url="html/9d4a3654-89bd-d4bc-70b9-6bc7d506a4b1.htm" />
+        <HelpTOCNode Title="OnPaymentEvent Event" Url="html/4b778346-ab30-51e6-960e-834900604ff6.htm" />
+        <HelpTOCNode Title="OnReceiveNotificationData Event" Url="html/8b6d3ee8-5702-a10e-dbfa-60c2620f2b08.htm" />
+        <HelpTOCNode Title="OnReceiveServerExtra Event" Url="html/84a2a9bb-f0f4-a80b-c772-976af788d5dc.htm" />
+        <HelpTOCNode Title="OnReceiveServerResult Event" Url="html/3f4db182-d330-e546-5c00-273408f07ec6.htm" />
+        <HelpTOCNode Title="OnRewardAdEvent Event" Url="html/9a04c2e1-5440-224f-b5f0-77ef843ffda0.htm" />
+        <HelpTOCNode Title="OnSNSEvent Event" Url="html/69e0986e-d057-9952-1147-d4b15a7a505d.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+</HelpTOC>
