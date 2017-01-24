@@ -3,7 +3,12 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+using UnityEngine.EventSystems;
+#endif
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 #endregion
 
 /// <summary>
@@ -224,7 +229,7 @@ public sealed class RiseSdk {
     /// <param name="pos">bannner显示的位置，如：POS_BANNER_MIDDLE_BOTTOM为在底部居中显示</param>
     public void ShowBanner (string tag, int pos) {
 #if UNITY_EDITOR
-        RiseAd.Instance.ShowBanner (tag, pos);
+        RiseEditorAd.EditorAdInstance.ShowBanner (tag, pos);
 #endif
         if (_class != null)
             _class.CallStatic ("showBanner", tag, pos);
@@ -242,7 +247,7 @@ public sealed class RiseSdk {
     /// <param name="pos">bannner显示的位置，如：POS_BANNER_MIDDLE_BOTTOM为在底部居中显示</param>
     public void ShowBanner (int pos) {
 #if UNITY_EDITOR
-        RiseAd.Instance.ShowBanner (pos);
+        RiseEditorAd.EditorAdInstance.ShowBanner (pos);
 #endif
         if (_class != null)
             _class.CallStatic ("showBanner", pos);
@@ -253,7 +258,7 @@ public sealed class RiseSdk {
     /// </summary>
     public void CloseBanner () {
 #if UNITY_EDITOR
-        RiseAd.Instance.CloseBanner ();
+        RiseEditorAd.EditorAdInstance.CloseBanner ();
 #endif
         if (_class != null)
             _class.CallStatic ("closeBanner");
@@ -273,7 +278,7 @@ public sealed class RiseSdk {
     /// <param name="tag">大屏广告弹出时机，如：M_PAUSE为游戏暂停时弹出</param>
     public void ShowAd (String tag) {
 #if UNITY_EDITOR
-        RiseAd.Instance.ShowAd (tag);
+        RiseEditorAd.EditorAdInstance.ShowAd (tag);
 #endif
         if (_class != null)
             _class.CallStatic ("showFullAd", tag);
@@ -284,7 +289,7 @@ public sealed class RiseSdk {
     /// </summary>
     public void ShowMore () {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("ShowMore");
+        RiseEditorAd.EditorAdInstance.Toast ("ShowMore");
 #endif
         if (_class != null)
             _class.CallStatic ("moreGame");
@@ -336,7 +341,7 @@ public sealed class RiseSdk {
     /// <param name="rewardId">客户端自己配置的视频广告调用时机</param>
     public void ShowRewardAd (int rewardId) {
 #if UNITY_EDITOR
-        RiseAd.Instance.ShowRewardAd (rewardId);
+        RiseEditorAd.EditorAdInstance.ShowRewardAd (rewardId);
 #endif
         if (_class != null)
             _class.CallStatic ("showRewardAd", rewardId);
@@ -356,7 +361,7 @@ public sealed class RiseSdk {
     /// <param name="rewardId">客户端自己配置的视频广告调用时机</param>
     public void ShowRewardAd (string tag, int rewardId) {
 #if UNITY_EDITOR
-        RiseAd.Instance.ShowRewardAd (tag, rewardId);
+        RiseEditorAd.EditorAdInstance.ShowRewardAd (tag, rewardId);
 #endif
         if (_class != null)
             _class.CallStatic ("showRewardAd", tag, rewardId);
@@ -441,7 +446,7 @@ public sealed class RiseSdk {
     /// <param name="billingId">计费点id</param>
     public void Pay (int billingId) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Pay (billingId);
+        RiseEditorAd.EditorAdInstance.Pay (billingId);
 #endif
         if (_class != null) {
             _class.CallStatic ("pay", billingId);
@@ -453,7 +458,7 @@ public sealed class RiseSdk {
     /// </summary>
     public void Share () {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Share");
+        RiseEditorAd.EditorAdInstance.Toast ("Share");
 #endif
         if (_class == null)
             return;
@@ -479,7 +484,7 @@ public sealed class RiseSdk {
     /// <param name="value">一般传0</param>
     public void TrackEvent (string category, string action, string label, int value) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Track: " + category + ", action: " + action + ", label: " + label + ", value: " + value);
+        RiseEditorAd.EditorAdInstance.Toast ("Track: " + category + ", action: " + action + ", label: " + label + ", value: " + value);
 #endif
         if (_class == null)
             return;
@@ -491,7 +496,7 @@ public sealed class RiseSdk {
     /// </summary>
     public void Rate () {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Rate");
+        RiseEditorAd.EditorAdInstance.Toast ("Rate");
 #endif
         if (_class == null)
             return;
@@ -505,7 +510,7 @@ public sealed class RiseSdk {
     /// <param name="yPercent"></param>
     public void ShowNativeAd (string tag, int yPercent) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("ShowNativeAd");
+        RiseEditorAd.EditorAdInstance.Toast ("ShowNativeAd");
 #endif
         if (_class != null) {
             _class.CallStatic ("showNative", tag, yPercent);
@@ -548,7 +553,7 @@ public sealed class RiseSdk {
     /// </summary>
     public void Login () {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Login");
+        RiseEditorAd.EditorAdInstance.Toast ("Login");
 #endif
         if (_class != null) {
             _class.CallStatic ("login");
@@ -572,7 +577,7 @@ public sealed class RiseSdk {
     /// </summary>
     public void Logout () {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Logout");
+        RiseEditorAd.EditorAdInstance.Toast ("Logout");
 #endif
         if (_class != null) {
             _class.CallStatic ("logout");
@@ -592,7 +597,7 @@ public sealed class RiseSdk {
     /// </summary>
     public void Invite () {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Invite");
+        RiseEditorAd.EditorAdInstance.Toast ("Invite");
 #endif
         if (_class != null) {
             _class.CallStatic ("invite");
@@ -614,7 +619,7 @@ public sealed class RiseSdk {
     /// <param name="message">挑战内容</param>
     public void Challenge (string title, string message) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Challenge, title: " + title + ", message: " + message);
+        RiseEditorAd.EditorAdInstance.Toast ("Challenge, title: " + title + ", message: " + message);
 #endif
         if (_class != null) {
             _class.CallStatic ("challenge", title, message);
@@ -634,7 +639,7 @@ public sealed class RiseSdk {
     /// </returns>
     public string Me () {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Me");
+        RiseEditorAd.EditorAdInstance.Toast ("Me");
 #endif
         if (_class != null) {
             return _class.CallStatic<string> ("me");
@@ -668,7 +673,7 @@ public sealed class RiseSdk {
     /// </returns>
     public string GetFriends () {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("GetFriends");
+        RiseEditorAd.EditorAdInstance.Toast ("GetFriends");
 #endif
         if (_class != null) {
             return _class.CallStatic<string> ("friends");
@@ -690,7 +695,7 @@ public sealed class RiseSdk {
     /// </summary>
     public void Like () {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Like");
+        RiseEditorAd.EditorAdInstance.Toast ("Like");
 #endif
         if (_class != null) {
             _class.CallStatic ("like");
@@ -704,7 +709,7 @@ public sealed class RiseSdk {
     /// <returns>返回请求的信息</returns>
     public string GetConfig (int configId) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("GetConfig, configId: " + configId);
+        RiseEditorAd.EditorAdInstance.Toast ("GetConfig, configId: " + configId);
 #endif
         if (_class != null) {
             return _class.CallStatic<string> ("getConfig", configId);
@@ -720,7 +725,7 @@ public sealed class RiseSdk {
     /// <returns>返回该文件保存在本地的绝对路径</returns>
     public string CacheUrl (string url) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("CacheUrl, url: " + url);
+        RiseEditorAd.EditorAdInstance.Toast ("CacheUrl, url: " + url);
 #endif
         if (_class != null) {
             return _class.CallStatic<string> ("cacheUrl", url);
@@ -744,7 +749,7 @@ public sealed class RiseSdk {
     /// <param name="url">需要下载的文件的url地址</param>
     public void CacheUrl (int tag, string url) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("CacheUrl, tag: " + tag + ", url: " + url);
+        RiseEditorAd.EditorAdInstance.Toast ("CacheUrl, tag: " + tag + ", url: " + url);
 #endif
         if (_class != null) {
             _class.CallStatic ("cacheUrl", tag, url);
@@ -792,7 +797,7 @@ public sealed class RiseSdk {
     /// <returns>返回请求的信息</returns>
     public string GetConfig (string packageName, int configId) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("GetConfig, packageName: " + packageName + ", configId: " + configId);
+        RiseEditorAd.EditorAdInstance.Toast ("GetConfig, packageName: " + packageName + ", configId: " + configId);
 #endif
         if (_class != null) {
             return _class.CallStatic<string> ("getConfig", packageName, configId);
@@ -808,7 +813,7 @@ public sealed class RiseSdk {
     /// <param name="message">对话框内容</param>
     public void Alert (string title, string message) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Alert (title, message);
+        RiseEditorAd.EditorAdInstance.Alert (title, message);
 #endif
         if (_class != null) {
             _class.CallStatic ("alert", title, message);
@@ -821,7 +826,7 @@ public sealed class RiseSdk {
     /// <param name="message">提示内容</param>
     public void Toast (string message) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast (message);
+        RiseEditorAd.EditorAdInstance.Toast (message);
 #endif
         if (_class != null) {
             _class.CallStatic ("toast", message);
@@ -846,7 +851,7 @@ public sealed class RiseSdk {
     /// <param name="level">等级</param>
     public void UM_setPlayerLevel (int level) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, setPlayerLevel: " + level);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, setPlayerLevel: " + level);
 #endif
         if (_class != null) {
             _class.CallStatic ("UM_setPlayerLevel", level);
@@ -859,7 +864,7 @@ public sealed class RiseSdk {
     /// <param name="eventId">事件id，要与在友盟后台添加的保持一致</param>
     public void UM_onEvent (String eventId) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, onEvent: " + eventId);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, onEvent: " + eventId);
 #endif
         if (_class != null) {
             _class.CallStatic ("UM_onEvent", eventId);
@@ -873,7 +878,7 @@ public sealed class RiseSdk {
     /// <param name="eventLabel">事件标签</param>
     public void UM_onEvent (String eventId, String eventLabel) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, onEvent: " + eventId + ", label: " + eventLabel);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, onEvent: " + eventId + ", label: " + eventLabel);
 #endif
         if (_class != null) {
             _class.CallStatic ("UM_onEvent", eventId, eventLabel);
@@ -908,7 +913,7 @@ public sealed class RiseSdk {
     /// <param name="pageName">页面名称</param>
     public void UM_onPageStart (String pageName) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, onPageStart: " + pageName);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, onPageStart: " + pageName);
 #endif
         if (_class != null) {
             _class.CallStatic ("UM_onPageStart", pageName);
@@ -921,7 +926,7 @@ public sealed class RiseSdk {
     /// <param name="pageName">页面名称</param>
     public void UM_onPageEnd (String pageName) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, onPageEnd: " + pageName);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, onPageEnd: " + pageName);
 #endif
         if (_class != null) {
             _class.CallStatic ("UM_onPageEnd", pageName);
@@ -934,7 +939,7 @@ public sealed class RiseSdk {
     /// <param name="level">关卡名称</param>
     public void UM_startLevel (String level) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, startLevel: " + level);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, startLevel: " + level);
 #endif
         if (_class != null) {
             _class.CallStatic ("UM_startLevel", level);
@@ -947,7 +952,7 @@ public sealed class RiseSdk {
     /// <param name="level">关卡名称</param>
     public void UM_failLevel (String level) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, failLevel: " + level);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, failLevel: " + level);
 #endif
         if (_class != null) {
             _class.CallStatic ("UM_failLevel", level);
@@ -960,7 +965,7 @@ public sealed class RiseSdk {
     /// <param name="level">关卡名称</param>
     public void UM_finishLevel (String level) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, finishLevel: " + level);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, finishLevel: " + level);
 #endif
         if (_class != null) {
             _class.CallStatic ("UM_finishLevel", level);
@@ -976,7 +981,7 @@ public sealed class RiseSdk {
     /// <param name="price">内付购买的商品价格</param>
     public void UM_pay (double money, String itemName, int number, double price) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, pay, money: " + money + ", item: " + itemName + ", number: " + number + ", price: " + price);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, pay, money: " + money + ", item: " + itemName + ", number: " + number + ", price: " + price);
 #endif
         /**
          * 最后一个参数是支付渠道：
@@ -1002,7 +1007,7 @@ public sealed class RiseSdk {
     /// <param name="price">购买道具价格</param>
     public void UM_buy (String itemName, int count, double price) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, buy, item: " + itemName + ", count: " + count + ", price: " + price);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, buy, item: " + itemName + ", count: " + count + ", price: " + price);
 #endif
         if (_class != null) {
             _class.CallStatic ("UM_buy", itemName, count, price);
@@ -1017,7 +1022,7 @@ public sealed class RiseSdk {
     /// <param name="price">使用道具价格</param>
     public void UM_use (String itemName, int number, double price) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, use, item: " + itemName + ", number: " + number + ", price: " + price);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, use, item: " + itemName + ", number: " + number + ", price: " + price);
 #endif
         if (_class != null) {
             _class.CallStatic ("UM_use", itemName, number, price);
@@ -1033,7 +1038,7 @@ public sealed class RiseSdk {
     /// <param name="trigger">触发奖励的事件, 取值在 1~10 之间，“1”已经被预先定义为“系统奖励”， 2~10 需要在网站设置含义</param>
     public void UM_bonus (String itemName, int number, double price, int trigger) {
 #if UNITY_EDITOR
-        RiseAd.Instance.Toast ("Umeng, bonus, item: " + itemName + ", number: " + number + ", price: " + price + ", trigger: " + trigger);
+        RiseEditorAd.EditorAdInstance.Toast ("Umeng, bonus, item: " + itemName + ", number: " + number + ", price: " + price + ", trigger: " + trigger);
 #endif
         if (_class != null) {
             _class.CallStatic ("UM_bonus", itemName, number, price, trigger);
@@ -1089,4 +1094,411 @@ public sealed class RiseSdk {
 			_class.CallStatic ("showSales", saleId);
 		}
 	}*/
+
+
+
+
+/// <summary>
+/// Editor模式下的广告测试类，不可以调用该类的方法，SDK会自动调用。
+/// </summary>
+private class RiseEditorAd : MonoBehaviour {
+
+    private static RiseEditorAd _editorAdInstance = null;
+    private Rect bannerPos;
+    private bool bannerShow = false;
+    private string bannerContent = "";
+    private bool interstitialShow = false;
+    private string interstitialContent = "";
+    private bool rewardShow = false;
+    private string rewardContent = "";
+    private float scaleWidth = 1;
+    private float scaleHeight = 1;
+    private int originScreenWidth = 1;
+    private int originScreenHeight = 1;
+    private bool toastShow = false;
+    private List<string> toastList = new List<string> ();
+    private GUIStyle toastStyle = null;
+    private Texture2D btnBg = null;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+    private EventSystem curEvent = null;
+#endif
+
+    private const string BANNER_DEFAULT_TXT = "Banner AD: ";
+    private const string INTERSTITIAL_DEFAULT_TXT = "\nInterstitial AD Test";
+    private const string REWARD_DEFAULT_TXT = "Free Coin AD Test: ";
+    private const int SCREEN_WIDTH = 854;
+    private const int SCREEN_HEIGHT = 480;
+    private const int GUI_DEPTH = -99;
+
+    void Awake () {
+        if (_editorAdInstance == null) {
+            _editorAdInstance = this;
+        }
+        DontDestroyOnLoad (gameObject);
+        if (Screen.width > Screen.height) {
+            originScreenWidth = SCREEN_WIDTH;
+            originScreenHeight = SCREEN_HEIGHT;
+        } else {
+            originScreenWidth = SCREEN_HEIGHT;
+            originScreenHeight = SCREEN_WIDTH;
+        }
+        scaleWidth = Screen.width * 1f / originScreenWidth;
+        scaleHeight = Screen.height * 1f / originScreenHeight;
+        toastStyle = new GUIStyle ();
+        toastStyle.fontStyle = FontStyle.Bold;
+        toastStyle.alignment = TextAnchor.MiddleCenter;
+        toastStyle.fontSize = 30;
+        btnBg = AssetDatabase.LoadAssetAtPath<Texture2D> ("Assets/Plugins/Square.png");
+        //btnBg.Resize ((int) (100 * scaleWidth), (int) (50 * scaleHeight));
+    }
+
+    public static RiseEditorAd EditorAdInstance {
+        get {
+            if (_editorAdInstance == null) {
+                _editorAdInstance = FindObjectOfType<RiseEditorAd> () == null ? new GameObject ("RiseEditorAd").AddComponent<RiseEditorAd> () : _editorAdInstance;
+            }
+            return _editorAdInstance;
+        }
+    }
+
+#if UNITY_EDITOR
+    void OnGUI () {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+        if (curEvent == null) {
+            curEvent = EventSystem.current;
+        }
+#endif
+        GUI.depth = GUI_DEPTH;
+        if (bannerShow) {
+            GUI.backgroundColor = Color.green;
+            GUI.color = Color.red;
+            if (GUI.Button (bannerPos, bannerContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            GUI.backgroundColor = Color.green;
+            if (GUI.Button (bannerPos, bannerContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            GUI.backgroundColor = Color.green;
+            if (GUI.Button (bannerPos, bannerContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            GUI.backgroundColor = Color.green;
+            if (GUI.Button (bannerPos, bannerContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+        }
+        if (interstitialShow) {
+            GUI.backgroundColor = Color.black;
+            //GUI.backgroundColor = new Color (0, 0, 0, 1);
+            //GUI.color = new Color (1, 0, 0, 1);
+            if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                interstitialShow = false;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height), interstitialContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height), interstitialContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height), interstitialContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height), interstitialContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            GUI.backgroundColor = Color.red;
+            if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                interstitialShow = false;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                interstitialShow = false;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                interstitialShow = false;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                interstitialShow = false;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+        }
+        if (rewardShow) {
+            GUI.backgroundColor = Color.black;
+            if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                rewardShow = false;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height), rewardContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height), rewardContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height), rewardContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (0, 0, Screen.width, Screen.height), rewardContent)) {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            GUI.backgroundColor = Color.red;
+            if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                rewardShow = false;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                rewardShow = false;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                rewardShow = false;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+            if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                rewardShow = false;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+                if (EventSystem.current != null) {
+                    EventSystem.current.enabled = false;
+                }
+#endif
+            }
+        }
+        if (toastList.Count > 0) {
+            GUI.backgroundColor = Color.black;
+            GUI.Label (new Rect ((Screen.width - 200 * scaleWidth) * .5f, Screen.height - 100 * scaleHeight, 200 * scaleWidth, 50 * scaleHeight), toastList [0], toastStyle);
+        }
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+        if (EventSystem.current != null) {
+            EventSystem.current.enabled = true;
+        } else if (curEvent != null) {
+            curEvent.enabled = true;
+            EventSystem.current = curEvent;
+        }
+#endif
+    }
+
+    void Update () {
+        if (Input.GetKeyDown (KeyCode.Escape)) {
+            interstitialShow = false;
+            rewardShow = false;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
+            if (EventSystem.current != null) {
+                EventSystem.current.enabled = true;
+            } else if (curEvent != null) {
+                curEvent.enabled = true;
+                EventSystem.current = curEvent;
+            }
+#endif
+        }
+    }
+#endif
+
+    public void ShowBanner (int pos) {
+#if UNITY_EDITOR
+        bannerContent = BANNER_DEFAULT_TXT + "default";
+        bannerShow = true;
+        SetBannerPos (pos);
+        Toast ("ShowBanner, pos: " + pos);
+#endif
+    }
+
+    public void ShowBanner (string tag, int pos) {
+#if UNITY_EDITOR
+        bannerContent = BANNER_DEFAULT_TXT + tag;
+        bannerShow = true;
+        SetBannerPos (pos);
+        Toast ("ShowBanner, tag: " + tag + ", pos: " + pos);
+#endif
+    }
+
+    public void CloseBanner () {
+#if UNITY_EDITOR
+        bannerShow = false;
+        Toast ("CloseBanner");
+#endif
+    }
+
+    private void SetBannerPos (int pos) {
+#if UNITY_EDITOR
+        switch (pos) {
+            case RiseSdk.POS_BANNER_LEFT_BOTTOM:
+                bannerPos = new Rect (0, Screen.height - 50 * scaleHeight, 320 * scaleWidth, 50 * scaleHeight);
+                break;
+            case RiseSdk.POS_BANNER_LEFT_TOP:
+                bannerPos = new Rect (0, 0, 320 * scaleWidth, 50 * scaleHeight);
+                break;
+            case RiseSdk.POS_BANNER_MIDDLE_BOTTOM:
+                bannerPos = new Rect ((Screen.width - 320 * scaleWidth) * .5f, Screen.height - 50 * scaleHeight, 320 * scaleWidth, 50 * scaleHeight);
+                break;
+            case RiseSdk.POS_BANNER_MIDDLE_MIDDLE:
+                bannerPos = new Rect ((Screen.width - 320 * scaleWidth) * .5f, (Screen.height - 50 * scaleHeight) * .5f, 320 * scaleWidth, 50 * scaleHeight);
+                break;
+            case RiseSdk.POS_BANNER_MIDDLE_TOP:
+                bannerPos = new Rect ((Screen.width - 320 * scaleWidth) * .5f, 0, 320 * scaleWidth, 50 * scaleHeight);
+                break;
+            case RiseSdk.POS_BANNER_RIGHT_BOTTOM:
+                bannerPos = new Rect (Screen.width - 320 * scaleWidth, Screen.height - 50 * scaleHeight, 320 * scaleWidth, 50 * scaleHeight);
+                break;
+            case RiseSdk.POS_BANNER_RIGHT_TOP:
+                bannerPos = new Rect (Screen.width - 320 * scaleWidth, 0, 320 * scaleWidth, 50 * scaleHeight);
+                break;
+        }
+#endif
+    }
+
+    public void ShowAd (string tag) {
+#if UNITY_EDITOR
+        interstitialShow = true;
+        interstitialContent = tag + INTERSTITIAL_DEFAULT_TXT;
+#endif
+    }
+
+    public void ShowRewardAd (int id) {
+#if UNITY_EDITOR
+        rewardShow = true;
+        rewardContent = REWARD_DEFAULT_TXT + "default";
+#endif
+    }
+
+    public void ShowRewardAd (string tag, int id) {
+#if UNITY_EDITOR
+        rewardShow = true;
+        rewardContent = REWARD_DEFAULT_TXT + tag;
+#endif
+    }
+
+    public void Pay (int billingId) {
+#if UNITY_EDITOR
+        switch (EditorUtility.DisplayDialogComplex ("Pay", "Pay: " + billingId, "TRY FAILURE", "NO", "YES")) {
+            case 0://TRY FAILURE
+                RiseSdkListener.Instance.onPaymentFail (billingId + "");
+                break;
+            case 1://NO
+                RiseSdkListener.Instance.onPaymentCanceled (billingId + "");
+                break;
+            case 2://YES
+                RiseSdkListener.Instance.onPaymentSuccess (billingId + "");
+                break;
+        }
+#endif
+    }
+
+    private bool timeCounting = false;
+    public void Toast (string msg) {
+#if UNITY_EDITOR
+        toastList.Add (msg);
+        if (!timeCounting) {
+            timeCounting = true;
+            StartCoroutine (CheckToast ());
+        }
+#endif
+    }
+
+    private IEnumerator CheckToast (float time = 2) {
+        yield return new WaitForSeconds (time);
+        if (toastList.Count > 0) {
+            toastList.RemoveAt (0);
+        }
+        if (toastList.Count > 0) {
+            StartCoroutine (CheckToast ());
+        } else {
+            timeCounting = false;
+        }
+    }
+
+    public void Alert (string title, string msg) {
+#if UNITY_EDITOR
+        EditorUtility.DisplayDialog (title, msg, "NO", "OK");
+#endif
+    }
+
+}
+
 }
