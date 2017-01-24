@@ -1118,7 +1118,6 @@ private class RiseEditorAd : MonoBehaviour {
     private bool toastShow = false;
     private List<string> toastList = new List<string> ();
     private GUIStyle toastStyle = null;
-    private Texture2D btnBg = null;
 #if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
     private EventSystem curEvent = null;
 #endif
@@ -1129,6 +1128,8 @@ private class RiseEditorAd : MonoBehaviour {
     private const int SCREEN_WIDTH = 854;
     private const int SCREEN_HEIGHT = 480;
     private const int GUI_DEPTH = -99;
+    private const int BANNER_WIDTH = 320;
+    private const int BANNER_HEIGHT = 50;
 
     void Awake () {
         if (_editorAdInstance == null) {
@@ -1148,8 +1149,6 @@ private class RiseEditorAd : MonoBehaviour {
         toastStyle.fontStyle = FontStyle.Bold;
         toastStyle.alignment = TextAnchor.MiddleCenter;
         toastStyle.fontSize = 30;
-        btnBg = AssetDatabase.LoadAssetAtPath<Texture2D> ("Assets/Plugins/Square.png");
-        //btnBg.Resize ((int) (100 * scaleWidth), (int) (50 * scaleHeight));
     }
 
     public static RiseEditorAd EditorAdInstance {
@@ -1352,7 +1351,11 @@ private class RiseEditorAd : MonoBehaviour {
         }
         if (toastList.Count > 0) {
             GUI.backgroundColor = Color.black;
-            GUI.Label (new Rect ((Screen.width - 200 * scaleWidth) * .5f, Screen.height - 100 * scaleHeight, 200 * scaleWidth, 50 * scaleHeight), toastList [0], toastStyle);
+            GUI.color = Color.red;
+            //GUI.contentColor = Color.red;
+            GUI.Button (new Rect ((Screen.width - 400 * scaleWidth) * .5f, Screen.height - 100 * scaleHeight, 400 * scaleWidth, 50 * scaleHeight), toastList [0]);
+            GUI.Button (new Rect ((Screen.width - 400 * scaleWidth) * .5f, Screen.height - 100 * scaleHeight, 400 * scaleWidth, 50 * scaleHeight), toastList [0]);
+            //GUI.Label (new Rect ((Screen.width - 200 * scaleWidth) * .5f, Screen.height - 100 * scaleHeight, 200 * scaleWidth, 50 * scaleHeight), toastList [0], toastStyle);
         }
 #if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
         if (EventSystem.current != null) {
@@ -1409,25 +1412,25 @@ private class RiseEditorAd : MonoBehaviour {
 #if UNITY_EDITOR
         switch (pos) {
             case RiseSdk.POS_BANNER_LEFT_BOTTOM:
-                bannerPos = new Rect (0, Screen.height - 50 * scaleHeight, 320 * scaleWidth, 50 * scaleHeight);
+                bannerPos = new Rect (0, Screen.height - BANNER_HEIGHT * scaleHeight, BANNER_WIDTH * scaleWidth, BANNER_HEIGHT * scaleHeight);
                 break;
             case RiseSdk.POS_BANNER_LEFT_TOP:
-                bannerPos = new Rect (0, 0, 320 * scaleWidth, 50 * scaleHeight);
+                bannerPos = new Rect (0, 0, BANNER_WIDTH * scaleWidth, BANNER_HEIGHT * scaleHeight);
                 break;
             case RiseSdk.POS_BANNER_MIDDLE_BOTTOM:
-                bannerPos = new Rect ((Screen.width - 320 * scaleWidth) * .5f, Screen.height - 50 * scaleHeight, 320 * scaleWidth, 50 * scaleHeight);
+                bannerPos = new Rect ((Screen.width - BANNER_WIDTH * scaleWidth) * .5f, Screen.height - BANNER_HEIGHT * scaleHeight, BANNER_WIDTH * scaleWidth, BANNER_HEIGHT * scaleHeight);
                 break;
             case RiseSdk.POS_BANNER_MIDDLE_MIDDLE:
-                bannerPos = new Rect ((Screen.width - 320 * scaleWidth) * .5f, (Screen.height - 50 * scaleHeight) * .5f, 320 * scaleWidth, 50 * scaleHeight);
+                bannerPos = new Rect ((Screen.width - BANNER_WIDTH * scaleWidth) * .5f, (Screen.height - BANNER_HEIGHT * scaleHeight) * .5f, BANNER_WIDTH * scaleWidth, BANNER_HEIGHT * scaleHeight);
                 break;
             case RiseSdk.POS_BANNER_MIDDLE_TOP:
-                bannerPos = new Rect ((Screen.width - 320 * scaleWidth) * .5f, 0, 320 * scaleWidth, 50 * scaleHeight);
+                bannerPos = new Rect ((Screen.width - BANNER_WIDTH * scaleWidth) * .5f, 0, BANNER_WIDTH * scaleWidth, BANNER_HEIGHT * scaleHeight);
                 break;
             case RiseSdk.POS_BANNER_RIGHT_BOTTOM:
-                bannerPos = new Rect (Screen.width - 320 * scaleWidth, Screen.height - 50 * scaleHeight, 320 * scaleWidth, 50 * scaleHeight);
+                bannerPos = new Rect (Screen.width - BANNER_WIDTH * scaleWidth, Screen.height - BANNER_HEIGHT * scaleHeight, BANNER_WIDTH * scaleWidth, BANNER_HEIGHT * scaleHeight);
                 break;
             case RiseSdk.POS_BANNER_RIGHT_TOP:
-                bannerPos = new Rect (Screen.width - 320 * scaleWidth, 0, 320 * scaleWidth, 50 * scaleHeight);
+                bannerPos = new Rect (Screen.width - BANNER_WIDTH * scaleWidth, 0, BANNER_WIDTH * scaleWidth, BANNER_HEIGHT * scaleHeight);
                 break;
         }
 #endif
