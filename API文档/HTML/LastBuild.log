@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shfbBuild product="Sandcastle Help File Builder" version="2015.1.12.0" projectFile="G:\Sandcastle\SandcastleTest.shfbproj" started="2017/1/24 15:28:42">
+<shfbBuild product="Sandcastle Help File Builder" version="2015.1.12.0" projectFile="G:\Sandcastle\SandcastleTest.shfbproj" started="2017/2/6 11:42:50">
 <buildStep step="Initializing">
 Finding tools...
 The Sandcastle tools are located in &#39;C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\&#39;
@@ -24,16 +24,16 @@ Copying XML comments files
 Generating shared content files (zh-CN, 中文(简体，中国))...
 SHFB: Warning BE0003: Sandcastle shared content for the &#39;zh-CN, 中文(简体，中国)&#39; language could not be found.  Using &#39;en-US, English (US)&#39; defaults.
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
-</plugIn>    Last step completed in 00:00:00.0000
+</plugIn>    Last step completed in 00:00:00.0600
 </buildStep>
 <buildStep step="GenerateApiFilter">
 Generating API filter for MRefBuilder...
-    Last step completed in 00:00:00.0100
+    Last step completed in 00:00:00.0050
 </buildStep>
 <buildStep step="GenerateReflectionInfo">
 Generating reflection information...
 [C:\windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe]
-生成启动时间为 2017/1/24 15:28:43。
+生成启动时间为 2017/2/6 11:42:50。
 节点 1 上的项目“G:\Sandcastle\Help\HTML\Working\GenerateRefInfo.proj”(默认目标)。
 PrepareForBuild:
   正在创建目录“obj\Debug\”。
@@ -52,13 +52,13 @@ GenerateRefInfo:
 
 已成功生成。
 
-已用时间 00:00:00.47
-    Last step completed in 00:00:00.6000
+已用时间 00:00:00.50
+    Last step completed in 00:00:00.7120
 </buildStep>
 <buildStep step="TransformReflectionInfo">
 Transforming reflection output...
 [C:\windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe]
-生成启动时间为 2017/1/24 15:28:43。
+生成启动时间为 2017/2/6 11:42:51。
 节点 1 上的项目“G:\Sandcastle\Help\HTML\Working\TransformManifest.proj”(默认目标)。
 TransformManifest:
   XslTransform (v2015.1.12.0)
@@ -78,26 +78,26 @@ TransformManifest:
 
 已成功生成。
 
-已用时间 00:00:00.44
-    Last step completed in 00:00:00.5530
+已用时间 00:00:01.29
+    Last step completed in 00:00:01.4951
 </buildStep>
 <buildStep step="GenerateNamespaceSummaries">
 Generating namespace summary information...
-    Last step completed in 00:00:00.0200
+    Last step completed in 00:00:00.0320
 </buildStep>
 <buildStep step="CopyAdditionalContent">
 Copying additional content files...
 No additional content to copy
-    Last step completed in 00:00:00.0100
+    Last step completed in 00:00:00.0090
 </buildStep>
 <buildStep step="MergeTablesOfContents">
 Merging conceptual and additional tables of contents...
-    Last step completed in 00:00:00.0000
+    Last step completed in 00:00:00.0040
 </buildStep>
 <buildStep step="GenerateIntermediateTableOfContents">
 Generating intermediate table of contents file...
 [C:\windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe]
-生成启动时间为 2017/1/24 15:28:44。
+生成启动时间为 2017/2/6 11:42:53。
 节点 1 上的项目“G:\Sandcastle\Help\HTML\Working\GenerateIntermediateTOC.proj”(默认目标)。
 GenerateIntermediateTOC:
   XslTransform (v2015.1.12.0)
@@ -108,24 +108,24 @@ GenerateIntermediateTOC:
 
 已成功生成。
 
-已用时间 00:00:00.14
+已用时间 00:00:00.25
 Generating conceptual content intermediate TOC file...
-    Last step completed in 00:00:00.2400
+    Last step completed in 00:00:00.5190
 </buildStep>
 <buildStep step="CreateBuildAssemblerConfigs">
 Creating Sandcastle configuration files...
     sandcastle.config
-    Last step completed in 00:00:00.0500
+    Last step completed in 00:00:00.2950
 </buildStep>
 <buildStep step="MergeCustomConfigs">
 Merging custom build component configurations
 G:\Sandcastle\Help\HTML\Working\sandcastle.config
-    Last step completed in 00:00:00.0200
+    Last step completed in 00:00:00.0220
 </buildStep>
 <buildStep step="BuildReferenceTopics">
 Building reference help topics...
 [C:\windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe]
-生成启动时间为 2017/1/24 15:28:44。
+生成启动时间为 2017/2/6 11:42:53。
 节点 1 上的项目“G:\Sandcastle\Help\HTML\Working\BuildReferenceTopics.proj”(默认目标)。
 BuildReferenceTopics:
   BuildAssembler (v2015.1.12.0)
@@ -145,14 +145,14 @@ BuildAssembler : warning : ResolveReferenceLinksComponent: [T:RiseSdkListener] U
 
 已成功生成。
 
-已用时间 00:00:02.89
-    Last step completed in 00:00:03.0050
+已用时间 00:00:04.33
+    Last step completed in 00:00:04.5433
 </buildStep>
 <buildStep step="CombiningIntermediateTocFiles">
 Combining conceptual and API intermediate TOC files...
 
 Clearing any prior web output
-    Last step completed in 00:00:00.1200
+    Last step completed in 00:00:00.0020
 </buildStep>
 <buildStep step="ExtractingHtmlInfo">
 Extracting HTML info for HTML Help 1 and/or website...
@@ -168,7 +168,7 @@ Processed 135 HTML files
 Sorting keywords and generating See Also indices
 Saving website keyword index to G:\Sandcastle\Help\HTML\Working\WebKI.xml
 Saving website table of contents to G:\Sandcastle\Help\HTML\Working\WebTOC.xml
-    Last step completed in 00:00:00.2100
+    Last step completed in 00:00:00.5260
 </buildStep>
 <buildStep step="CopyStandardHelpContent">
 Copying standard help content...
@@ -248,18 +248,18 @@ C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyle
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\icons\TocOpen.gif -&gt; G:\Sandcastle\Help\HTML\Working\Output\Website\icons\TocOpen.gif
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\branding-Website.js -&gt; G:\Sandcastle\Help\HTML\Working\Output\Website\scripts\branding-Website.js
 C:\Program Files (x86)\EWSoftware\Sandcastle Help File Builder\PresentationStyles\VS2013\Web\scripts\jquery-1.11.0.min.js -&gt; G:\Sandcastle\Help\HTML\Working\Output\Website\scripts\jquery-1.11.0.min.js
-    Last step completed in 00:00:00.3440
+    Last step completed in 00:00:01.3761
 </buildStep>
 <buildStep step="GenerateHelpFormatTableOfContents">
 Generating website table of contents file...
-    Last step completed in 00:00:00.0000
+    Last step completed in 00:00:00.0070
 </buildStep>
 <buildStep step="GenerateFullTextIndex">
 Generating full-text index for the website...
 
 <plugIn name="Lightweight Website Style" behavior="After" priority="1000">
 Adding lightweight search and TOC elements to each topic...
-</plugIn>    Last step completed in 00:00:00.5900
+</plugIn>    Last step completed in 00:00:00.6570
 </buildStep>
 <buildStep step="CopyingWebsiteFiles">
 Copying website files to output folder...
@@ -268,15 +268,15 @@ Copied 100 files
 Copied 200 files
 Copied 300 files
 Copied 317 files for the website content
-    Last step completed in 00:00:00.2110
+    Last step completed in 00:00:00.2400
 </buildStep>
 <buildStep step="CleanIntermediates">
 Removing intermediate files...
-    Last step completed in 00:00:00.1200
+    Last step completed in 00:00:00.1220
 </buildStep>
 <buildStep step="Completed">
 
-Build completed successfully at 2017/1/24 15:28:49.  Total time: 00:00:06.4250
+Build completed successfully at 2017/2/6 11:43:01.  Total time: 00:00:11.0386
 
 </buildStep>
 </shfbBuild>

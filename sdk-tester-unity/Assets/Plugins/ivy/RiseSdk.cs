@@ -1099,7 +1099,7 @@ public sealed class RiseSdk {
 
 
 /// <summary>
-/// Editor模式下的广告测试类，不可以调用该类的方法，SDK会自动调用。
+/// Editor模式下的广告测试类，不可以调用该类的方法。
 /// </summary>
 private class RiseEditorAd : MonoBehaviour {
 
