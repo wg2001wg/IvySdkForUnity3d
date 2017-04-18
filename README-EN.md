@@ -1,13 +1,8 @@
-# RiseSDK for Unity3D
-#
-#### English Doc Link: https://github.com/IvySdk/unity3d/wiki/English-Doc
-#
-## 1, Add dependencies 添加引用
-完全复制Plugins文件夹到你的Unity工程Assets目录下
-Copy the folder named Plugins into your Unity3D project Assets folder
-![Copy](assets/risesdk-unity-8c095.png)
 
-* 如果您有使用proguard来混淆Java代码，需要添加以下规则：
+## 1, Add dependencies
+Copy Plugins folder to the Assets directory in your Unity3D project, as shown in the following figure:
+![](https://github.com/IvySdk/unity3d/raw/master/assets/risesdk-unity-8c095.png)
+
 * if you use proguard to obfuscate your java source code, you should add these rules to your proguard rules file:
 ```java
 -dontwarn com.unity3d.**
@@ -36,8 +31,7 @@ Copy the folder named Plugins into your Unity3D project Assets folder
 }
 ```
 
-## 2, Initialize 初始化SDK
-在第一个场景中的一个脚本中的Awake方法中调用RiseSdk.Instance.Init()方法
+## 2, Initialize
 Call the Init function in a gameObject's Awake function in your initialize scene
 ```csharp
 void Awake() {
@@ -49,138 +43,134 @@ void Awake() {
 }
 ```
 
-## 3, ADs 广告
+## 3, ADs
 This module will make these things done:
-* show banner 显示banner广告
-* close banner 关闭banner广告
-* show full screen ad 显示大屏广告
-* make the player to share the game to his friends 分享游戏给朋友
-* let the player to give your game a 5-star-rating 跳转到游戏的评分界面
-* track the player's behaviors for analytics 游戏统计
-
+* show banner
+* close banner
+* show full screen ad
+* make the player to share the game to his friends
+* let the player to give your game a 5-star-rating
+* track the player's behaviors for analytics
 * Call the functions in need
 ```csharp
-// show start ad when you want 显示开始大屏广告
+// show full screen ads when game starts
 RiseSdk.Instance.ShowAd(RiseSdk.M_START);
 
-// show pause ad when you want 显示暂停大屏广告
+// show full screen ads when game pauses
 RiseSdk.Instance.ShowAd(RiseSdk.M_PAUSE);
 
-// show custom ad when you want 显示自定义大屏广告
+// show full screen ads at the customized position
 RiseSdk.Instance.ShowAd(RiseSdk.M_CUSTOM);
 
-// show banner in the bottom center position of your phone 在手机底部居中显示banner广告
+// show banner at the middle bottom position of your phone
 RiseSdk.Instance.ShowBanner(RiseSdk.POS_BANNER_MIDDLE_BOTTOM);
 
-// close banner 关闭banner广告
+// close banner
 RiseSdk.Instance.CloseBanner();
 
-// exit game 显示退出界面
+// show exit page
 RiseSdk.Instance.OnExit();
 
-// ask the player to give your game a 5 stars rating 跳转到游戏的评分界面
+// ask the player to give your game a 5 stars rating
 RiseSdk.Instance.Rate ();
 
-// ask the player to share your game with his friends 分享游戏给朋友
+// ask the player to share your game with their friends
 RiseSdk.Instance.Share();
 
-// show more game to the player 显示更多游戏
+// show more game to the player
 RiseSdk.Instance.ShowMore();
 ```
 
-### Google Analytics events 谷歌后台统计分析
+### Google Analytics events
 ```csharp
 RiseSdk.Instance.TrackEvent ("your category", "your action", "your label", 1);
 ```
 
-### 友盟统计相关接口
-* 统计玩家等级
+### Umeng analytics related API
+* Track data of player's level
 ```csharp
-int level = 1; //玩家等级
-RiseSdk.Instance.UM_setPlayerLevel(level);//统计玩家等级
+int level = 1; //player level
+RiseSdk.Instance.UM_setPlayerLevel(level);//Track data of player's level
 ```
-* 统计进入某页面
+* Track times for entering certain page
 ```csharp
 String pageName = "Shop"; 
-RiseSdk.Instance.UM_onPageStart(pageName);//统计进入商店页面
+RiseSdk.Instance.UM_onPageStart(pageName);//track times for entering Shop page
 ```
-* 统计离开某页面
+* Track times for exiting certain page
 ```csharp
 String pageName = "Shop";
-RiseSdk.Instance.UM_onPageEnd(pageName);//统计离开商店页面
+RiseSdk.Instance.UM_onPageEnd(pageName);//track times for exiting Shop page
 ```  
-* 统计事件名称
+* Track event name
 ```csharp
-String eventId = "EnterGame"; //事件名称
+String eventId = "EnterGame"; //event name
 RiseSdk.Instance.UM_onEvent(eventId);
 ```
-* 统计事件标签操作
+* Track event label 
 ```csharp
-String eventId = "EnterGame"; //事件名称
-String eventLabel = "eventLable";//事件的某个操作标签
+String eventId = "EnterGame"; //event name
+String eventLabel = "eventLable";//certain event operation label
 RiseSdk.Instance.UM_onEvent(eventId, eventLabel);
 ```
-* 统计事件详细分组内容
+* Detailed grouping content for tracked events
 ```csharp
-HashMap<String, String> map = new HashMap<>(); //事件详细分组内容
+HashMap<String, String> map = new HashMap<>(); //detailed grouping content for certain event
 map.put("openGift", "roll");
-int value = 1;//计数统计值，比如持续时间，每次付款金额
+int value = 1;//count statistics, like duration, amount of money
 RiseSdk.Instance.UM_onEventValue("EnterGame", map, value);
 ```
-* 统计关卡开始
+* Track times for level start
 ```csharp
-String level = "Level" + 5;//level ,开始哪个关卡
+String level = "Level" + 5;//start from which level
 RiseSdk.Instance.UM_startLevel(level);
 ```
-* 统计关卡失败
+* Track times for level failure
 ```csharp
-String level = "Level" + 5); //level ,哪个关卡失败
+String level = "Level" + 5); //which level is failed
 RiseSdk.Instance.UM_failLevel(level);
 ```
-* 关卡结束
+* Track times for level completed
 ```csharp
-String level = "Level" + (new Random().nextInt(30) + 10); //level,完成哪个关卡
+String level = "Level" + (new Random().nextInt(30) + 10); //which level is completed
 RiseSdk.Instance.UM_finishLevel(level);
 ```
-* 游戏内付统计
+* In-app purchase analytics
 ```csharp
-double money = 5.0; //内付的金额
-String itemName = "钻石"; //内付购买的商品名称
-int number = 10;//内付购买的商品数量
-double price = 99.0;//内付购买的商品价格
+double money = 5.0; //payment amount
+String itemName = "Diamond"; //item name
+int number = 10;//amount of the purchased item
+double price = 99.0;//price of the purchased item 
 RiseSdk.Instance.UM_pay(money,itemName,number,price);
 ```
-* 购买道具统计
+* Booster
 ```csharp
-String itemName = "血瓶"; //购买游戏中道具名称
-int number = 10;//购买道具数量
-double price = 99.0;//购买道具价格
+String itemName = "life potion"; //name of the booster to be purchased in game
+int number = 10;//amount of purchased boosters
+double price = 99.0;//price of purchased booster 
 RiseSdk.Instance.UM_buy(itemName,count,price); 
 ```
-* 使用道具统计
+* Booster usage
 ```csharp
-String itemName = "血瓶"; //使用道具名称
-int count = 10;//使用道具数量
-double price = 99.0;//使用道具价格
+String itemName = "life potion"; //name of the used booster
+int count = 10;//amount of the used booster
+double price = 99.0;//price of the used booster 
 RiseSdk.Instance.UM_use(itemName,count,price); 
 ```
-* 额外奖励统计
+* Extra bonus
 ```csharp
-String itemName = "血瓶"; //奖励道具名称
-int number = 5;//奖励道具数量
-double price = 99.0;//奖励道具价格
-int trigger = 1;//触发奖励的事件, 取值在 1~10 之间，“1”已经被预先定义为“系统奖励”， 2~10 需要在网站设置含义
+String itemName = "life potion"; //name of the rewarded booster
+int number = 5;//amount of the rewarded booster
+double price = 99.0;//price of the reward booster
+int trigger = 1;//Events that trigger reward, its value ranges from 1 to 10. “1” is defined as “system reward”. About 2-10，you have to define corresponding rewards respectively
 RiseSdk.Instance.UM_bonus(itemName,number,price,trigger);
 
-// get server data for your game if needed 获取服务器后台配置的自定义json数据
+// get server data in json format for your game if required 
 string data = RiseSdk.Instance.GetExtraData ();
 ```
-* Notice 注意
-banner广告的显示位置参数和大屏广告的显示时机参数都已经在RiseSdk类中定义过了，无需再自行定义。
-POS_BANNER* and M_* are defined in namespace RiseSdk
-you should NOT define these again
+* Notice: the ad position for banner (POS_BANNER*) and interstitial (M_*) are defined in "namespace RiseSdk", you don’t need to redefine them
 ```csharp
-//position for showBanner
+// position for showBanner
 public const int POS_BANNER_LEFT_TOP = 1;
 public const int POS_BANNER_MIDDLE_TOP = 3;
 public const int POS_BANNER_RIGHT_TOP = 6;
@@ -189,16 +179,15 @@ public const int POS_BANNER_LEFT_BOTTOM = 2;
 public const int POS_BANNER_MIDDLE_BOTTOM = 4;
 public const int POS_BANNER_RIGHT_BOTTOM = 7;
 
-// tag for showAd 大屏广告显示时机参数
+// positions to show full screen ads
 public const string M_START = "start";
 public const string M_PAUSE = "pause";
 public const string M_PASSLEVEL = "passlevel";
 public const string M_CUSTOM = "custom";
 ```
 
-## 4, In-App billing 应用中内付费
-* 如果你想使用google內付，你需要添加以下方法
-* When you want to use google checkout, then you should do this:
+## 4, In-App billing
+* If you want to use Google checkout service (in-app purchase), you should follow this:
 ```csharp
 void InitListeners() {
   RiseSdkListener.OnPaymentEvent -= OnPaymentResult;
@@ -233,16 +222,15 @@ void OnPaymentResult(int resultCode, int billId) {
 }
 ```
 
-* 调用付费接口 Call Billing Interface
+* Call Billing Interface
 ```csharp
 RiseSdk.Instance.Pay(billId);
 ```
 
-## 5, Reward Ads 视频奖励广告
-* Reward Ad is video ad that when the player saw it, you will give him some golds/items/diamonds etc.
+## 5, Reward Ads
+Reward Ad is video ad that when the player saw it, you will give him some golds/items/diamonds etc.
 
-* 如果你想使用视频奖励广告，你需要添加以下方法
-* when you want to use reward ad, then you should do:
+* If you want to use video reward ads, then you should follow this:
 ```csharp
 void InitListeners() {
   RiseSdkListener.OnRewardAdEvent -= GetFreeCoin;
@@ -265,8 +253,7 @@ void GetFreeCoin (bool success, int rewardId){
 ```
 * and now you can call
 ```csharp
-//判断视频广告是否加载完成
-// determine whether exists reward ad
+//check whether the video ad is loaded or not
 bool yes = RiseSdk.Instance.HasRewardAd();
 if (yes) {
   setRewardButtonEnable();
@@ -274,12 +261,11 @@ if (yes) {
   setRewardButtonDisable();
 }
 
-显示视频广告
 // show reward ad
 RiseSdk.Instance.ShowRewardAd(rewardId);
 ```
 
-## 6, SNS facebook相关操作接口
+## 6, SNS Facebook Related API
 This module can make these things done:
 * login with facebook
 * logout
@@ -288,8 +274,7 @@ This module can make these things done:
 * let the player challenge his all friends
 * get the player's friend list that have played this game
 * get player's profile
-* 如果你想使用facebook相关功能，需要添加以下方法
-* When you want to use SNS, eg. facebook to login, you should do this:
+* If you want use Facebook related functions, you should follow this:
 ```csharp
 void InitListeners() {
   RiseSdkListener.OnSNSEvent -= OnSNSEvent;
@@ -319,55 +304,55 @@ void OnSNSEvent(bool success, int eventType, int extra) {
 ```
 * and then you can do this:
 ```csharp
-// when you want to login 登陆facebook
+// Facebook Login
 RiseSdk.Instance.Login();
 
-// when you want to log out 登出facebook
+// Facebook Logout
 RiseSdk.Instance.Logout();
 
-// determine is login 检测facebook是否登陆
+// check whether Facebook account is logged in
 RiseSdk.Instance.IsLogin();
 
-// invite friends 邀请facebook好友玩游戏
+// invite facebook friends to play the game
 RiseSdk.Instance.Invite ();
 
-// like facebook page facebook点赞界面
+// like facebook page
 RiseSdk.Instance.Like ();
 
-// challenge your friends 挑战好友
+// challenge your facebook friends
 RiseSdk.Instance.Challenge ("your see", "speed coming...");
 
-// get self profile 获取我的faceook个人信息
+// get my facebook profile info
 string mestring = RiseSdk.Instance.Me ();
 // friends is a Hashtable, {"id":"xxx", "name":"xxx", "picture":"/sdcard/.cache/xxxxx"}
 object me = MiniJSON.jsonDecode (mestring);
-//返回的json格式如下：
+//returned data in json format is as follows:
  {
- "id":"0000000000000000",//我的facebook账户id
- "name":"Me is me",//我的facebook账户名称
- "picture":"/data/empty_not_exists"//我的facebook账户个人图片本地保存的绝对路径
+ "id":"0000000000000000",// my Facebook account id
+ "name":"Me is me",// my Facebook account name
+ "picture":"/data/empty_not_exists"// absolute path where my Facebook profile picture is saved
  }
 
-// get friend list 获取faceook朋友信息列表
+// get facebook friend list 
 string friendstring = RiseSdk.Instance.GetFriends ();
 // friends is an ArrayList, [{"id":"xxx", "name":"xxxx", "picture":"/sdcard/.cache/xxxxx"}, ...]
 object friends = MiniJSON.jsonDecode (friendstring);
- //返回的json格式如下：
+ //returned data in json format is as follows:
  [
  {
- "id":"0000000000000001",//我的facebook好友1的账户id
- "name":"Friend 1",//我的facebook好友1的账户名称
- "picture":"/data/empty_not_exists1"//我的facebook好友1个人头像本地保存的绝对路径
+ "id":"0000000000000001",//account id for Facebook Friend 1
+ "name":"Friend 1",//account name for Facebook Friend 1
+ "picture":"/data/empty_not_exists1"//absolute path where the profile picture of Facebook 1 is saved
  },
  {
-  "id":"0000000000000002",//我的facebook好友2的账户id
- "name":"Friend 2",//我的facebook好友2的账户名称
- "picture":"/data/empty_not_exists2"//我的facebook好友2个人头像本地保存的绝对路径
+  "id":"0000000000000002",//account id for Facebook Friend 2
+ "name":"Friend 2",//account name for Facebook Friend 2
+ "picture":"/data/empty_not_exists2"//absolute path where the profile picture of Facebook 2 is saved
  },
  {
- "id":"0000000000000003",//我的facebook好友3的账户id
- "name":"Friend 3",//我的facebook好友3的账户名称
- "picture":"/data/empty_not_exists3"//我的facebook好友3个人头像本地保存的绝对路径
+ "id":"0000000000000003",//account id for Facebook Friend 3
+ "name":"Friend 3",//account name for Facebook Friend 3
+ "picture":"/data/empty_not_exists3"//absolute path where the profile picture of Facebook 3 is saved
  }
  ]
 ```
@@ -389,24 +374,21 @@ if (RiseSdk.Instance.HasNativeAd ("loading")) {
 }
 ```
 
-## 8, Misc 其他
+## 8, Others
 * download something and cache it (async)
 * get system configurations
 * query whether installed an app or not
 * launch an app
 * goto play store for an app
 
-下载图片并且缓存(没有回调)
 Download a bitmap and cache it (without callback)
 ```csharp
 string path = RiseSdk.Instance.CacheUrl("http://img.google.com/xxxxxx.png");
 // do your works, you can query the path whether exists or not after 5 seconds
 ```
 
-如果你想缓存一个url并且让系统给你一个回调，你应该这样做：
-If you want to cache an url and let the system give you a callback, you can do this
-* 定义回调函数
-* define callback
+If you want to cache an url and get a callback from system, you can follow this:
+* Define callback function
 ```csharp
 const int TAG_BITMAP = 1;
 void InitListeners() {
@@ -419,16 +401,15 @@ void OnCacheUrl(bool result, int tag, string path) {
 }
 ```
 
-* download 下载
+* Download 
 ```csharp
 RiseSdk.Instance.CacheUrl(TAG_BITMAP, "http://img.google.com/xxxxxx.png");
-// 当下载完成时，会调用刚才添加的回调方法OnCacheUrl
-// the result will be called in function OnCacheUrl
+// OnCacheUrl will be called when download completed
 ```
 
 * other misc 其他
 ```csharp
-// get system configurations 获取一些配置信息
+// get system configurations
 string config = RiseSdk.Instance.GetConfig(RiseSdk.CONFIG_KEY_APP_ID);
 int appId = int.Parse(config);
 
@@ -445,8 +426,7 @@ public const int CONFIG_KEY_VERSION_CODE = 8;
 public const int CONFIG_KEY_VERSION_NAME = 9;
 public const int CONFIG_KEY_PACKAGE_NAME = 10;
 
-//检测是否安装了某个app
-// query an app whether installed or not
+//Check whether an app is installed
 string appPackageName = "com.yes.good";
 if (RiseSdk.Instance.HasApp(appPackageName)) {
   // launch this app
@@ -460,49 +440,49 @@ if (RiseSdk.Instance.HasApp(appPackageName)) {
 ## 9, Congratulations, done.
 when you run your game in your android phone or emulator, your will see some toast information.
 
-### 我们额外还提供以下接口：
-* 判断网络是否连接
+### We also offer the following API：
+* check whether the network is connected
 ```csharp
 boolean isNetworkConnected = RiseSdk.Instance.isNetworkConnected();
 ```
 
-* 弹出android原生toast提示
+* Pop up android native toast notification
 ```csharp
-String messageContent="我是toast消息内容";
+String messageContent="toast content";
 RiseSdk.Instance.toast(messageContent);
 ```
 
-* 弹出android原生alert dialog
+* Pop up android native alert dialog
 ```csharp
-String title = "我是标题";
-String message = "我是内容";
+String title = "Title";
+String message = "Content";
 RiseSdk.Instance.alert(title,message);
 ```
 
-* 如果你想在玩家对广告进行操作后做处理，你可以添加广告事件的监听：
-* 定义回调函数
+* If you want to monitor players’ ad behavior, please add ads monitor events：
+* Define callback function
 ```csharp
 void OnAdResult (RiseSdk.AdEventType type) {
   switch(type) {
-    case RiseSdk.AdEventType.FullAdClosed: //大屏广告被关闭
+    case RiseSdk.AdEventType.FullAdClosed: //full screen ads closed
       Debug.Log ("OnAdResult, FullAdClosed");
     break;
-	case RiseSdk.AdEventType.FullAdClicked: //大屏广告被点击
+	case RiseSdk.AdEventType.FullAdClicked: //full screen ads clicked
       Debug.Log ("OnAdResult, FullAdClicked");
     break;
-	case RiseSdk.AdEventType.VideoAdClosed: //视频广告被关闭
+	case RiseSdk.AdEventType.VideoAdClosed: //video ads closed
 	  Debug.Log ("OnAdResult, VideoAdClosed");
     break;
-	case RiseSdk.AdEventType.BannerAdClicked: //bannner广告被点击
+	case RiseSdk.AdEventType.BannerAdClicked: //banner ads clicked
 	  Debug.Log ("OnAdResult, BannerAdClicked");
     break;
-	case RiseSdk.AdEventType.CrossAdClicked: //交叉推广广告被点击
+	case RiseSdk.AdEventType.CrossAdClicked: //cross promotion ads clicked
 	  Debug.Log ("OnAdResult, CrossAdClicked");
     break;
   }
 }
 
-// 在初始化的时候注册你的回调函数
+// register callback function during initialization
  void Awake () {
   ...
   RiseSdkListener.OnAdEvent -= OnAdResult;
@@ -511,6 +491,6 @@ void OnAdResult (RiseSdk.AdEventType type) {
 }
 ```
 
-## 10，如果您有不明白之处可以查看我们的API文档，API文档中有对接口的详细解释。如您看过API文档后还有不明白之处，可发送邮件到appdev@ivymobile.com，我们会尽快给您回复！谢谢！
+## 10，If you have any question about the API document, please contact us via appdev@ivymobile.com. We will reply you as soon as possible! Thank you!
 
 
