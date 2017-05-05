@@ -1,6 +1,6 @@
 # RiseSDK for Unity3D
 #
-#### English Doc Link: https://github.com/IvySdk/unity3d/wiki/English-Doc
+#### English Version Link: https://github.com/IvySdk/unity3d/wiki/English-Doc
 #
 ## 1, Add dependencies 添加引用
 完全复制Plugins文件夹到你的Unity工程Assets目录下
