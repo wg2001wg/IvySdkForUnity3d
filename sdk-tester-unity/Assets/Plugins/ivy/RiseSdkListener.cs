@@ -107,7 +107,7 @@ public class RiseSdkListener : MonoBehaviour
     public void onReceiveReward(string data)
     {
         string[] results = data.Split('|');
-        bool success = results[0].Equals("true");
+        bool success = int.Parse (results [0]) == 0;
         int id = int.Parse(results[1]);
         if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList().Length > 0)
         {
