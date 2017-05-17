@@ -7,8 +7,7 @@ using UnityEngine;
 /// <summary>
 /// SDK接口回调类
 /// </summary>
-public class RiseSdkListener : MonoBehaviour
-{
+public class RiseSdkListener : MonoBehaviour {
     /// <summary>
     /// 显示视频广告的结果回调事件
     /// </summary>
@@ -51,21 +50,17 @@ public class RiseSdkListener : MonoBehaviour
     /// <summary>
     /// 单例对象
     /// </summary>
-    public static RiseSdkListener Instance
-    {
-        get
-        {
-            if (!_instance)
-            {
+    public static RiseSdkListener Instance {
+        get {
+            if (!_instance) {
                 // check if there is a IceTimer instance already available in the scene graph
-                _instance = FindObjectOfType(typeof(RiseSdkListener)) as RiseSdkListener;
+                _instance = FindObjectOfType (typeof (RiseSdkListener)) as RiseSdkListener;
 
                 // nope, create a new one
-                if (!_instance)
-                {
-                    var obj = new GameObject("RiseSdkListener");
-                    _instance = obj.AddComponent<RiseSdkListener>();
-                    DontDestroyOnLoad(obj);
+                if (!_instance) {
+                    var obj = new GameObject ("RiseSdkListener");
+                    _instance = obj.AddComponent<RiseSdkListener> ();
+                    DontDestroyOnLoad (obj);
                 }
             }
 
@@ -73,45 +68,37 @@ public class RiseSdkListener : MonoBehaviour
         }
     }
 
-    void OnApplicationPause(bool pauseStatus)
-    {
-        if (pauseStatus)
-        {
-            RiseSdk.Instance.OnPause();
+    void OnApplicationPause (bool pauseStatus) {
+        if (pauseStatus) {
+            RiseSdk.Instance.OnPause ();
         }
     }
 
-    void OnApplicationFocus(bool focusStatus)
-    {
-        if (focusStatus)
-        {
-            RiseSdk.Instance.OnResume();
+    void OnApplicationFocus (bool focusStatus) {
+        if (focusStatus) {
+            RiseSdk.Instance.OnResume ();
         }
     }
 
-    void OnApplicationQuit()
-    {
-        RiseSdk.Instance.OnStop();
-        RiseSdk.Instance.OnDestroy();
+    void OnApplicationQuit () {
+        RiseSdk.Instance.OnStop ();
+        RiseSdk.Instance.OnDestroy ();
     }
 
-    void Awake()
-    {
-        RiseSdk.Instance.OnStart();
+    void Awake () {
+        RiseSdk.Instance.OnStart ();
     }
 
     /// <summary>
     /// 显示视频广告的结果回调方法，SDK自动调用。
     /// </summary>
     /// <param name="data">返回的结果数据</param>
-    public void onReceiveReward(string data)
-    {
-        string[] results = data.Split('|');
+    public void onReceiveReward (string data) {
+        string [] results = data.Split ('|');
         bool success = int.Parse (results [0]) == 0;
-        int id = int.Parse(results[1]);
-        if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList().Length > 0)
-        {
-            OnRewardAdEvent(success, id);
+        int id = int.Parse (results [1]);
+        if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList ().Length > 0) {
+            OnRewardAdEvent (success, id);
         }
     }
 
@@ -119,12 +106,10 @@ public class RiseSdkListener : MonoBehaviour
     /// 支付成功结果回调方法，SDK自动调用。
     /// </summary>
     /// <param name="billId">计费点Id</param>
-    public void onPaymentSuccess(string billId)
-    {
-        int id = int.Parse(billId);
-        if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList().Length > 0)
-        {
-            OnPaymentEvent(RiseSdk.PAYMENT_RESULT_SUCCESS, id);
+    public void onPaymentSuccess (string billId) {
+        int id = int.Parse (billId);
+        if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList ().Length > 0) {
+            OnPaymentEvent (RiseSdk.PAYMENT_RESULT_SUCCESS, id);
         }
     }
 
@@ -132,12 +117,10 @@ public class RiseSdkListener : MonoBehaviour
     /// 支付失败结果回调方法，SDK自动调用。
     /// </summary>
     /// <param name="billId">计费点Id</param>
-    public void onPaymentFail(string billId)
-    {
-        int id = int.Parse(billId);
-        if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList().Length > 0)
-        {
-            OnPaymentEvent(RiseSdk.PAYMENT_RESULT_FAILS, id);
+    public void onPaymentFail (string billId) {
+        int id = int.Parse (billId);
+        if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList ().Length > 0) {
+            OnPaymentEvent (RiseSdk.PAYMENT_RESULT_FAILS, id);
         }
     }
 
@@ -145,12 +128,10 @@ public class RiseSdkListener : MonoBehaviour
     /// 支付取消结果回调方法，SDK自动调用。
     /// </summary>
     /// <param name="billId">计费点Id</param>
-    public void onPaymentCanceled(string billId)
-    {
-        int id = int.Parse(billId);
-        if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList().Length > 0)
-        {
-            OnPaymentEvent(RiseSdk.PAYMENT_RESULT_CANCEL, id);
+    public void onPaymentCanceled (string billId) {
+        int id = int.Parse (billId);
+        if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList ().Length > 0) {
+            OnPaymentEvent (RiseSdk.PAYMENT_RESULT_CANCEL, id);
         }
     }
 
@@ -158,21 +139,18 @@ public class RiseSdkListener : MonoBehaviour
     /// 设置支付系统状态，SDK自动调用。
     /// </summary>
     /// <param name="dummy"></param>
-    public void onPaymentSystemValid(string dummy)
-    {
-        RiseSdk.Instance.SetPaymentSystemValid(true);
+    public void onPaymentSystemValid (string dummy) {
+        RiseSdk.Instance.SetPaymentSystemValid (true);
     }
 
     /// <summary>
     /// 登陆faceboook账户的结果回调方法，SDK自动调用。
     /// </summary>
     /// <param name="result">返回的结果数据</param>
-    public void onReceiveLoginResult(string result)
-    {
-        int success = int.Parse(result);
-        if (OnSNSEvent != null && OnSNSEvent.GetInvocationList().Length > 0)
-        {
-            OnSNSEvent(success == 0, RiseSdk.SNS_EVENT_LOGIN, 0);
+    public void onReceiveLoginResult (string result) {
+        int success = int.Parse (result);
+        if (OnSNSEvent != null && OnSNSEvent.GetInvocationList ().Length > 0) {
+            OnSNSEvent (success == 0, RiseSdk.SNS_EVENT_LOGIN, 0);
         }
     }
 
@@ -180,12 +158,10 @@ public class RiseSdkListener : MonoBehaviour
     /// 邀请faceboook好友的结果回调方法，SDK自动调用。
     /// </summary>
     /// <param name="result">返回的结果数据</param>
-    public void onReceiveInviteResult(string result)
-    {
-        int success = int.Parse(result);
-        if (OnSNSEvent != null && OnSNSEvent.GetInvocationList().Length > 0)
-        {
-            OnSNSEvent(success == 0, RiseSdk.SNS_EVENT_INVITE, 0);
+    public void onReceiveInviteResult (string result) {
+        int success = int.Parse (result);
+        if (OnSNSEvent != null && OnSNSEvent.GetInvocationList ().Length > 0) {
+            OnSNSEvent (success == 0, RiseSdk.SNS_EVENT_INVITE, 0);
         }
     }
 
@@ -193,12 +169,10 @@ public class RiseSdkListener : MonoBehaviour
     /// faceboook点赞的结果回调方法，SDK自动调用。
     /// </summary>
     /// <param name="result">返回的结果数据</param>
-    public void onReceiveLikeResult(string result)
-    {
-        int success = int.Parse(result);
-        if (OnSNSEvent != null && OnSNSEvent.GetInvocationList().Length > 0)
-        {
-            OnSNSEvent(success == 0, RiseSdk.SNS_EVENT_LIKE, 0);
+    public void onReceiveLikeResult (string result) {
+        int success = int.Parse (result);
+        if (OnSNSEvent != null && OnSNSEvent.GetInvocationList ().Length > 0) {
+            OnSNSEvent (success == 0, RiseSdk.SNS_EVENT_LIKE, 0);
         }
     }
 
@@ -206,56 +180,44 @@ public class RiseSdkListener : MonoBehaviour
     /// faceboook发起挑战的结果回调方法，SDK自动调用。
     /// </summary>
     /// <param name="result">返回的结果数据</param>
-    public void onReceiveChallengeResult(string result)
-    {
-        int count = int.Parse(result);
-        if (OnSNSEvent != null && OnSNSEvent.GetInvocationList().Length > 0)
-        {
-            OnSNSEvent(count > 0, RiseSdk.SNS_EVENT_CHALLENGE, count);
+    public void onReceiveChallengeResult (string result) {
+        int count = int.Parse (result);
+        if (OnSNSEvent != null && OnSNSEvent.GetInvocationList ().Length > 0) {
+            OnSNSEvent (count > 0, RiseSdk.SNS_EVENT_CHALLENGE, count);
         }
     }
 
-    public void onSubmitSuccess(string leaderBoardTag)
-    {
-        if (OnLeaderBoardEvent != null && OnLeaderBoardEvent.GetInvocationList().Length > 0)
-        {
-            OnLeaderBoardEvent(true, true, leaderBoardTag, "");
+    public void onSubmitSuccess (string leaderBoardTag) {
+        if (OnLeaderBoardEvent != null && OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
+            OnLeaderBoardEvent (true, true, leaderBoardTag, "");
         }
     }
 
-    public void onSubmitFailure(string leaderBoardTag)
-    {
-        if (OnLeaderBoardEvent != null && OnLeaderBoardEvent.GetInvocationList().Length > 0)
-        {
-            OnLeaderBoardEvent(true, false, leaderBoardTag, "");
+    public void onSubmitFailure (string leaderBoardTag) {
+        if (OnLeaderBoardEvent != null && OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
+            OnLeaderBoardEvent (true, false, leaderBoardTag, "");
         }
     }
 
-    public void onLoadSuccess(string data)
-    {
-        string[] results = data.Split('|');
-        if (OnLeaderBoardEvent != null && OnLeaderBoardEvent.GetInvocationList().Length > 0)
-        {
-            OnLeaderBoardEvent(false, true, results[0], results[1]);
+    public void onLoadSuccess (string data) {
+        string [] results = data.Split ('|');
+        if (OnLeaderBoardEvent != null && OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
+            OnLeaderBoardEvent (false, true, results [0], results [1]);
         }
     }
 
-    public void onLoadFailure(string leaderBoardTag)
-    {
-        if (OnLeaderBoardEvent != null && OnLeaderBoardEvent.GetInvocationList().Length > 0)
-        {
-            OnLeaderBoardEvent(false, false, leaderBoardTag, "");
+    public void onLoadFailure (string leaderBoardTag) {
+        if (OnLeaderBoardEvent != null && OnLeaderBoardEvent.GetInvocationList ().Length > 0) {
+            OnLeaderBoardEvent (false, false, leaderBoardTag, "");
         }
     }
 
-    public void onServerResult(string data)
-    {
-        string[] results = data.Split('|');
-        int resultCode = int.Parse(results[0]);
-        bool success = int.Parse(results[1]) == 0;
-        if (OnReceiveServerResult != null && OnReceiveServerResult.GetInvocationList().Length > 0)
-        {
-            OnReceiveServerResult(resultCode, success, results[2]);
+    public void onServerResult (string data) {
+        string [] results = data.Split ('|');
+        int resultCode = int.Parse (results [0]);
+        bool success = int.Parse (results [1]) == 0;
+        if (OnReceiveServerResult != null && OnReceiveServerResult.GetInvocationList ().Length > 0) {
+            OnReceiveServerResult (resultCode, success, results [2]);
         }
     }
 
@@ -263,21 +225,16 @@ public class RiseSdkListener : MonoBehaviour
     /// 下载文件结果回调方法，SDK自动调用。
     /// </summary>
     /// <param name="data">返回的数据</param>
-    public void onCacheUrlResult(string data)
-    {
+    public void onCacheUrlResult (string data) {
         //tag,success,name
-        string[] results = data.Split('|');
-        int tag = int.Parse(results[0]);
-        bool success = int.Parse(results[1]) == 0;
-        if (OnCacheUrlResult != null && OnCacheUrlResult.GetInvocationList().Length > 0)
-        {
-            if (success)
-            {
-                OnCacheUrlResult(true, tag, results[2]);
-            }
-            else
-            {
-                OnCacheUrlResult(false, tag, "");
+        string [] results = data.Split ('|');
+        int tag = int.Parse (results [0]);
+        bool success = int.Parse (results [1]) == 0;
+        if (OnCacheUrlResult != null && OnCacheUrlResult.GetInvocationList ().Length > 0) {
+            if (success) {
+                OnCacheUrlResult (true, tag, results [2]);
+            } else {
+                OnCacheUrlResult (false, tag, "");
             }
         }
     }
@@ -285,11 +242,9 @@ public class RiseSdkListener : MonoBehaviour
     /// <summary>
     /// 获取后台配置的自定义json数据的回调。当SDK初始化完成，第一稳〉绞?莺蠡嶙远?饔酶梅椒ǎ?绻?枰?梢蕴崆疤砑蛹嗵?⑸    /// </summary>
     /// <param name="data">返回后台配置的自定义json数据，如：{"x":"x", "x":8, "x":{x}, "x":[x]}</param>
-    public void onReceiveServerExtra(string data)
-    {
-        if (OnReceiveServerExtra != null && OnReceiveServerExtra.GetInvocationList().Length > 0)
-        {
-            OnReceiveServerExtra(data);
+    public void onReceiveServerExtra (string data) {
+        if (OnReceiveServerExtra != null && OnReceiveServerExtra.GetInvocationList ().Length > 0) {
+            OnReceiveServerExtra (data);
         }
     }
 
@@ -297,11 +252,9 @@ public class RiseSdkListener : MonoBehaviour
     /// 获取到通知栏消息数据的回调。当SDK初始化完成，第一次取到数据后会自动调用该方法，如果需要可以提前添加监听。
     /// </summary>
     /// <param name="data">后台配置的数据</param>
-    public void onReceiveNotificationData(string data)
-    {
-        if (OnReceiveNotificationData != null && OnReceiveNotificationData.GetInvocationList().Length > 0)
-        {
-            OnReceiveNotificationData(data);
+    public void onReceiveNotificationData (string data) {
+        if (OnReceiveNotificationData != null && OnReceiveNotificationData.GetInvocationList ().Length > 0) {
+            OnReceiveNotificationData (data);
         }
     }
 
@@ -309,22 +262,18 @@ public class RiseSdkListener : MonoBehaviour
     /// 大屏广告被关闭的回调方法，SDK自动调用。
     /// </summary>
     /// <param name="data">返回的数据</param>
-    public void onFullAdClosed(string data)
-    {
-        if (OnAdEvent != null && OnAdEvent.GetInvocationList().Length > 0)
-        {
-            OnAdEvent(RiseSdk.AdEventType.FullAdClosed);
+    public void onFullAdClosed (string data) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            OnAdEvent (RiseSdk.AdEventType.FullAdClosed);
         }
     }
 
     /// <summary>
     /// 大屏广告被点击的回调方法，SDK自动饔谩⑸    /// </summary>
     /// <param name="data">返回的数据</param>
-    public void onFullAdClicked(string data)
-    {
-        if (OnAdEvent != null && OnAdEvent.GetInvocationList().Length > 0)
-        {
-            OnAdEvent(RiseSdk.AdEventType.FullAdClicked);
+    public void onFullAdClicked (string data) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            OnAdEvent (RiseSdk.AdEventType.FullAdClicked);
         }
     }
 
@@ -332,11 +281,9 @@ public class RiseSdkListener : MonoBehaviour
     /// 视频广告被关闭的回调方法，SDK自动调用。
     /// </summary>
     /// <param name="data">返回的数据</param>
-    public void onVideoAdClosed(string data)
-    {
-        if (OnAdEvent != null && OnAdEvent.GetInvocationList().Length > 0)
-        {
-            OnAdEvent(RiseSdk.AdEventType.VideoAdClosed);
+    public void onVideoAdClosed (string data) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            OnAdEvent (RiseSdk.AdEventType.VideoAdClosed);
         }
     }
 
@@ -344,11 +291,9 @@ public class RiseSdkListener : MonoBehaviour
     /// banner广告被点击的回调方法，SDK自动调用。
     /// </summary>
     /// <param name="data">返回的数据</param>
-    public void onBannerAdClicked(string data)
-    {
-        if (OnAdEvent != null && OnAdEvent.GetInvocationList().Length > 0)
-        {
-            OnAdEvent(RiseSdk.AdEventType.BannerAdClicked);
+    public void onBannerAdClicked (string data) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            OnAdEvent (RiseSdk.AdEventType.BannerAdClicked);
         }
     }
 
@@ -356,11 +301,9 @@ public class RiseSdkListener : MonoBehaviour
     /// 交叉推广广告被点击的回调方法，SDK自动调用。
     /// </summary>
     /// <param name="data">返回的数据</param>
-    public void onCrossAdClicked(string data)
-    {
-        if (OnAdEvent != null && OnAdEvent.GetInvocationList().Length > 0)
-        {
-            OnAdEvent(RiseSdk.AdEventType.CrossAdClicked);
+    public void onCrossAdClicked (string data) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            OnAdEvent (RiseSdk.AdEventType.CrossAdClicked);
         }
     }
 }

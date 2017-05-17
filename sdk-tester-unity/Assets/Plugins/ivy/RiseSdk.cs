@@ -300,6 +300,7 @@ public sealed class RiseSdk {
     /// 更多游戏接口，跳到推广的游戏列表界面。
     /// </summary>
     public void ShowMore () {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("ShowMore");
 #endif
@@ -352,6 +353,7 @@ public sealed class RiseSdk {
     /// </summary>
     /// <param name="rewardId">客户端自己配置的视频广告调用时机</param>
     public void ShowRewardAd (int rewardId) {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.ShowRewardAd (rewardId);
         RiseSdkListener.Instance.onReceiveReward ("true|1");
@@ -373,6 +375,7 @@ public sealed class RiseSdk {
     /// <param name="tag">视频广告tag</param>
     /// <param name="rewardId">客户端自己配置的视频广告调用时机</param>
     public void ShowRewardAd (string tag, int rewardId) {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.ShowRewardAd (tag, rewardId);
 #endif
@@ -443,6 +446,7 @@ public sealed class RiseSdk {
     /// 需要退出游戏时调用。
     /// </summary>
     public void OnExit () {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.OnExit ();
 #endif
@@ -480,6 +484,7 @@ public sealed class RiseSdk {
     /// </summary>
     /// <param name="billingId">计费点id</param>
     public void Pay (int billingId) {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Pay (billingId);
 #endif
@@ -492,6 +497,7 @@ public sealed class RiseSdk {
     /// 分享游戏。
     /// </summary>
     public void Share () {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Share");
 #endif
@@ -530,6 +536,7 @@ public sealed class RiseSdk {
     /// 跳转到游戏评分界面。
     /// </summary>
     public void Rate () {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Rate");
 #endif
@@ -544,6 +551,7 @@ public sealed class RiseSdk {
     /// <param name="tag"></param>
     /// <param name="yPercent"></param>
     public void ShowNativeAd (string tag, int yPercent) {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("ShowNativeAd");
 #endif
@@ -631,6 +639,7 @@ public sealed class RiseSdk {
     /// => {to do something};
     /// </summary>
     public void Invite () {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Invite");
 #endif
@@ -653,6 +662,7 @@ public sealed class RiseSdk {
     /// <param name="title">挑战标题</param>
     /// <param name="message">挑战内容</param>
     public void Challenge (string title, string message) {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Challenge, title: " + title + ", message: " + message);
 #endif
@@ -729,6 +739,7 @@ public sealed class RiseSdk {
     /// => {to do something};
     /// </summary>
     public void Like () {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Like");
 #endif
@@ -809,6 +820,7 @@ public sealed class RiseSdk {
     /// </summary>
     /// <param name="packageName">需要打开的app的包名</param>
     public void LaunchApp (string packageName) {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
         if (_class != null) {
             _class.CallStatic ("launchApp", packageName);
         }
@@ -819,6 +831,7 @@ public sealed class RiseSdk {
     /// </summary>
     /// <param name="packageName">需要下载的app的包名</param>
     public void GetApp (string packageName) {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
         if (_class != null) {
             _class.CallStatic ("getApp", packageName);
         }
@@ -847,6 +860,7 @@ public sealed class RiseSdk {
     /// <param name="title">对话框标题</param>
     /// <param name="message">对话框内容</param>
     public void Alert (string title, string message) {
+        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Alert (title, message);
 #endif
