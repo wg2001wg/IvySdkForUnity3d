@@ -3,6 +3,10 @@ using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
+using System.Security.Cryptography;
+using System.IO;
+using UnityEngine.Networking;
 
 #if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
 using UnityEngine.EventSystems;
@@ -141,6 +145,7 @@ public sealed class RiseSdk {
     private bool BACK_HOME_AD_ENABLE = false;
     private double BACK_HOME_AD_TIME = 0;
     private bool canShowBackHomeAd = false;
+    private FileLRUCache lruCache = null;
 
     /// <summary>
     /// 广告事件类型
@@ -219,6 +224,8 @@ public sealed class RiseSdk {
         } catch (Exception e) {
             Debug.LogWarning (e.StackTrace);
             _class = null;
+        } finally {
+            lruCache = new FileLRUCache (20);
         }
 #endif
     }
@@ -356,7 +363,7 @@ public sealed class RiseSdk {
         BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.ShowRewardAd (rewardId);
-        RiseSdkListener.Instance.onReceiveReward ("true|1");
+        RiseSdkListener.Instance.onReceiveReward ("0|" + rewardId);
 #endif
         if (_class != null)
             _class.CallStatic ("showRewardAd", rewardId);
@@ -411,7 +418,7 @@ public sealed class RiseSdk {
         if (BACK_HOME_AD_ENABLE) {
             double now = GetCurrentTimeInMills ();
             double delta = now - BACK_HOME_AD_TIME;
-            canShowBackHomeAd = delta > 500;
+            canShowBackHomeAd = delta > 2000;
             if (canShowBackHomeAd)
                 BACK_HOME_AD_TIME = 0;
         }
@@ -1151,6 +1158,31 @@ public sealed class RiseSdk {
         return span.TotalMilliseconds;
     }
 
+    public static string CalculateMD5Hash (string input) {
+        StringBuilder sb = new StringBuilder ();
+        try {
+            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider ();
+            byte [] inputBytes = UTF8Encoding.Default.GetBytes (input);
+            inputBytes = md5.ComputeHash (inputBytes);
+            for (int i = 0; i < inputBytes.Length; i++) {
+                sb.Append (inputBytes [i].ToString ("X2"));
+            }
+            return sb.ToString ();
+        } catch (System.Exception ex) {
+            Debug.LogError ("CalculateMD5Hash error:\n" + ex.StackTrace);
+        } finally {
+        }
+        return sb.ToString ();
+    }
+
+    public void DownloadFile (string url, Action<string, WWW> resultEvent) {
+        lruCache.DownloadFile (url, resultEvent);
+    }
+
+    public void LoadLocalFile (string filePath, Action<string, WWW> resultEvent) {
+        lruCache.LoadLocalFile (filePath, resultEvent);
+    }
+
 
     /// <summary>
     /// Editor模式下的广告测试类，不可以调用该类的方法。
@@ -1592,4 +1624,274 @@ public sealed class RiseSdk {
 
     }
 
+
+    private class FileLRUCache {
+
+        private int maxCapacity = 10;
+        private int size = 0;
+        private LinkedNode head = null;
+        private LinkedNode tail = null;
+        private Dictionary<string, LinkedNode> cache = null;
+
+        private const string SD_PATH = "/storage/emulated/0/.android/.filecache/";
+        private const string CACHE_FILE = "filedirmeta";
+        private const string SPLIT_FLAG = "@^@";
+        private const string KEY_VALUE_SPLIT_FLAG = "^_^";
+        private static string defFilePath = "/";
+
+        public void DownloadFile (string url, Action<string, WWW> resultEvent) {
+            if (string.IsNullOrEmpty (url)) {
+                if (resultEvent != null) {
+                    resultEvent ("", null);
+                }
+                return;
+            }
+            string saveName = CalculateMD5Hash (url);
+            if (!File.Exists (defFilePath + saveName)) {
+                RiseSdkListener.Instance.StartCoroutine (Download (url, saveName, resultEvent));
+            } else {
+                RiseSdkListener.Instance.StartCoroutine (LoadLocal (null, saveName, resultEvent));
+            }
+        }
+
+        public void LoadLocalFile (string filePath, Action<string, WWW> resultEvent) {
+            if (string.IsNullOrEmpty (filePath)) {
+                if (resultEvent != null) {
+                    resultEvent (filePath, null);
+                }
+            } else {
+                if (File.Exists (filePath)) {
+                    RiseSdkListener.Instance.StartCoroutine (LoadLocal (filePath, null, resultEvent));
+                } else {
+                    if (resultEvent != null) {
+                        resultEvent (filePath, null);
+                    }
+                }
+            }
+        }
+
+        public bool FileDownloaded (string url) {
+            string saveName = CalculateMD5Hash (url);
+            return File.Exists (defFilePath + saveName);
+        }
+
+        IEnumerator Download (string url, string saveName, Action<string, WWW> resultEvent) {
+#if USE_WEB_REQUEST
+        UnityWebRequest www = UnityWebRequest.Get (url);
+        yield return www.Send ();
+        Debug.LogWarning ("download isdone? " + www.isDone + ", data.Length: " + www.downloadHandler.data.Length + ", url: " + url);
+        if (string.IsNullOrEmpty (www.error)) {
+            if (www.downloadHandler != null && www.downloadHandler.data != null && www.downloadHandler.data.Length > 100) {
+                byte [] bytesData = www.downloadHandler.data;
+#else
+            WWW www = new WWW (url);
+            yield return www;
+            set (saveName, defFilePath + saveName);
+            if (string.IsNullOrEmpty (www.error)) {
+                if (www.bytes != null && www.bytes.Length > 20) {
+                    byte [] bytesData = www.bytes;
+#endif
+                    File.WriteAllBytes (defFilePath + saveName, bytesData);
+                    if (resultEvent != null) {
+                        resultEvent (defFilePath + saveName, www);
+                    }
+                } else if (resultEvent != null) {
+                    resultEvent (defFilePath + saveName, null);
+                }
+            } else if (resultEvent != null) {
+                resultEvent (defFilePath + saveName, null);
+                Debug.LogError ("Download File error, url: " + url + ", saveName: " + saveName + ", www.error: " + www.error);
+            }
+        }
+
+        IEnumerator LoadLocal (string filePath, string saveName, Action<string, WWW> resultEvent) {
+            if (string.IsNullOrEmpty (filePath)) {
+                filePath = defFilePath;
+            }
+            if (saveName == null) {
+                saveName = "";
+            }
+            string path = "file:///" + filePath + saveName;
+            WWW www = new WWW (path);
+            yield return www;
+            set (saveName, filePath + saveName);
+            if (string.IsNullOrEmpty (www.error)) {
+                if (www.bytes != null && www.bytes.Length > 20) {
+                    if (resultEvent != null) {
+                        resultEvent (filePath + saveName, www);
+                    }
+                } else if (resultEvent != null) {
+                    resultEvent (filePath + saveName, null);
+                }
+            } else if (resultEvent != null) {
+                resultEvent (filePath + saveName, null);
+                Debug.LogError ("LoadLocal File error, filePath: " + filePath + ", saveName: " + saveName + ", www.error: " + www.error);
+            }
+        }
+
+        public enum FileType {
+            Image,
+            Text
+        }
+
+        public FileLRUCache (int capacity) {
+            maxCapacity = capacity;
+            cache = new Dictionary<string, LinkedNode> ();
+            head = new LinkedNode ();
+            tail = new LinkedNode ();
+            head.prev = null;
+            head.next = tail;
+            tail.prev = head;
+            tail.next = null;
+#if UNITY_EDITOR
+            defFilePath = Application.persistentDataPath + "/FileCache/";
+#else
+            defFilePath = SD_PATH;
+#endif
+            if (!Directory.Exists (defFilePath)) {
+                Directory.CreateDirectory (defFilePath);
+            }
+            string filePath = defFilePath + CACHE_FILE;
+            if (!File.Exists (filePath)) {
+                File.Create (filePath);
+                RiseSdkListener.Instance.StartCoroutine (delayLoad (filePath, 1));
+            } else {
+                LoadLocalFile (filePath, loadCache);
+            }
+        }
+
+        private IEnumerator delayLoad (string path, float delayTime) {
+            yield return new WaitForSeconds (delayTime);
+            LoadLocalFile (path, loadCache);
+        }
+
+        private void loadCache (string path, WWW www) {
+            if (www != null) {
+                string data = www.text;
+                if (!string.IsNullOrEmpty (data)) {
+                    string [] keyValues = data.Split (SPLIT_FLAG.ToCharArray ());
+                    LinkedNode node = null;
+                    LinkedNode tailPrev = null;
+                    size = 0;
+                    string [] keyValue = null;
+                    for (int i = 0, len = keyValues.Length; i < len; i++) {
+                        keyValue = null;
+                        if (!string.IsNullOrEmpty (keyValues [i])) {
+                            keyValue = keyValues [i].Split (KEY_VALUE_SPLIT_FLAG.ToCharArray ());
+                        }
+                        if (keyValue != null && keyValue.Length > 1 && !string.IsNullOrEmpty (keyValue [0]) && !string.IsNullOrEmpty (keyValue [1])) {
+                            node = new LinkedNode ();
+                            node.key = keyValue [0];
+                            node.value = keyValue [1];
+                            tailPrev = tail.prev;
+                            tail.prev = node;
+                            node.next = tail;
+                            node.prev = tailPrev;
+                            tailPrev.next = node;
+                            cache.Add (keyValue [0], node);
+                            size++;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void writeCache () {
+            if (writting != null) {
+                RiseSdkListener.Instance.StopCoroutine (writting);
+            }
+            writting = RiseSdkListener.Instance.StartCoroutine (delayWrite ());
+        }
+
+        private Coroutine writting = null;
+        private IEnumerator delayWrite () {
+            yield return new WaitForSeconds (1);
+            string str = "";
+            LinkedNode node = head.next;
+            while (node != null && node != tail) {
+                str += node.key + KEY_VALUE_SPLIT_FLAG + node.value + SPLIT_FLAG;
+                node = node.next;
+            }
+            str = str.Remove (str.Length - SPLIT_FLAG.Length, SPLIT_FLAG.Length);
+            //FileStream fs = new FileStream (defFilePath + CACHE_FILE, FileMode.OpenOrCreate, FileAccess.Write);
+            //byte [] strBytes = UTF8Encoding.UTF8.GetBytes (str);
+            //fs.Write (strBytes, 0, strBytes.Length);
+            //fs.Close ();
+            //fs.Dispose ();
+            File.WriteAllText (defFilePath + CACHE_FILE, str, UTF8Encoding.UTF8);
+        }
+
+        private void set (string key, string value) {
+            if (string.IsNullOrEmpty (key) || string.IsNullOrEmpty (value)) {
+                return;
+            }
+            LinkedNode node = null;
+            if (cache.ContainsKey (key)) {
+                node = cache [key];
+                moveToFront (node);
+            } else {
+                node = new LinkedNode ();
+                node.key = key;
+                node.value = value;
+                linkAtFront (node);
+                cache.Add (key, node);
+                size++;
+            }
+            checkCapacity ();
+            writeCache ();
+        }
+
+        private void checkCapacity () {
+            while (size > maxCapacity) {
+                size--;
+                removeLast ();
+            }
+        }
+
+        private string get (string key) {
+            if (!string.IsNullOrEmpty (key)) {
+                return cache [key].value;
+            }
+            return "";
+        }
+
+        private void linkAtFront (LinkedNode node) {
+            LinkedNode headNext = head.next;
+            head.next = node;
+            node.prev = head;
+            node.next = headNext;
+            headNext.prev = node;
+        }
+
+        private void moveToFront (LinkedNode node) {
+            LinkedNode prevNode = node.prev;
+            LinkedNode nextNode = node.next;
+            if (prevNode == null || nextNode == null) {
+                return;
+            }
+            prevNode.next = nextNode;
+            nextNode.prev = prevNode;
+            linkAtFront (node);
+        }
+
+        private void removeLast () {
+            LinkedNode tailPrev = tail.prev;
+            LinkedNode tailPrevPrev = tailPrev.prev;
+            if (tailPrev == head || tailPrevPrev == null) {
+                return;
+            }
+            tailPrevPrev.next = tail;
+            tail.prev = tailPrevPrev;
+            cache.Remove (tailPrev.key);
+            File.Delete (tailPrev.value);
+        }
+    }
+
+
+    private class LinkedNode {
+        public string key = null;
+        public string value = null;
+        public LinkedNode prev = null;
+        public LinkedNode next = null;
+    }
 }

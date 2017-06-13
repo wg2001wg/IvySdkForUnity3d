@@ -491,6 +491,29 @@ void OnAdResult (RiseSdk.AdEventType type) {
 }
 ```
 
+* download file or load local file
+```csharp
+// download file
+RiseSdk.Instance.DownloadFile ("http://u4.tdimg.com/5/247/29/169525782757782754049058805819627272075.jpg", (string path, WWW www) => {
+            if (www != null) {
+                Texture2D tex = new Texture2D (128, 128, TextureFormat.ARGB32, false);
+                tex.LoadImage (www.bytes);
+                Sprite sp = Sprite.Create (tex, new Rect (0, 0, tex.width, tex.height), new Vector2 (0, 0));
+                //avatarImg.sprite = sp;
+            }
+});
+
+// load local file
+RiseSdk.Instance.LoadLocalFile ("/storage/emulated/0/.android/.filecache/asdf.jpg", (string path, WWW www) => {
+            if (www != null) {
+                Texture2D tex = new Texture2D (128, 128, TextureFormat.ARGB32, false);
+                tex.LoadImage (www.bytes);
+                Sprite sp = Sprite.Create (tex, new Rect (0, 0, tex.width, tex.height), new Vector2 (0, 0));
+                //avatarImg.sprite = sp;
+            }
+});
+```
+
 ## 10，If you have any question about the API document, please contact us via appdev@ivymobile.com. We will reply you as soon as possible! Thank you!
 
 

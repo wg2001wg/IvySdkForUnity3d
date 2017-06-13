@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
-public class Demo : MonoBehaviour
-{
-	public GUISkin guiSkin;
-	private string[] titles = {
+public class Demo : MonoBehaviour {
+
+    public GUISkin guiSkin;
+    public TextAsset infoJson = null;
+    public Image avatarImg = null;
+    private string [] imgUrl = null;
+
+    private string [] titles = {
 		"Start AD", //0
 		"Pause AD", //1
 		"PassLevel AD", //2
@@ -38,322 +43,379 @@ public class Demo : MonoBehaviour
 		"load config", //30
 		"Alert", //31
 		"Cache Url With Tag", //32
+        "Download Image"
 	};
 
-	// Use this for initialization
-	void Awake ()
-	{
-		RiseSdk.Instance.Init();
-		InitListeners();
-	}
+    // Use this for initialization
+    void Awake () {
+        RiseSdk.Instance.Init ();
+        InitListeners ();
+#if UNITY_EDITOR
+        if (guiSkin != null) {
+            guiSkin.button.fontSize = 20;
+        }
+#else
+        if (guiSkin != null) {
+            guiSkin.button.fontSize = 50;
+        }
+#endif
+    }
 
-	void InitListeners() {
-		// Set get free coin event
-		RiseSdkListener.OnRewardAdEvent -= GetFreeCoin;
-		RiseSdkListener.OnRewardAdEvent += GetFreeCoin;
-		// On payment result
-		RiseSdkListener.OnPaymentEvent -= OnPaymentResult;
-		RiseSdkListener.OnPaymentEvent += OnPaymentResult;
+    void Start () {
+        initJsonData ();
+    }
 
-		RiseSdkListener.OnSNSEvent -= OnSNSEvent;
-		RiseSdkListener.OnSNSEvent += OnSNSEvent;
+    private int imgIdx = 0;
+    private void initJsonData () {
+        if (infoJson != null) {
+            List<object> data = (List<object>) RiseJson.Deserialize (infoJson.text);
+            if (data != null && data.Count > 0) {
+                int len = data.Count;
+                imgUrl = new string [len];
+                Dictionary<string, object> obj = null;
+                string avatar = null;
+                for (int i = 0; i < len; i++) {
+                    obj = (Dictionary<string, object>) RiseJson.Deserialize (RiseJson.Serialize (data [i]));
+                    avatar = obj ["Avatar"].ToString ();
+                    imgUrl [i] = avatar;
+                    if (i == 0 && avatarImg != null) {
+                        changeAvatarImg ();
+                    } else {
+                        RiseSdk.Instance.DownloadFile (avatar, null);
+                    }
+                }
+            }
+        }
+    }
 
-		RiseSdkListener.OnCacheUrlResult -= OnCacheUrl;
-		RiseSdkListener.OnCacheUrlResult += OnCacheUrl;
+    private void changeAvatarImg () {
+        if (imgUrl == null) {
+            return;
+        }
+        if (imgIdx < 0) {
+            imgIdx = 0;
+        }
+        RiseSdk.Instance.DownloadFile (imgUrl [imgIdx], (string path, WWW www) => {
+            if (www != null) {
+                Texture2D tex = new Texture2D (128, 128, TextureFormat.ARGB32, false);
+                tex.LoadImage (www.bytes);
+                Sprite sp = Sprite.Create (tex, new Rect (0, 0, tex.width, tex.height), new Vector2 (0, 0));
+                avatarImg.sprite = sp;
+            }
+        });
+        if (++imgIdx >= imgUrl.Length) {
+            imgIdx = 0;
+        }
+    }
 
-		RiseSdkListener.OnReceiveServerExtra -= OnReceiveServerExtra;
-		RiseSdkListener.OnReceiveServerExtra += OnReceiveServerExtra;
+    void InitListeners () {
+        // Set get free coin event
+        RiseSdkListener.OnRewardAdEvent -= GetFreeCoin;
+        RiseSdkListener.OnRewardAdEvent += GetFreeCoin;
+        // On payment result
+        RiseSdkListener.OnPaymentEvent -= OnPaymentResult;
+        RiseSdkListener.OnPaymentEvent += OnPaymentResult;
 
-		RiseSdkListener.OnReceiveNotificationData -= OnNotificationData;
-		RiseSdkListener.OnReceiveNotificationData += OnNotificationData;
+        RiseSdkListener.OnSNSEvent -= OnSNSEvent;
+        RiseSdkListener.OnSNSEvent += OnSNSEvent;
 
-		//RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
-		//RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
+        RiseSdkListener.OnCacheUrlResult -= OnCacheUrl;
+        RiseSdkListener.OnCacheUrlResult += OnCacheUrl;
 
-		//RiseSdkListener.OnReceiveServerResult -= OnServerResult;
-		//RiseSdkListener.OnReceiveServerResult += OnServerResult;
-	}
+        RiseSdkListener.OnReceiveServerExtra -= OnReceiveServerExtra;
+        RiseSdkListener.OnReceiveServerExtra += OnReceiveServerExtra;
 
-	void OnNotificationData(string data) {
-		Debug.LogError ("receive notification data: " + data);
-	}
+        RiseSdkListener.OnReceiveNotificationData -= OnNotificationData;
+        RiseSdkListener.OnReceiveNotificationData += OnNotificationData;
 
-	void OnReceiveServerExtra(string data) {
-		Debug.LogError ("receive server result" + data);
-	}
+        //RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
+        //RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
 
-	void OnCacheUrl(bool result, int tag, string path) {
-		Debug.LogError ("cache url result " + result + " tag " + tag + " path: " + path);
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-		if(Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Home)) {
-			RiseSdk.Instance.OnExit();
-		}
-	}
-	
-	void OnGUI ()
-	{
-		GUI.skin = guiSkin;
-		float w = Screen.width * .46f;
-		float h = Screen.height * .06f;
-		float x = 0, y = 0;
-		for (int i=0; i<titles.Length; i++) {
-			int l = ((int)i / 2) + 1;
-			y = 10 + (l - 1) * (h + 2);
-			if (i % 2 == 0)
-				x = 5;
-			else
-				x = Screen.width - w - 5;
-			if (GUI.Button (new Rect (x, y, w, h), titles [i])) {
-				doAction (i);
-			}
-		}
-	}
-	
-	void doAction (int id)
-	{
-		switch (id) {
-		case 0:
-			RiseSdk.Instance.ShowAd(RiseSdk.M_START);
-			break;
-		case 1:
-			RiseSdk.Instance.ShowAd(RiseSdk.M_PAUSE);
-			break;
-		case 2:
-			RiseSdk.Instance.ShowAd(RiseSdk.M_PASSLEVEL);
-			break;
-		case 3:
-			RiseSdk.Instance.ShowAd(RiseSdk.M_CUSTOM);
-			break;
-		case 4:
-			RiseSdk.Instance.ShowBanner("default", RiseSdk.POS_BANNER_MIDDLE_BOTTOM);
-			break;
-		case 5:
-			RiseSdk.Instance.CloseBanner();
-			break;
-		case 6:
-			RiseSdk.Instance.OnExit();
-			break;
-		case 7:
-			RiseSdk.Instance.Rate ();
-			break;
-		case 8:
-			Debug.LogError("get extra data: " + RiseSdk.Instance.GetExtraData ());
-			break;
-		case 9:
-			RiseSdk.Instance.TrackEvent ("category", "action", "label", 323);
-			break;
-		case 10:
-			RiseSdk.Instance.Pay (1);
-			break;
-		case 11:
-			RiseSdk.Instance.ShowMore();
-			break;
-		case 12:
-			RiseSdk.Instance.ShowRewardAd("default", 1);
-			break;
-		case 13:
-			RiseSdk.Instance.Share();
-			break;
+        //RiseSdkListener.OnReceiveServerResult -= OnServerResult;
+        //RiseSdkListener.OnReceiveServerResult += OnServerResult;
+    }
 
-		case 14:
-			RiseSdk.Instance.Login ();
-			break;
+    void OnNotificationData (string data) {
+        Debug.LogError ("receive notification data: " + data);
+    }
 
-		case 15:
-			Debug.LogError("is login: " + RiseSdk.Instance.IsLogin ());
-			break;
+    void OnReceiveServerExtra (string data) {
+        Debug.LogError ("receive server result" + data);
+    }
 
-		case 16:
-			RiseSdk.Instance.Logout ();
-			break;
+    void OnCacheUrl (bool result, int tag, string path) {
+        Debug.LogError ("cache url result " + result + " tag " + tag + " path: " + path);
+    }
 
-		case 17:
-			RiseSdk.Instance.Like ();
-			break;
+    // Update is called once per frame
+    void Update () {
+        if (Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown (KeyCode.Home)) {
+            RiseSdk.Instance.OnExit ();
+        }
+    }
 
-		case 19:
-			RiseSdk.Instance.Challenge ("your see", "speed coming...");
-			break;
+    void OnGUI () {
+        GUI.skin = guiSkin;
+        float w = Screen.width * .46f;
+        //float h = Screen.height * .06f;
+        float h = 1f * Screen.height / (titles.Length / 2 + 2);
+        float x = 0, y = 0;
+        for (int i = 0; i < titles.Length; i++) {
+            int l = ((int) i / 2) + 1;
+            y = 1 + (l - 1) * (h + 2);
+            if (i % 2 == 0)
+                x = 5;
+            else
+                x = Screen.width - w - 5;
+            if (GUI.Button (new Rect (x, y, w, h), titles [i])) {
+                doAction (i);
+            }
+        }
+    }
 
-		case 18:
-			RiseSdk.Instance.Invite ();
-			break;
+    void doAction (int id) {
+        switch (id) {
+            case 0:
+                RiseSdk.Instance.ShowAd (RiseSdk.M_START);
+                break;
+            case 1:
+                RiseSdk.Instance.ShowAd (RiseSdk.M_PAUSE);
+                break;
+            case 2:
+                RiseSdk.Instance.ShowAd (RiseSdk.M_PASSLEVEL);
+                break;
+            case 3:
+                RiseSdk.Instance.ShowAd (RiseSdk.M_CUSTOM);
+                break;
+            case 4:
+                RiseSdk.Instance.ShowBanner ("default", RiseSdk.POS_BANNER_MIDDLE_BOTTOM);
+                break;
+            case 5:
+                RiseSdk.Instance.CloseBanner ();
+                break;
+            case 6:
+                RiseSdk.Instance.OnExit ();
+                break;
+            case 7:
+                RiseSdk.Instance.Rate ();
+                break;
+            case 8:
+                Debug.LogError ("get extra data: " + RiseSdk.Instance.GetExtraData ());
+                break;
+            case 9:
+                RiseSdk.Instance.TrackEvent ("category", "action", "label", 323);
+                break;
+            case 10:
+                RiseSdk.Instance.Pay (1);
+                break;
+            case 11:
+                RiseSdk.Instance.ShowMore ();
+                break;
+            case 12:
+                RiseSdk.Instance.ShowRewardAd ("default", 1);
+                break;
+            case 13:
+                RiseSdk.Instance.Share ();
+                break;
 
-		case 20:
-			string mestring = RiseSdk.Instance.Me ();
-			object me = MiniJSON.jsonDecode (mestring);
-			if (me == null) {
-				Debug.LogError ("me is null");
-			} else {
-				Debug.LogError ("me is: " + me);
-			}
-			break;
+            case 14:
+                RiseSdk.Instance.Login ();
+                break;
 
-		case 21:
-			string friendstring = RiseSdk.Instance.GetFriends ();
-			object friends = MiniJSON.jsonDecode (friendstring);
-			Debug.LogError ("friends are: " + friends);
-			break;
-			/*
-		case 22:
-			RiseSdk.Instance.SubmitScore ("endless", 1234, "userName: haha");
-			break;
+            case 15:
+                Debug.LogError ("is login: " + RiseSdk.Instance.IsLogin ());
+                break;
 
-		case 23:
-			RiseSdk.Instance.LoadFriendLeaderBoard ("endless", 1, 32, "");
-			break;
+            case 16:
+                RiseSdk.Instance.Logout ();
+                break;
 
-		case 24:
-			RiseSdk.Instance.LoadGlobalLeaderBoard ("endless", 1, 32);
-			break;
-			*/
+            case 17:
+                RiseSdk.Instance.Like ();
+                break;
 
-		case 25:
-			RiseSdk.Instance.ShowNativeAd ("lock_pre", 20);
-			break;
+            case 19:
+                RiseSdk.Instance.Challenge ("your see", "speed coming...");
+                break;
 
-		case 26:
-			RiseSdk.Instance.HideNativeAd ("lock_pre");
-			break;
-			/*
-		case 27:
-			RiseSdk.Instance.LoadGameData (1);
-			break;
+            case 18:
+                RiseSdk.Instance.Invite ();
+                break;
 
-		case 28:
-			RiseSdk.Instance.ShowSales (1);
-			break;
-			*/
+            case 20:
+                string mestring = RiseSdk.Instance.Me ();
+                object me = MiniJSON.jsonDecode (mestring);
+                if (me == null) {
+                    Debug.LogError ("me is null");
+                } else {
+                    Debug.LogError ("me is: " + me);
+                }
+                break;
 
-		case 29:
-			RiseSdk.Instance.CacheUrl ("http://img4.imgtn.bdimg.com/it/u=3087502007,2322343371&fm=21&gp=0.jpg");
-			break;
+            case 21:
+                string friendstring = RiseSdk.Instance.GetFriends ();
+                object friends = MiniJSON.jsonDecode (friendstring);
+                Debug.LogError ("friends are: " + friends);
+                break;
+            /*
+        case 22:
+            RiseSdk.Instance.SubmitScore ("endless", 1234, "userName: haha");
+            break;
 
-		case 30:
-			Debug.LogError ("app id is " + RiseSdk.Instance.GetConfig(RiseSdk.CONFIG_KEY_APP_ID));
-			break;
+        case 23:
+            RiseSdk.Instance.LoadFriendLeaderBoard ("endless", 1, 32, "");
+            break;
 
-		case 31:
-			RiseSdk.Instance.Alert ("haha", "Very good");
-            //RiseSdk.Instance.Pay (0);
-			break;
+        case 24:
+            RiseSdk.Instance.LoadGlobalLeaderBoard ("endless", 1, 32);
+            break;
+            */
 
-		case 32:
-			RiseSdk.Instance.CacheUrl (1, "http://img4.imgtn.bdimg.com/it/u=3087502007,2322343371&fm=21&gp=0.jpg");
-			break;
-		}
-	}
+            case 25:
+                RiseSdk.Instance.ShowNativeAd ("lock_pre", 20);
+                break;
 
-	void OnPaymentResult(int resultCode, int billId) {
-		switch (resultCode) {
-		case RiseSdk.PAYMENT_RESULT_SUCCESS:
-			switch (billId) {
-			case 1:// the first billing Id success 
-				break;
-			case 2:// the second billing Id success
-				break;
-			case 3:
-				break;
-			}
-			Debug.LogError("On billing success : " + billId);
-			break;
+            case 26:
+                RiseSdk.Instance.HideNativeAd ("lock_pre");
+                break;
+            /*
+        case 27:
+            RiseSdk.Instance.LoadGameData (1);
+            break;
 
-		case RiseSdk.PAYMENT_RESULT_FAILS:
-			switch (billId) {
-			case 1:
-				break;
-			}
-			Debug.LogError("On billing failure : " + billId);
-			break;
+        case 28:
+            RiseSdk.Instance.ShowSales (1);
+            break;
+            */
 
-		case RiseSdk.PAYMENT_RESULT_CANCEL:
-			break;
-		}
-	}
+            case 29:
+                RiseSdk.Instance.CacheUrl ("http://img4.imgtn.bdimg.com/it/u=3087502007,2322343371&fm=21&gp=0.jpg");
+                break;
 
-	void OnSNSEvent(bool success, int eventType, int extra) {
-		switch (eventType) {
-		case RiseSdk.SNS_EVENT_LOGIN:
-			Debug.LogError ("login: " + success);
-			break;
+            case 30:
+                Debug.LogError ("app id is " + RiseSdk.Instance.GetConfig (RiseSdk.CONFIG_KEY_APP_ID));
+                break;
 
-		case RiseSdk.SNS_EVENT_INVITE:
-			Debug.LogError ("invite: " + success);
-			break;
+            case 31:
+                RiseSdk.Instance.Alert ("haha", "Very good");
+                //RiseSdk.Instance.Pay (0);
+                break;
 
-		case RiseSdk.SNS_EVENT_LIKE:
-			Debug.LogError ("like success? " + success);
-			break;
+            case 32:
+                RiseSdk.Instance.CacheUrl (1, "http://img4.imgtn.bdimg.com/it/u=3087502007,2322343371&fm=21&gp=0.jpg");
+                break;
+            case 33:
+                changeAvatarImg ();
+                break;
+        }
+    }
 
-		case RiseSdk.SNS_EVENT_CHALLENGE:
-			int friendsCount = extra;
-			Debug.LogError ("challenge: " + friendsCount);
-			break;
-		}
-	}
+    void OnPaymentResult (int resultCode, int billId) {
+        switch (resultCode) {
+            case RiseSdk.PAYMENT_RESULT_SUCCESS:
+                switch (billId) {
+                    case 1:// the first billing Id success 
+                        break;
+                    case 2:// the second billing Id success
+                        break;
+                    case 3:
+                        break;
+                }
+                Debug.LogError ("On billing success : " + billId);
+                break;
 
-	// Get Free coin handler
-	void GetFreeCoin (bool success, int rewardId){
-		if (success) {
-			switch(rewardId) {
-			case 1:
-				// you can add random golds, eg. 10
-				//player.gold += 10;
-				break;
-			}
-			Debug.LogError ("success: free coin: " + rewardId);
-		} else {
-			Debug.LogError ("fails: free coin: " + rewardId);
-		}
-	}
+            case RiseSdk.PAYMENT_RESULT_FAILS:
+                switch (billId) {
+                    case 1:
+                        break;
+                }
+                Debug.LogError ("On billing failure : " + billId);
+                break;
 
-	/*
-	void OnLeaderBoardResult(bool submit, bool success, string leaderBoardId, string extraData) {
-		if (submit) {
-			if (success) {
-				Debug.LogError ("submit to leader board success: " + leaderBoardId);
-			} else {
-				Debug.LogError ("submit to leader board failure: " + leaderBoardId);
-			}
-		} else {
-			if (success) {
-				Debug.LogError ("load leader board " + leaderBoardId + " success: " + extraData);
-			} else {
-				Debug.LogError ("load leader board failure " + leaderBoardId);
-			}
-		}
-	}
+            case RiseSdk.PAYMENT_RESULT_CANCEL:
+                break;
+        }
+    }
 
-	void OnServerResult(int resultCode, bool success, string data) {
-		switch (resultCode) {
-		case RiseSdk.SERVER_RESULT_RECEIVE_GAME_DATA:
-			if (success) {
-				Debug.LogError ("load extra: " + data);
-			} else {
-				Debug.LogError ("load extra fails");
-			}
-			break;
+    void OnSNSEvent (bool success, int eventType, int extra) {
+        switch (eventType) {
+            case RiseSdk.SNS_EVENT_LOGIN:
+                Debug.LogError ("login: " + success);
+                break;
 
-		case RiseSdk.SERVER_RESULT_SALES_CLICK:
-			if (success) {
-				Debug.LogError ("sales click");
-			} else {
-				// do nothing...
-			}
-			break;
+            case RiseSdk.SNS_EVENT_INVITE:
+                Debug.LogError ("invite: " + success);
+                break;
 
-		case RiseSdk.SERVER_RESULT_VERIFY_CODE:
-			if (success) {
-				Debug.LogError ("verify code success: " + data);
-			} else {
-				// fails
-			}
-			break;
-		}
-	}
-	*/
+            case RiseSdk.SNS_EVENT_LIKE:
+                Debug.LogError ("like success? " + success);
+                break;
+
+            case RiseSdk.SNS_EVENT_CHALLENGE:
+                int friendsCount = extra;
+                Debug.LogError ("challenge: " + friendsCount);
+                break;
+        }
+    }
+
+    // Get Free coin handler
+    void GetFreeCoin (bool success, int rewardId) {
+        if (success) {
+            switch (rewardId) {
+                case 1:
+                    // you can add random golds, eg. 10
+                    //player.gold += 10;
+                    break;
+            }
+            Debug.LogError ("success: free coin: " + rewardId);
+        } else {
+            Debug.LogError ("fails: free coin: " + rewardId);
+        }
+    }
+
+    /*
+    void OnLeaderBoardResult(bool submit, bool success, string leaderBoardId, string extraData) {
+        if (submit) {
+            if (success) {
+                Debug.LogError ("submit to leader board success: " + leaderBoardId);
+            } else {
+                Debug.LogError ("submit to leader board failure: " + leaderBoardId);
+            }
+        } else {
+            if (success) {
+                Debug.LogError ("load leader board " + leaderBoardId + " success: " + extraData);
+            } else {
+                Debug.LogError ("load leader board failure " + leaderBoardId);
+            }
+        }
+    }
+
+    void OnServerResult(int resultCode, bool success, string data) {
+        switch (resultCode) {
+        case RiseSdk.SERVER_RESULT_RECEIVE_GAME_DATA:
+            if (success) {
+                Debug.LogError ("load extra: " + data);
+            } else {
+                Debug.LogError ("load extra fails");
+            }
+            break;
+
+        case RiseSdk.SERVER_RESULT_SALES_CLICK:
+            if (success) {
+                Debug.LogError ("sales click");
+            } else {
+                // do nothing...
+            }
+            break;
+
+        case RiseSdk.SERVER_RESULT_VERIFY_CODE:
+            if (success) {
+                Debug.LogError ("verify code success: " + data);
+            } else {
+                // fails
+            }
+            break;
+        }
+    }
+    */
 }

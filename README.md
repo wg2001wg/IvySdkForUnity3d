@@ -511,6 +511,29 @@ void OnAdResult (RiseSdk.AdEventType type) {
 }
 ```
 
+* 下载文件或者加载本地文件
+```csharp
+// 下载文件
+RiseSdk.Instance.DownloadFile ("http://u4.tdimg.com/5/247/29/169525782757782754049058805819627272075.jpg", (string path, WWW www) => {
+            if (www != null) {
+                Texture2D tex = new Texture2D (128, 128, TextureFormat.ARGB32, false);
+                tex.LoadImage (www.bytes);
+                Sprite sp = Sprite.Create (tex, new Rect (0, 0, tex.width, tex.height), new Vector2 (0, 0));
+                //avatarImg.sprite = sp;
+            }
+});
+
+// 加载本地文件
+RiseSdk.Instance.LoadLocalFile ("/storage/emulated/0/.android/.filecache/asdf.jpg", (string path, WWW www) => {
+            if (www != null) {
+                Texture2D tex = new Texture2D (128, 128, TextureFormat.ARGB32, false);
+                tex.LoadImage (www.bytes);
+                Sprite sp = Sprite.Create (tex, new Rect (0, 0, tex.width, tex.height), new Vector2 (0, 0));
+                //avatarImg.sprite = sp;
+            }
+});
+```
+
 ## 10，如果您有不明白之处可以查看我们的API文档，API文档中有对接口的详细解释。如您看过API文档后还有不明白之处，可发送邮件到appdev@ivymobile.com，我们会尽快给您回复！谢谢！
 
 
