@@ -19,6 +19,9 @@ using UnityEditor;
 /// <summary>
 /// SDK接口类
 /// </summary>
+#if UNITY_EDITOR
+[UnityEditor.InitializeOnLoad]
+#endif
 public sealed class RiseSdk {
     private static RiseSdk _instance = null;
     private AndroidJavaClass _class = null;
@@ -199,8 +202,22 @@ public sealed class RiseSdk {
         }
     }
 
-    private RiseSdk () {
+    static RiseSdk () {
+#if UNITY_EDITOR
+        EditorApplication.update -= SetExternalSDCard;
+        EditorApplication.update += SetExternalSDCard;
+        UnityEditor.PlayerSettings.Android.forceSDCardPermission = true;
+#endif
     }
+
+#if UNITY_EDITOR
+    private static void SetExternalSDCard () {
+        if (!EditorApplication.isPlaying) {
+            EditorApplication.update -= SetExternalSDCard;
+            UnityEditor.PlayerSettings.Android.forceSDCardPermission = true;
+        }
+    }
+#endif
 
     /// <summary>
     /// 初始化SDK，最好在第一个场景加载时初始化。
