@@ -1,0 +1,385 @@
+{
+   "cf" : {
+      "appid" : 113,
+      "cloud_appid" : 113,
+      "cloud_url" : "http://119.29.178.60/restart/gateway.php?db=2",
+      "gateway" : "http://119.29.178.60/restart/gateway.php?db=2"
+   },
+   "data" : {
+      "EventsData" : [
+         {
+            "AiRacers" : [
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "CL 500",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 200,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "CL 500",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 210,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "MINI",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 220,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "MINI",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 230,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "Model X",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 240,
+                  "TopSpdLv" : 0
+               }
+            ],
+            "FinishTime" : "2017-1-6-16-35-0",
+            "Lap" : 1,
+            "LastEvent" : {
+               "ImgUrl" : "http://farm9.staticflickr.com/8865/28865492545_f1272bdb61_o.png",
+               "RankTag" : "",
+               "Reward" : {
+                  "FinishReward" : {
+                     "Diamond" : 5,
+                     "Gold" : 2500
+                  },
+                  "Pos1stReward" : {
+                     "Diamond" : 10,
+                     "Gold" : 5000
+                  },
+                  "Top100Reward" : {
+                     "Diamond" : 25,
+                     "Gold" : 5000
+                  },
+                  "Top10Reward" : {
+                     "Diamond" : 100,
+                     "Gold" : 50000
+                  },
+                  "Top50Reward" : {
+                     "Diamond" : 50,
+                     "Gold" : 10000
+                  }
+               },
+               "ShowName" : ""
+            },
+            "LoadScene" : "China_02",
+            "NeedCarIdx" : -1,
+            "NeedCarRank" : "C",
+            "NewEvent" : {
+               "ImgUrl" : "http://farm9.staticflickr.com/8865/28865492545_f1272bdb61_o.png",
+               "RankTag" : "1-1",
+               "Reward" : {
+                  "FinishReward" : {
+                     "Diamond" : 5,
+                     "Gold" : 2500
+                  },
+                  "Pos1stReward" : {
+                     "Diamond" : 10,
+                     "Gold" : 5000
+                  },
+                  "Top100Reward" : {
+                     "Diamond" : 25,
+                     "Gold" : 5000
+                  },
+                  "Top10Reward" : {
+                     "Diamond" : 100,
+                     "Gold" : 50000
+                  },
+                  "Top50Reward" : {
+                     "Diamond" : 50,
+                     "Gold" : 10000
+                  }
+               },
+               "ShowName" : "ROOKIE CUP"
+            },
+            "ObstacleAiCars" : [
+               {
+                  "Clockwise" : 0,
+                  "Detectable" : 0
+               },
+               {
+                  "Clockwise" : 0,
+                  "Detectable" : 0
+               }
+            ],
+            "PlayerStartIdx" : 5,
+            "StartTime" : "2016-11-24-14-0-0",
+            "TimeStar" : [ 0, 0, 0 ],
+            "Type" : "Classic",
+            "UnlockStarNum" : 0
+         },
+         {
+            "AiRacers" : [
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "911",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 300,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "911",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 310,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "Survolt",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 320,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "Survolt",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 330,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "GT-R",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 350,
+                  "TopSpdLv" : 0
+               }
+            ],
+            "FinishTime" : "2017-1-6-16-35-0",
+            "Lap" : 1,
+            "LastEvent" : {
+               "ImgUrl" : "http://farm9.staticflickr.com/8865/28865492545_f1272bdb61_o.png",
+               "RankTag" : "",
+               "Reward" : {
+                  "FinishReward" : {
+                     "Diamond" : 10,
+                     "Gold" : 3000
+                  },
+                  "Pos1stReward" : {
+                     "Diamond" : 20,
+                     "Gold" : 6000
+                  },
+                  "Top100Reward" : {
+                     "Diamond" : 50,
+                     "Gold" : 8000
+                  },
+                  "Top10Reward" : {
+                     "Diamond" : 100,
+                     "Gold" : 60000
+                  },
+                  "Top50Reward" : {
+                     "Diamond" : 200,
+                     "Gold" : 15000
+                  }
+               },
+               "ShowName" : ""
+            },
+            "LoadScene" : "Egypt_05",
+            "NeedCarIdx" : -1,
+            "NeedCarRank" : "B",
+            "NewEvent" : {
+               "ImgUrl" : "http://farm9.staticflickr.com/8865/28865492545_f1272bdb61_o.png",
+               "RankTag" : "2-1",
+               "Reward" : {
+                  "FinishReward" : {
+                     "Diamond" : 10,
+                     "Gold" : 3000
+                  },
+                  "Pos1stReward" : {
+                     "Diamond" : 20,
+                     "Gold" : 6000
+                  },
+                  "Top100Reward" : {
+                     "Diamond" : 50,
+                     "Gold" : 8000
+                  },
+                  "Top10Reward" : {
+                     "Diamond" : 100,
+                     "Gold" : 60000
+                  },
+                  "Top50Reward" : {
+                     "Diamond" : 200,
+                     "Gold" : 15000
+                  }
+               },
+               "ShowName" : "SPORTS CUP"
+            },
+            "ObstacleAiCars" : [
+               {
+                  "Clockwise" : 0,
+                  "Detectable" : 0
+               },
+               {
+                  "Clockwise" : 0,
+                  "Detectable" : 0
+               }
+            ],
+            "PlayerStartIdx" : 5,
+            "StartTime" : "2016-11-24-14-0-0",
+            "TimeStar" : [ 0, 0, 0 ],
+            "Type" : "Classic",
+            "UnlockStarNum" : 0
+         },
+         {
+            "AiRacers" : [
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "Veneno",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 406,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "Veyron",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 450,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "Agera R",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 396,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "Lykan",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 452,
+                  "TopSpdLv" : 0
+               },
+               {
+                  "AccLv" : 0,
+                  "CarIndex" : 0,
+                  "CarName" : "Enzo",
+                  "HandleLv" : 0,
+                  "NosSpdLv" : 0,
+                  "Performance" : 418,
+                  "TopSpdLv" : 0
+               }
+            ],
+            "FinishTime" : "2017-1-6-16-35-0",
+            "Lap" : 1,
+            "LastEvent" : {
+               "ImgUrl" : "http://farm9.staticflickr.com/8865/28865492545_f1272bdb61_o.png",
+               "RankTag" : "",
+               "Reward" : {
+                  "FinishReward" : {
+                     "Diamond" : 5,
+                     "Gold" : 500
+                  },
+                  "Pos1stReward" : {
+                     "Diamond" : 10,
+                     "Gold" : 1000
+                  },
+                  "Top100Reward" : {
+                     "Diamond" : 10,
+                     "Gold" : 1000
+                  },
+                  "Top10Reward" : {
+                     "Diamond" : 100,
+                     "Gold" : 10000
+                  },
+                  "Top50Reward" : {
+                     "Diamond" : 50,
+                     "Gold" : 5000
+                  }
+               },
+               "ShowName" : ""
+            },
+            "LoadScene" : "Marina_02",
+            "NeedCarIdx" : -1,
+            "NeedCarRank" : "S",
+            "NewEvent" : {
+               "ImgUrl" : "http://farm9.staticflickr.com/8865/28865492545_f1272bdb61_o.png",
+               "RankTag" : "3-1",
+               "Reward" : {
+                  "FinishReward" : {
+                     "Diamond" : 5,
+                     "Gold" : 500
+                  },
+                  "Pos1stReward" : {
+                     "Diamond" : 10,
+                     "Gold" : 1000
+                  },
+                  "Top100Reward" : {
+                     "Diamond" : 10,
+                     "Gold" : 1000
+                  },
+                  "Top10Reward" : {
+                     "Diamond" : 100,
+                     "Gold" : 10000
+                  },
+                  "Top50Reward" : {
+                     "Diamond" : 50,
+                     "Gold" : 5000
+                  }
+               },
+               "ShowName" : "SUPER CUP"
+            },
+            "ObstacleAiCars" : [
+               {
+                  "Clockwise" : 0,
+                  "Detectable" : 0
+               },
+               {
+                  "Clockwise" : 0,
+                  "Detectable" : 0
+               }
+            ],
+            "PlayerStartIdx" : 5,
+            "StartTime" : "2016-11-24-14-0-0",
+            "TimeStar" : [ 0, 0, 0 ],
+            "Type" : "Classic",
+            "UnlockStarNum" : 0
+         }
+      ],
+      "PromotionImg" : "http://farm9.staticflickr.com/8865/28865492545_f1272bdb61_o.png",
+      "PromotionUrl" : "market://details?id=com.teniubi.turbodrift.car&referrer=utm_source%3Ddasaichecross",
+      "Version" : 0
+   },
+   "dp" : {}
+}

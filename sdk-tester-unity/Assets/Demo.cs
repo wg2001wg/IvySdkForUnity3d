@@ -7,9 +7,10 @@ public class Demo : MonoBehaviour {
     public GUISkin guiSkin;
     public TextAsset infoJson = null;
     public Image avatarImg = null;
-    private string [] imgUrl = null;
+    private string[] imgUrl = null;
 
-    private string [] titles = {
+#if UNITY_ANDROID
+    private string[] titles = {
 		"Start AD", //0
 		"Pause AD", //1
 		"PassLevel AD", //2
@@ -45,6 +46,20 @@ public class Demo : MonoBehaviour {
 		"Cache Url With Tag", //32
         "Download Image"
 	};
+#elif UNITY_IOS
+    private string[] titles = {
+		"Start AD", //0
+		"Pause AD", //1
+		"PassLevel AD", //2
+		"Custom AD", //3
+		"Banner AD", //4
+		"Close Banner AD", //5
+		"Rate",//6
+		"Do Billing", //7
+		"Show FreeCoin", //8
+        "Show IconAD" //9
+	};
+#endif
 
     // Use this for initialization
     void Awake () {
@@ -71,17 +86,19 @@ public class Demo : MonoBehaviour {
             List<object> data = (List<object>) RiseJson.Deserialize (infoJson.text);
             if (data != null && data.Count > 0) {
                 int len = data.Count;
-                imgUrl = new string [len];
+                imgUrl = new string[len];
                 Dictionary<string, object> obj = null;
                 string avatar = null;
                 for (int i = 0; i < len; i++) {
-                    obj = (Dictionary<string, object>) RiseJson.Deserialize (RiseJson.Serialize (data [i]));
-                    avatar = obj ["Avatar"].ToString ();
-                    imgUrl [i] = avatar;
+                    obj = (Dictionary<string, object>) RiseJson.Deserialize (RiseJson.Serialize (data[i]));
+                    avatar = obj["Avatar"].ToString ();
+                    imgUrl[i] = avatar;
                     if (i == 0 && avatarImg != null) {
                         changeAvatarImg ();
                     } else {
+#if UNITY_ANDROID
                         RiseSdk.Instance.DownloadFile (avatar, null);
+#endif
                     }
                 }
             }
@@ -95,7 +112,8 @@ public class Demo : MonoBehaviour {
         if (imgIdx < 0) {
             imgIdx = 0;
         }
-        RiseSdk.Instance.DownloadFile (imgUrl [imgIdx], (string path, WWW www) => {
+#if UNITY_ANDROID
+        RiseSdk.Instance.DownloadFile (imgUrl[imgIdx], (string path, WWW www) => {
             if (www != null) {
                 Texture2D tex = new Texture2D (128, 128, TextureFormat.ARGB32, false);
                 tex.LoadImage (www.bytes);
@@ -103,6 +121,7 @@ public class Demo : MonoBehaviour {
                 avatarImg.sprite = sp;
             }
         });
+#endif
         if (++imgIdx >= imgUrl.Length) {
             imgIdx = 0;
         }
@@ -116,6 +135,7 @@ public class Demo : MonoBehaviour {
         RiseSdkListener.OnPaymentEvent -= OnPaymentResult;
         RiseSdkListener.OnPaymentEvent += OnPaymentResult;
 
+#if UNITY_ANDROID
         RiseSdkListener.OnSNSEvent -= OnSNSEvent;
         RiseSdkListener.OnSNSEvent += OnSNSEvent;
 
@@ -127,6 +147,7 @@ public class Demo : MonoBehaviour {
 
         RiseSdkListener.OnReceiveNotificationData -= OnNotificationData;
         RiseSdkListener.OnReceiveNotificationData += OnNotificationData;
+#endif
 
         //RiseSdkListener.OnLeaderBoardEvent -= OnLeaderBoardResult;
         //RiseSdkListener.OnLeaderBoardEvent += OnLeaderBoardResult;
@@ -149,9 +170,11 @@ public class Demo : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+#if UNITY_ANDROID
         if (Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown (KeyCode.Home)) {
             RiseSdk.Instance.OnExit ();
         }
+#endif
     }
 
     void OnGUI () {
@@ -167,13 +190,14 @@ public class Demo : MonoBehaviour {
                 x = 5;
             else
                 x = Screen.width - w - 5;
-            if (GUI.Button (new Rect (x, y, w, h), titles [i])) {
+            if (GUI.Button (new Rect (x, y, w, h), titles[i])) {
                 doAction (i);
             }
         }
     }
 
     void doAction (int id) {
+#if UNITY_ANDROID
         switch (id) {
             case 0:
                 RiseSdk.Instance.ShowAd (RiseSdk.M_START);
@@ -308,11 +332,45 @@ public class Demo : MonoBehaviour {
                 changeAvatarImg ();
                 break;
         }
+#elif UNITY_IOS
+        switch (id) {
+            case 0:
+                RiseSdk.Instance.ShowAd (RiseSdk.M_START);
+                break;
+            case 1:
+                RiseSdk.Instance.ShowAd (RiseSdk.M_PAUSE);
+                break;
+            case 2:
+                RiseSdk.Instance.ShowAd (RiseSdk.M_PASSLEVEL);
+                break;
+            case 3:
+                RiseSdk.Instance.ShowAd (RiseSdk.M_CUSTOM);
+                break;
+            case 4:
+                RiseSdk.Instance.ShowBanner ("default", RiseSdk.POS_BANNER_MIDDLE_BOTTOM);
+                break;
+            case 5:
+                RiseSdk.Instance.CloseBanner ();
+                break;
+            case 6:
+                RiseSdk.Instance.Rate ();
+                break;
+            case 7:
+                RiseSdk.Instance.Pay (1);
+                break;
+            case 8:
+                RiseSdk.Instance.ShowRewardAd ("default", 1);
+                break;
+            case 9:
+                RiseSdk.Instance.ShowIconAd (56, .2f, .2f);
+                break;
+        }
+#endif
     }
 
-    void OnPaymentResult (int resultCode, int billId) {
+    void OnPaymentResult (RiseSdk.PaymentResult resultCode, int billId) {
         switch (resultCode) {
-            case RiseSdk.PAYMENT_RESULT_SUCCESS:
+            case RiseSdk.PaymentResult.Success:
                 switch (billId) {
                     case 1:// the first billing Id success 
                         break;
@@ -324,7 +382,7 @@ public class Demo : MonoBehaviour {
                 Debug.LogError ("On billing success : " + billId);
                 break;
 
-            case RiseSdk.PAYMENT_RESULT_FAILS:
+            case RiseSdk.PaymentResult.Failed:
                 switch (billId) {
                     case 1:
                         break;
@@ -332,34 +390,45 @@ public class Demo : MonoBehaviour {
                 Debug.LogError ("On billing failure : " + billId);
                 break;
 
-            case RiseSdk.PAYMENT_RESULT_CANCEL:
+            case RiseSdk.PaymentResult.Cancel:
                 break;
         }
     }
 
-    void OnSNSEvent (bool success, int eventType, int extra) {
+#if UNITY_ANDROID
+    void OnSNSEvent (RiseSdk.SnsEventType eventType, int extra) {
         switch (eventType) {
-            case RiseSdk.SNS_EVENT_LOGIN:
-                Debug.LogError ("login: " + success);
+            case RiseSdk.SnsEventType.LoginSuccess:
+                Debug.LogError ("login success");
                 break;
-
-            case RiseSdk.SNS_EVENT_INVITE:
-                Debug.LogError ("invite: " + success);
+            case RiseSdk.SnsEventType.LoginFailed:
+                Debug.LogError ("login failed");
                 break;
-
-            case RiseSdk.SNS_EVENT_LIKE:
-                Debug.LogError ("like success? " + success);
+            case RiseSdk.SnsEventType.InviteSuccess:
+                Debug.LogError ("invite success");
                 break;
-
-            case RiseSdk.SNS_EVENT_CHALLENGE:
-                int friendsCount = extra;
-                Debug.LogError ("challenge: " + friendsCount);
+            case RiseSdk.SnsEventType.InviteFailed:
+                Debug.LogError ("invite failed");
+                break;
+            case RiseSdk.SnsEventType.LikeSuccess:
+                Debug.LogError ("like success");
+                break;
+            case RiseSdk.SnsEventType.LikeFailed:
+                Debug.LogError ("like failed");
+                break;
+            case RiseSdk.SnsEventType.ChallengeSuccess:
+                Debug.LogError ("challenge success");
+                break;
+            case RiseSdk.SnsEventType.ChallengeFailed:
+                Debug.LogError ("challenge failed");
                 break;
         }
     }
+#endif
 
     // Get Free coin handler
-    void GetFreeCoin (bool success, int rewardId) {
+#if UNITY_ANDROID
+    void GetFreeCoin (bool success, int rewardId, string tag) {
         if (success) {
             switch (rewardId) {
                 case 1:
@@ -367,11 +436,26 @@ public class Demo : MonoBehaviour {
                     //player.gold += 10;
                     break;
             }
-            Debug.LogError ("success: free coin: " + rewardId);
+            Debug.LogError ("success: free coin: " + rewardId + ", " + tag);
         } else {
-            Debug.LogError ("fails: free coin: " + rewardId);
+            Debug.LogError ("fails: free coin: " + rewardId + ", " + tag);
         }
     }
+#elif UNITY_IOS
+    void GetFreeCoin (bool success, string tag, int rewardId) {
+        if (success) {
+            switch (rewardId) {
+                case 1:
+                    // you can add random golds, eg. 10
+                    //player.gold += 10;
+                    break;
+            }
+            Debug.LogError ("success: free coin: " + tag + ", " + rewardId);
+        } else {
+            Debug.LogError ("fails: free coin: " + tag + ", " + rewardId);
+        }
+    }
+#endif
 
     /*
     void OnLeaderBoardResult(bool submit, bool success, string leaderBoardId, string extraData) {
