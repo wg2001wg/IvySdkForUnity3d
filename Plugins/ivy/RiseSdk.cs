@@ -638,6 +638,86 @@ public sealed class RiseSdk {
         }
     }
 
+    public string GetMePictureURL () {
+#if UNITY_EDITOR
+        return "http://img.qq1234.org/uploads/allimg/141205/3_141205195713_3.jpg";
+#else
+        string me = Me ();
+        string meImgPath = "http://img.qq1234.org/uploads/allimg/141205/3_141205195713_3.jpg";
+        if (!string.IsNullOrEmpty (me) && me.Length > 5) {
+            Dictionary<string, object> meData = (Dictionary<string, object>) RiseJson.Deserialize (me);
+            if (meData.ContainsKey ("picture")) {
+                meImgPath = meData["picture"].ToString ();
+            }
+        }
+        return meImgPath;
+#endif
+    }
+
+    public string GetPaymentsPrices () {
+#if UNITY_EDITOR
+        return "{}";
+#else
+        if (_class != null) {
+            return _class.CallStatic<string> ("getPrices");
+        } else {
+            return "{}";
+        }
+#endif
+    }
+
+
+    #region Android_Dummy
+    public string GetMeFirstName () {
+#if UNITY_EDITOR
+        return "FirstName";
+#else
+        return "FirstName";
+#endif
+    }
+
+    public string GetMeLastName () {
+#if UNITY_EDITOR
+        return "LastName";
+#else
+        return "LastName";
+#endif
+    }
+
+    public string GetMeId () {
+#if UNITY_EDITOR
+        return "MeId";
+#else
+        return "MeId";
+#endif
+    }
+
+    public void FetchFriends (bool invitable) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("FetchFriends");
+#endif
+    }
+
+    public void FetchScores () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("FetchScores");
+#endif
+    }
+
+    public void Share (string contentURL, string tag, string quote) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("Share: " + contentURL + ", " + tag + ", " + quote);
+#endif
+    }
+
+    public void RestorePayments () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("RestorePayments");
+#endif
+    }
+    #endregion
+
+
     /// <summary>
     /// 获取后台配置信息和Unity无法直接获取的一些信息。
     /// </summary>
@@ -1045,14 +1125,6 @@ public sealed class RiseSdk {
 #endif
     }
 #elif UNITY_IOS
-#if iOS_TEST
-    [DllImport ("__Internal")]
-    private static extern void onCreate ();
-    [DllImport ("__Internal")]
-    private static extern void sdklog (string info);
-    [DllImport ("__Internal")]
-    private static extern void toast (string info);
-#else
     [DllImport ("__Internal")]
     private static extern int getScreenWidth ();
     [DllImport ("__Internal")]
@@ -1084,7 +1156,7 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern void closeIconAd ();
     [DllImport ("__Internal")]
-    private static extern void rateUs ();
+    private static extern void rateInApp ();
     [DllImport ("__Internal")]
     private static extern bool isNetworkAvaliable ();
     [DllImport ("__Internal")]
@@ -1098,8 +1170,6 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern void clearPurchasedId (int billingId);
     [DllImport ("__Internal")]
-    private static extern void track (string category, string keyValueData);
-    [DllImport ("__Internal")]
     private static extern bool isAdsEnabled ();
     [DllImport ("__Internal")]
     private static extern void setAdsEnable (bool enable);
@@ -1110,7 +1180,31 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern string getExtraData ();
     [DllImport ("__Internal")]
+    private static extern string getConfig (int configId);
+    [DllImport ("__Internal")]
     private static extern void login ();
+    [DllImport ("__Internal")]
+    private static extern void logout ();
+    [DllImport ("__Internal")]
+    private static extern bool isLogin ();
+    [DllImport ("__Internal")]
+    private static extern string meFirstName ();
+    [DllImport ("__Internal")]
+    private static extern string meLastName ();
+    [DllImport ("__Internal")]
+    private static extern long meId ();
+    [DllImport ("__Internal")]
+    private static extern string mePictureURL ();
+    [DllImport ("__Internal")]
+    private static extern void fetchFriends (bool invitable);
+    [DllImport ("__Internal")]
+    private static extern void fetchScores ();
+    [DllImport ("__Internal")]
+    private static extern void invite ();
+    [DllImport ("__Internal")]
+    private static extern void share (string contentURL, string tag, string quote);
+    [DllImport ("__Internal")]
+    private static extern void track (string category, string keyValueData);
     [DllImport ("__Internal")]
     private static extern void trackPlayerLevel (int levelId);
     [DllImport ("__Internal")]
@@ -1139,7 +1233,6 @@ public sealed class RiseSdk {
     private static extern void sdklog (string info);
     [DllImport ("__Internal")]
     private static extern void toast (string info);
-#endif
     private static RiseSdk _instance = null;
     private static bool hasInit = false;
 
@@ -1186,6 +1279,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.ShowBanner (pos);
 #elif iOS_TEST
+        showBanner (pos);
 #else
         showBanner (pos);
 #endif
@@ -1195,6 +1289,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.ShowBanner (tag, pos);
 #elif iOS_TEST
+        showBannerWithTag (tag, pos);
 #else
         showBannerWithTag (tag, pos);
 #endif
@@ -1204,6 +1299,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.CloseBanner ();
 #elif iOS_TEST
+        closeBanner ();
 #else
         closeBanner ();
 #endif
@@ -1229,6 +1325,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.ShowRewardAd (placementId);
 #elif iOS_TEST
+        showRewardVideo (placementId);
 #else
         showRewardVideo (placementId);
 #endif
@@ -1238,18 +1335,17 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.ShowRewardAd (tag, placementId);
 #elif iOS_TEST
+        showRewardVideoWithTag (tag, placementId);
 #else
         showRewardVideoWithTag (tag, placementId);
 #endif
     }
 
     public void ShowAd (string tag) {
-#if YSK_TEST
-        tag = M_CUSTOM;
-#endif
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.ShowAd (tag);
 #elif iOS_TEST
+        showInterstitialAd (tag);
 #else
         showInterstitialAd (tag);
 #endif
@@ -1259,6 +1355,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseSdkListener.Instance.StartCoroutine (delayStart ((string t) => RiseEditorAd.EditorAdInstance.ShowAd (t), tag, delayShowSeconds));
 #elif iOS_TEST
+        showInterstitialAdWithTag (tag, delayShowSeconds);
 #else
         showInterstitialAdWithTag (tag, delayShowSeconds);
 #endif
@@ -1268,6 +1365,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseSdkListener.Instance.StartCoroutine (delayStart ((string t) => RiseEditorAd.EditorAdInstance.ShowAd (t), tag, (float) (delayShowSeconds * delayTimeInterval)));
 #elif iOS_TEST
+        showInterstitialAdWithTag2 (tag, delayShowSeconds, delayTimeInterval);
 #else
         showInterstitialAdWithTag2 (tag, delayShowSeconds, delayTimeInterval);
 #endif
@@ -1287,6 +1385,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.ShowIconAd (width, xPercent, yPercent);
 #elif iOS_TEST
+        showIconAd (width, xPercent, yPercent);
 #else
         showIconAd (width, xPercent, yPercent);
 #endif
@@ -1296,6 +1395,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.CloseIconAd ();
 #elif iOS_TEST
+        closeIconAd ();
 #else
         closeIconAd ();
 #endif
@@ -1305,8 +1405,9 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Rate");
 #elif iOS_TEST
+        rateInApp ();
 #else
-        rateUs ();
+        rateInApp ();
 #endif
     }
 
@@ -1322,6 +1423,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Pay (billingId);
 #elif iOS_TEST
+        pay (billingId);
 #else
         pay (billingId);
 #endif
@@ -1331,6 +1433,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseSdkListener.Instance.onCheckSubscriptionResult (billingId + "," + 0);
 #elif iOS_TEST
+        isSubscriptionActive (billingId);
 #else
         isSubscriptionActive (billingId);
 #endif
@@ -1340,7 +1443,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         return new int[] { 1, 2, 3 };
 #elif iOS_TEST
-        return null;
+        return new int[] { 1, 2, 3 };
 #else
         return getPurchasedIds ();
 #endif
@@ -1385,6 +1488,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("SetAdsEnable: " + enable);
 #elif iOS_TEST
+        setAdsEnable (enable);
 #else
         setAdsEnable (enable);
 #endif
@@ -1392,18 +1496,17 @@ public sealed class RiseSdk {
 
     public void RestorePayments () {
 #if UNITY_EDITOR
-        RiseSdkListener.Instance.onRestoreSuccess (1);
-        RiseSdkListener.Instance.onRestoreSuccess (2);
+        RiseSdkListener.Instance.onRestoreSuccess ("1");
+        RiseEditorAd.EditorAdInstance.Toast ("RestorePayments");
 #elif iOS_TEST
+        restorePayments ();
 #else
         restorePayments ();
 #endif
     }
 
     public string GetPaymentDatas () {
-#if UNITY_EDITOR
-        return "{\n  \"3\" : {\n    \"price\" : \"CN¥28.00\",\n    \"id\" : \"com.e688.sdkdemo.monthvip1\",\n    \"title\" : \"Month VIP\",\n    \"name\" : \"Month VIP1\",\n    \"autorenew\" : 1,\n    \"desc\" : \"Support VIP in one month\"\n  },\n  \"1\" : {\n    \"id\" : \"com.e688.sdkdemo.gold100\",\n    \"title\" : \"100 coins\",\n    \"name\" : \"100 coins\",\n    \"desc\" : \"Consume 1 dollar can buy 100 coins.\",\n    \"price\" : \"CN¥6.00\"\n  },\n  \"4\" : {\n    \"id\" : \"com.e688.sdkdemo.vip\",\n    \"title\" : \"Lifelong VIP\",\n    \"name\" : \"Lifelong VIP\",\n    \"desc\" : \"Lifelong VIP\",\n    \"price\" : \"CN¥98.00\"\n  },\n  \"2\" : {\n    \"id\" : \"com.e688.sdkdemo.gold500\",\n    \"title\" : \"500 coins\",\n    \"name\" : \"500 coins\",\n    \"desc\" : \"Consume 5 dollar can buy 500 coins.\",\n    \"price\" : \"CN¥30.00\"\n  },\n  \"5\" : {\n    \"id\" : \"com.e688.sdkdemo.vip2\",\n    \"title\" : \"VIP2\",\n    \"name\" : \"VIP2\",\n    \"desc\" : \"Buy 10 times vip\",\n    \"price\" : \"CN¥30.00\"\n  }\n}";
-#elif iOS_TEST
+#if UNITY_EDITOR || iOS_TEST
         return "";
 #else
         return getPaymentDatas ();
@@ -1418,14 +1521,126 @@ public sealed class RiseSdk {
 #endif
     }
 
+    public string GetConfig (int configId) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("GetConfig, configId: " + configId);
+        return "";
+#else
+        return getConfig (configId);
+#endif
+    }
+
     public void Login () {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Login");
 #elif iOS_TEST
+        login();
 #else
         login();
 #endif
     }
+
+    public bool IsLogin () {
+#if UNITY_EDITOR
+        return false;
+#elif iOS_TEST
+        return false;
+#else
+        return isLogin ();
+#endif
+    }
+
+    public void Logout () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("Logout");
+#elif iOS_TEST
+        logout ();
+#else
+        logout ();
+#endif
+    }
+
+    public string GetMeFirstName () {
+#if UNITY_EDITOR
+        return "FirstName";
+#elif iOS_TEST
+        return "FirstName";
+#else
+        return meFirstName ();
+#endif
+    }
+
+    public string GetMeLastName () {
+#if UNITY_EDITOR
+        return "LastName";
+#elif iOS_TEST
+        return "LastName";
+#else
+        return meLastName ();
+#endif
+    }
+
+    public long GetMeId () {
+#if UNITY_EDITOR
+        return 12345678;
+#elif iOS_TEST
+        return 12345678;
+#else
+        return meId ();
+#endif
+    }
+
+    public string GetMePictureURL () {
+#if UNITY_EDITOR
+        return "http://img.qq1234.org/uploads/allimg/141205/3_141205195713_3.jpg";
+#elif iOS_TEST
+        return "http://img.qq1234.org/uploads/allimg/141205/3_141205195713_3.jpg";
+#else
+        return mePictureURL ();
+#endif
+    }
+
+
+    public void FetchFriends (bool invitable) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("FetchFriends");
+#elif iOS_TEST
+        fetchFriends (invitable);
+#else
+        fetchFriends (invitable);
+#endif
+    }
+
+    public void FetchScores () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("FetchScores");
+#elif iOS_TEST
+        FetchScores ();
+#else
+        FetchScores ();
+#endif
+    }
+
+    public void Invite () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("Invite");
+#elif iOS_TEST
+        invite ();
+#else
+        invite ();
+#endif
+    }
+
+    public void Share (string contentURL, string tag, string quote) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("Share: " + contentURL + ", " + tag + ", " + quote);
+#elif iOS_TEST
+        share (contentURL, tag, quote);
+#else
+        share (contentURL, tag, quote);
+#endif
+    }
+
 
     public void Toast (string message) {
 #if UNITY_EDITOR
@@ -1446,7 +1661,6 @@ public sealed class RiseSdk {
     public void UM_setPlayerLevel (int level) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, setPlayerLevel: " + level);
-#elif iOS_TEST
 #else
         trackPlayerLevel (level);
 #endif
@@ -1455,7 +1669,6 @@ public sealed class RiseSdk {
     public void UM_onEvent (String eventId) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, onEvent: " + eventId);
-#elif iOS_TEST
 #else
         trackEvent (eventId);
 #endif
@@ -1464,7 +1677,6 @@ public sealed class RiseSdk {
     public void UM_onEvent (String eventId, String eventLabel) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, onEvent: " + eventId + ", " + eventLabel);
-#elif iOS_TEST
 #else
         trackEventWithTag (eventId, eventLabel);
 #endif
@@ -1476,7 +1688,6 @@ public sealed class RiseSdk {
     public void UM_onPageStart (String pageName) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, onPageStart: " + pageName);
-#elif iOS_TEST
 #else
         trackPageStart (pageName);
 #endif
@@ -1485,7 +1696,6 @@ public sealed class RiseSdk {
     public void UM_onPageEnd (String pageName) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, onPageEnd: " + pageName);
-#elif iOS_TEST
 #else
         trackPageEnd (pageName);
 #endif
@@ -1494,7 +1704,6 @@ public sealed class RiseSdk {
     public void UM_startLevel (String level) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, startLevel: " + level);
-#elif iOS_TEST
 #else
         trackStartLevel (level);
 #endif
@@ -1503,7 +1712,6 @@ public sealed class RiseSdk {
     public void UM_failLevel (String level) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, failLevel: " + level);
-#elif iOS_TEST
 #else
         trackFailLevel (level);
 #endif
@@ -1512,7 +1720,6 @@ public sealed class RiseSdk {
     public void UM_finishLevel (String level) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, finishLevel: " + level);
-#elif iOS_TEST
 #else
         trackFinishLevel (level);
 #endif
@@ -1521,7 +1728,6 @@ public sealed class RiseSdk {
     public void UM_pay (double money, String itemName, int number, double price) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, pay, money: " + money + ", item: " + itemName + ", number: " + number + ", price: " + price);
-#elif iOS_TEST
 #else
 	trackPay (money, itemName, number, price);
 #endif
@@ -1530,7 +1736,6 @@ public sealed class RiseSdk {
     public void UM_buy (String itemName, int count, double price) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, buy, item: " + itemName + ", count: " + count + ", price: " + price);
-#elif iOS_TEST
 #else
         trackBuy (itemName, count, price);
 #endif
@@ -1539,7 +1744,6 @@ public sealed class RiseSdk {
     public void UM_use (String itemName, int number, double price) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, use, item: " + itemName + ", number: " + number + ", price: " + price);
-#elif iOS_TEST
 #else
         trackUse (itemName, number, price);
 #endif
@@ -1548,7 +1752,6 @@ public sealed class RiseSdk {
     public void UM_bonus (String itemName, int number, double price, int trigger) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, bonus, item: " + itemName + ", number: " + number + ", price: " + price + ", trigger: " + trigger);
-#elif iOS_TEST
 #else
         trackBonus (itemName, number, price, trigger);
 #endif
@@ -1571,13 +1774,6 @@ public sealed class RiseSdk {
     }
 
     public void OnExit () {
-    }
-
-    public string GetConfig (int configId) {
-#if UNITY_EDITOR
-        RiseEditorAd.EditorAdInstance.Toast ("GetConfig, configId: " + configId);
-#endif
-        return "";
     }
 
     public string GetConfig (string packageName, int configId) {
@@ -1715,22 +1911,21 @@ public sealed class RiseSdk {
     public enum AdEventType : int {
         FullAdLoadCompleted = 1,
         FullAdLoadFailed,
-        RewardAdShowFinished,
         RewardAdLoadFailed,
         RewardAdLoadCompleted,
-        RewardAdStart,
+        RewardAdShowStart,
+        RewardAdShowFinished,
+        RewardAdShowFailed,
+        RewardAdClosed,
         /// <summary>
         /// 大屏广告被关闭
         /// </summary>
         FullAdClosed,
+		FullAdShown,
         /// <summary>
         /// 大屏广告被点击
         /// </summary>
         FullAdClicked,
-        /// <summary>
-        /// 视频广告被关闭
-        /// </summary>
-        RewardAdClosed,
         /// <summary>
         /// bannner广告被点击
         /// </summary>
@@ -1744,7 +1939,8 @@ public sealed class RiseSdk {
     public enum PaymentResult : int {
         Success = 1,
         Failed,
-        Cancel
+        Cancel,
+        PaymentSystemError
     }
 
     /// <summary>
@@ -1923,6 +2119,7 @@ public sealed class RiseSdk {
                 //GUI.backgroundColor = new Color (0, 0, 0, 1);
                 //GUI.color = new Color (1, 0, 0, 1);
                 if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                    InterstitialAdCallBack ();
                     interstitialShow = false;
                     Instance.OnResume ();
 #if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
@@ -1961,6 +2158,7 @@ public sealed class RiseSdk {
                 }
                 GUI.backgroundColor = Color.red;
                 if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                    InterstitialAdCallBack ();
                     interstitialShow = false;
 #if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
                     if (EventSystem.current != null) {
@@ -1969,6 +2167,7 @@ public sealed class RiseSdk {
 #endif
                 }
                 if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                    InterstitialAdCallBack ();
                     interstitialShow = false;
 #if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
                     if (EventSystem.current != null) {
@@ -1977,6 +2176,7 @@ public sealed class RiseSdk {
 #endif
                 }
                 if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                    InterstitialAdCallBack ();
                     interstitialShow = false;
 #if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
                     if (EventSystem.current != null) {
@@ -1985,6 +2185,7 @@ public sealed class RiseSdk {
 #endif
                 }
                 if (GUI.Button (new Rect (Screen.width - 100 * scaleWidth, 0, 100 * scaleWidth, 50 * scaleHeight), "Close")) {
+                    InterstitialAdCallBack ();
                     interstitialShow = false;
 #if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
                     if (EventSystem.current != null) {
@@ -2119,6 +2320,14 @@ public sealed class RiseSdk {
             }
         }
 
+        private void InterstitialAdCallBack () {
+            if (interstitialShow) {
+#if UNITY_IOS
+				RiseSdkListener.Instance.interstitialAdDidClose ("custom");
+#endif
+            }
+        }
+
         private void RewardAdCallBack () {
             if (rewardAdId != NONE_REWARD_ID) {
                 Toast ("Show Reward Ad Success");
@@ -2243,15 +2452,15 @@ public sealed class RiseSdk {
             switch (EditorUtility.DisplayDialogComplex ("Pay", "Pay: " + billingId, "TRY FAILURE", "NO", "YES")) {
                 case 0://TRY FAILURE
                     Toast ("pay " + billingId + " Failed");
-                    RiseSdkListener.Instance.onPaymentFailure (billingId);
+                    RiseSdkListener.Instance.onPaymentFailure (billingId + "");
                     break;
                 case 1://NO
                     Toast ("pay " + billingId + " Canceled");
-                    RiseSdkListener.Instance.onPaymentFailure (billingId);
+					RiseSdkListener.Instance.onPaymentFailure (billingId + "");
                     break;
                 case 2://YES
                     Toast ("pay " + billingId + " Success");
-                    RiseSdkListener.Instance.onPaymentSuccess (billingId);
+					RiseSdkListener.Instance.onPaymentSuccess (billingId + "");
                     break;
             }
 #endif

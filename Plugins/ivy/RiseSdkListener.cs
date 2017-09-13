@@ -12,7 +12,7 @@ public class RiseSdkListener : MonoBehaviour {
     /// <summary>
     /// 显示视频广告的结果回调事件
     /// </summary>
-    public static event Action<bool, int, string> OnRewardAdEvent;
+    public static event Action<RiseSdk.AdEventType, int, string> OnRewardAdEvent;
 
     /// <summary>
     /// 支付的结果回调事件
@@ -33,6 +33,8 @@ public class RiseSdkListener : MonoBehaviour {
     public static event Action<bool, bool, string, string> OnLeaderBoardEvent;
 
     public static event Action<int, bool, string> OnReceiveServerResult;
+
+    public static event Action<string> OnReceivePaymentsPrice;
 
     /// <summary>
     /// 获取后台自定义json数据的结果回调事件
@@ -98,16 +100,22 @@ public class RiseSdkListener : MonoBehaviour {
         if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList ().Length > 0) {
             bool success = false;
             int id = 0;
-            string tag = "";
+            string tag = "Default";
             if (!string.IsNullOrEmpty (data)) {
                 string[] results = data.Split ('|');
-                if (results != null && results.Length > 2) {
+                if (results != null && results.Length > 1) {
                     success = int.Parse (results[0]) == 0;
                     id = int.Parse (results[1]);
-                    tag = results[2];
+                    if (results.Length > 2) {
+                        tag = results[2];
+                    }
                 }
             }
-            OnRewardAdEvent (success, id, tag);
+            if (success) {
+                OnRewardAdEvent (RiseSdk.AdEventType.RewardAdShowFinished, id, tag);
+            } else {
+                OnRewardAdEvent (RiseSdk.AdEventType.RewardAdShowFailed, id, tag);
+            }
         }
     }
 
@@ -141,6 +149,18 @@ public class RiseSdkListener : MonoBehaviour {
         if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList ().Length > 0) {
             int id = int.Parse (billId);
             OnPaymentEvent (RiseSdk.PaymentResult.Cancel, id);
+        }
+    }
+
+    public void onPaymentSystemError (string data) {
+        if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList ().Length > 0) {
+            OnPaymentEvent (RiseSdk.PaymentResult.PaymentSystemError, -1);
+        }
+    }
+
+    public void onReceiveBillPrices (string data) {
+        if (OnReceivePaymentsPrice != null && OnReceivePaymentsPrice.GetInvocationList ().Length > 0) {
+            OnReceivePaymentsPrice (data);
         }
     }
 
@@ -354,11 +374,11 @@ public class RiseSdkListener : MonoBehaviour {
     /// <summary>
     /// 大屏广告的回调事件
     /// </summary>
-    public static event Action<RiseSdk.AdEventType, string> OnFullAdEvent;
+    public static event Action<RiseSdk.AdEventType, string> OnAdEvent;
     /// <summary>
     /// 视频广告的回调事件
     /// </summary>
-    public static event Action<bool, string, int> OnRewardAdEvent;
+    public static event Action<RiseSdk.AdEventType, int, string> OnRewardAdEvent;
     /// <summary>
     /// 支付的回调事件
     /// </summary>
@@ -387,16 +407,28 @@ public class RiseSdkListener : MonoBehaviour {
     }
 
     public void interstitialAdDidReceive (string tag) {
-        if (OnFullAdEvent != null && OnFullAdEvent.GetInvocationList ().Length > 0) {
-            OnFullAdEvent (RiseSdk.AdEventType.FullAdLoadCompleted, tag);
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            OnAdEvent (RiseSdk.AdEventType.FullAdLoadCompleted, tag);
         }
     }
 
     public void interstitialAdDidClose (string tag) {
-        if (OnFullAdEvent != null && OnFullAdEvent.GetInvocationList ().Length > 0) {
-            OnFullAdEvent (RiseSdk.AdEventType.FullAdClosed, tag);
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            OnAdEvent (RiseSdk.AdEventType.FullAdClosed, tag);
         }
     }
+
+	public void interstitialAdDidShown (string tag) {
+		if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+			OnAdEvent (RiseSdk.AdEventType.FullAdShown, tag);
+		}
+	}
+
+    public void interstitialAdFailed (string tag) {
+		if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+			OnAdEvent (RiseSdk.AdEventType.FullAdLoadFailed, tag);
+		}
+	}
 
     public void rewardAdDidFinish (string data) {
         if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList ().Length > 0) {
@@ -406,12 +438,12 @@ public class RiseSdkListener : MonoBehaviour {
                 string[] str = data.Split (',');
                 if (str.Length == 1) {
                     int.TryParse (str[0], out placementId);
-                } else if (str.Length == 2) {
+                } else if (str.Length >= 2) {
                     tag = str[0];
                     placementId = int.Parse (str[1]);
                 }
             }
-            OnRewardAdEvent (true, tag, placementId);
+            OnRewardAdEvent (RiseSdk.AdEventType.RewardAdShowFinished, placementId, tag);
         }
     }
 
@@ -423,24 +455,58 @@ public class RiseSdkListener : MonoBehaviour {
                 string[] str = data.Split (',');
                 if (str.Length == 1) {
                     int.TryParse (str[0], out placementId);
-                } else if (str.Length == 2) {
+                } else if (str.Length >= 2) {
                     tag = str[0];
                     placementId = int.Parse (str[1]);
                 }
             }
-            OnRewardAdEvent (false, tag, placementId);
+            OnRewardAdEvent (RiseSdk.AdEventType.RewardAdLoadFailed, placementId, tag);
         }
     }
 
-    public void onPaymentSuccess (int billingId) {
-        if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList ().Length > 0) {
-            OnPaymentEvent (RiseSdk.PaymentResult.Success, billingId);
+    public void rewardAdDidStart (string data) {
+        if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList ().Length > 0) {
+            string tag = "Default";
+            int placementId = 0;
+            if (!string.IsNullOrEmpty (data)) {
+                string[] str = data.Split (',');
+                if (str.Length == 1) {
+                    int.TryParse (str[0], out placementId);
+                } else if (str.Length >= 2) {
+                    tag = str[0];
+                    placementId = int.Parse (str[1]);
+                }
+            }
+            OnRewardAdEvent (RiseSdk.AdEventType.RewardAdShowStart, placementId, tag);
         }
     }
 
-    public void onPaymentFailure (int billingId) {
+    public void rewardAdDidReceive (string data) {
+        if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList ().Length > 0) {
+            string tag = "Default";
+            int placementId = 0;
+            if (!string.IsNullOrEmpty (data)) {
+                string[] str = data.Split (',');
+                if (str.Length == 1) {
+                    int.TryParse (str[0], out placementId);
+                } else if (str.Length >= 2) {
+                    tag = str[0];
+                    placementId = int.Parse (str[1]);
+                }
+            }
+            OnRewardAdEvent (RiseSdk.AdEventType.RewardAdLoadCompleted, placementId, tag);
+        }
+    }
+
+    public void onPaymentSuccess (string billingId) {
         if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList ().Length > 0) {
-            OnPaymentEvent (RiseSdk.PaymentResult.Failed, billingId);
+            OnPaymentEvent (RiseSdk.PaymentResult.Success, int.Parse (billingId));
+        }
+    }
+
+    public void onPaymentFailure (string billingId) {
+        if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList ().Length > 0) {
+            OnPaymentEvent (RiseSdk.PaymentResult.Failed, int.Parse (billingId));
         }
     }
 
@@ -465,9 +531,9 @@ public class RiseSdkListener : MonoBehaviour {
         }
     }
 
-    public void onRestoreSuccess (int billingId) {
+    public void onRestoreSuccess (string billingId) {
         if (OnRestoreSuccessEvent != null && OnRestoreSuccessEvent.GetInvocationList ().Length > 0) {
-            OnRestoreSuccessEvent (billingId);
+            OnRestoreSuccessEvent (int.Parse (billingId));
         }
     }
 

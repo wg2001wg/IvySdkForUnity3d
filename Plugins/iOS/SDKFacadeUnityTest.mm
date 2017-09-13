@@ -33,10 +33,34 @@ extern "C" {
     Send("RiseSdkListener", "rewardAdLoadFail", _msg);
 }
 
+-(void)rewardAdDidStart:(NSString *)tag placement:(int)placementId
+{
+    const char * _msg = [[NSString stringWithFormat:@"%@,%@", tag, [@(placementId) stringValue]] UTF8String];
+    Send("RiseSdkListener", "rewardAdDidStart", _msg);
+}
+
+-(void)rewardAdDidReceive:(NSString *)tag placement:(int)placementId
+{
+    const char * _msg = [[NSString stringWithFormat:@"%@,%@", tag, [@(placementId) stringValue]] UTF8String];
+    Send("RiseSdkListener", "rewardAdDidReceive", _msg);
+}
+
 - (void)interstitialAdDidReceive:(NSString *)tag
 {
     const char * _msg = [tag UTF8String];
     Send("RiseSdkListener", "interstitialAdDidReceive", _msg);
+}
+
+-(void)interstitialAdFailed:(NSString *)tag forError:(NSError *)error
+{
+    const char * _msg = [tag UTF8String];
+    Send("RiseSdkListener", "interstitialAdFailed", _msg);
+}
+
+- (void)interstitialAdDidShown:(NSString *)tag
+{
+    const char * _msg = [tag UTF8String];
+    Send("RiseSdkListener", "interstitialAdDidShown", _msg);
 }
 
 - (void)interstitialAdDidClose:(NSString *)tag
@@ -140,6 +164,15 @@ extern "C" {
 #ifdef __cplusplus
 extern "C" {
 #endif
+    const char *returnStr(const char * src)
+    {
+        long n = strlen(src) + 1;
+        const char *str = (char*)malloc(n + 1);
+        memset((void*)str, 0, n);
+        memcpy((void*)str, (void*)src, n);
+        return str;
+    }
+    
     char* concat(const char *s1, const char *s2)
     {
         const size_t len1 = strlen(s1);
@@ -149,6 +182,11 @@ extern "C" {
         memcpy(result, s1, len1);
         memcpy(result+len1, s2, len2+1);//+1 to copy the null-terminator
         return result;
+    }
+    
+    const char *getConfig(int cid)
+    {
+        return returnStr("");
     }
     
     bool isAdsEnabled()
@@ -172,7 +210,7 @@ extern "C" {
     
     const char *getExtraData()
     {
-        return "{}";
+        return returnStr("{}");
     }
     
     void toast(const char * msg)
@@ -260,6 +298,11 @@ extern "C" {
         toast("rateUs");
     }
     
+    void rateInApp()
+    {
+        toast("rateInApp");
+    }
+    
     bool isNetworkAvaliable()
     {
         return true;
@@ -267,8 +310,39 @@ extern "C" {
     
     void pay(int payId)
     {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Pay" message:[NSString stringWithFormat:@"Pay for : %d", payId] delegate:[[PayHandler alloc] initWithId:payId] cancelButtonTitle:@"Cancel" otherButtonTitles:@"Pay success", @"Pay failure", nil];
-        [alertView show];
+        
+//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Pay" message:[NSString stringWithFormat:@"Pay for : %d", payId] delegate:[[PayHandler alloc] initWithId:payId] cancelButtonTitle:@"Cancel" otherButtonTitles:@"Pay success", @"Pay failure", nil];
+//        [alertView show];
+        
+        // 实例化 UIAlertController 对象
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Pay"
+                                                                                 message:[NSString stringWithFormat:@"Pay for : %d", payId]
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        
+        // 创建按钮
+        UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:nil];
+        
+        UIAlertAction *okAction = [UIAlertAction actionWithTitle:@"Pay success"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *action){                                                             
+                                                             SDKFacadeUnityTest *handler = [[SDKFacadeUnityTest alloc]init];
+                                                             [handler onPaymentSuccess:payId];
+                                                         }];
+        UIAlertAction *noAction = [UIAlertAction actionWithTitle:@"Pay failure"
+                                                           style:UIAlertActionStyleDestructive
+                                                         handler:^(UIAlertAction *action){
+                                                             SDKFacadeUnityTest *handler = [[SDKFacadeUnityTest alloc]init];
+                                                             [handler onPaymentFailure:payId forError:nil];
+                                                         }];
+        // 向 alertController 上添加按钮
+        [alertController addAction:cancelAction];
+        [alertController addAction:okAction];
+        [alertController addAction:noAction];
+        
+        // 显示 alertController 视图
+        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alertController animated:YES completion:nil];
     }
     
     void isSubscriptionActive(int payId)
@@ -284,7 +358,7 @@ extern "C" {
     
     const char *getPaymentDatas()
     {
-        return {};
+        return returnStr("{}");
     }
     
     int* getPurchasedIds()
@@ -312,16 +386,57 @@ extern "C" {
     
     bool isLogin()
     {
-        return true;
+        return false;
     }
-    
-    void getFriends(bool invitable)
+	
+	const char *meFirstName()
     {
+		return returnStr("FirstName");
     }
     
+    const char *meLastName()
+    {
+        return returnStr("LastName");
+    }
+    
+    const long meId()
+    {
+		return 12345678;
+    }
+    
+    const char *mePictureURL()
+    {
+        return returnStr("http://img.qq1234.org/uploads/allimg/141205/3_141205195713_3.jpg");
+    }
+    
+    void fetchFriends(bool invitable)
+    {
+		toast("facebook fetchFriends");
+    }
+	
+	void fetchScores()
+    {
+        toast("facebook fetchScores");
+    }
+    
+    void invite()
+    {
+        toast("facebook invite");
+    }
+
     void share(const char *contentURL, const char *tag, const char *quote)
     {
         toast(concat("facebook share", contentURL));
+    }
+    
+    void shareSheet(const char *linkURL, const char *tag, const char *quote)
+    {
+        toast(concat("facebook shareSheet", linkURL));
+    }
+    
+    void shareSheetOS(const char *linkURL, const char *title)
+    {
+        toast(concat("facebook shareSheetOS", linkURL));
     }
     
     void track(const char *name, const char *data)

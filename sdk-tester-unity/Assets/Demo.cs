@@ -428,8 +428,8 @@ public class Demo : MonoBehaviour {
 
     // Get Free coin handler
 #if UNITY_ANDROID
-    void GetFreeCoin (bool success, int rewardId, string tag) {
-        if (success) {
+    void GetFreeCoin (RiseSdk.AdEventType result, int rewardId, string tag) {
+        if (result == RiseSdk.AdEventType.RewardAdShowFinished) {
             switch (rewardId) {
                 case 1:
                     // you can add random golds, eg. 10
@@ -437,22 +437,26 @@ public class Demo : MonoBehaviour {
                     break;
             }
             Debug.LogError ("success: free coin: " + rewardId + ", " + tag);
-        } else {
+        } else if (result == RiseSdk.AdEventType.RewardAdShowFailed) {
             Debug.LogError ("fails: free coin: " + rewardId + ", " + tag);
         }
     }
 #elif UNITY_IOS
-    void GetFreeCoin (bool success, string tag, int rewardId) {
-        if (success) {
+    void GetFreeCoin (RiseSdk.AdEventType result, string tag, int rewardId) {
+        if (result == RiseSdk.AdEventType.RewardAdShowFinished) {
             switch (rewardId) {
                 case 1:
                     // you can add random golds, eg. 10
                     //player.gold += 10;
                     break;
             }
-            Debug.LogError ("success: free coin: " + tag + ", " + rewardId);
-        } else {
-            Debug.LogError ("fails: free coin: " + tag + ", " + rewardId);
+            Debug.LogError ("RewardAdShowFinished, " + tag + ", " + rewardId);
+        } else if (result == RiseSdk.AdEventType.RewardAdLoadCompleted) {
+            Debug.LogError ("RewardAdLoadCompleted, " + tag + ", " + rewardId);
+        } else if (result == RiseSdk.AdEventType.RewardAdLoadFailed) {
+            Debug.LogError ("RewardAdLoadFailed, " + tag + ", " + rewardId);
+        } else if (result == RiseSdk.AdEventType.RewardAdShowStart) {
+            Debug.LogError ("RewardAdShowStart, " + tag + ", " + rewardId);
         }
     }
 #endif
