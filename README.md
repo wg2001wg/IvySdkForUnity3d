@@ -249,17 +249,17 @@ void InitListeners() {
   RiseSdkListener.OnRewardAdEvent += GetFreeCoin;
 }
 
-void GetFreeCoin (bool success, int rewardId){
-		if (success) {
+void GetFreeCoin (RiseSdk.AdEventType result, int rewardId, string tag){
+		if (result == RiseSdk.AdEventType.RewardAdShowFinished) {
 			switch(rewardId) {
 			case 1:
 				// you can add random golds, eg. 10
 				//player.gold += 10;
 				break;
 			}
-			Debug.LogError ("success: free coin: " + rewardId);
-		} else {
-			Debug.LogError ("fails: free coin: " + rewardId);
+			Debug.LogError ("success: free coin: " + rewardId + ", " + tag);
+		} else if (result == RiseSdk.AdEventType.RewardAdShowFailed) {
+			Debug.LogError ("fails: free coin: " + rewardId + ", " + tag);
 		}
 	}
 ```
