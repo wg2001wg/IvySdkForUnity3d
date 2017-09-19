@@ -231,7 +231,7 @@ public sealed class RiseSdk {
     /// 该接口的回调方法为：
     /// RiseSdkListener.OnRewardAdEvent += 
     /// (
-    /// bool success,//是否成功显示视频广告
+    /// RiseSdk.AdEventType result,//是否成功显示视频广告，成功返回RiseSdk.AdEventType.RewardAdShowFinished，失败返回RiseSdk.AdEventType.RewardAdShowFailed
     /// int rewardId//视频广告调用时机
     /// ) 
     /// => {to do something};
@@ -257,12 +257,13 @@ public sealed class RiseSdk {
     /// 该接口的回调方法为：
     /// RiseSdkListener.OnRewardAdEvent += 
     /// (
-    /// bool success,//是否成功显示视频广告
-    /// int rewardId//视频广告调用时机
+    /// RiseSdk.AdEventType result,//是否成功显示视频广告，成功返回RiseSdk.AdEventType.RewardAdShowFinished，失败返回RiseSdk.AdEventType.RewardAdShowFailed
+    /// int rewardId，//视频广告调用时机
+    /// string tag//后台配置的视频广告位置tag
     /// ) 
     /// => {to do something};
     /// </summary>
-    /// <param name="tag">视频广告tag</param>
+    /// <param name="tag">后台配置的视频广告位置tag</param>
     /// <param name="rewardId">客户端自己配置的视频广告调用时机</param>
     public void ShowRewardAd (string tag, int rewardId) {
         BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
