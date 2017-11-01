@@ -667,58 +667,6 @@ public sealed class RiseSdk {
 #endif
     }
 
-
-    #region Android_Dummy
-    public string GetMeFirstName () {
-#if UNITY_EDITOR
-        return "FirstName";
-#else
-        return "FirstName";
-#endif
-    }
-
-    public string GetMeLastName () {
-#if UNITY_EDITOR
-        return "LastName";
-#else
-        return "LastName";
-#endif
-    }
-
-    public string GetMeId () {
-#if UNITY_EDITOR
-        return "MeId";
-#else
-        return "MeId";
-#endif
-    }
-
-    public void FetchFriends (bool invitable) {
-#if UNITY_EDITOR
-        RiseEditorAd.EditorAdInstance.Toast ("FetchFriends");
-#endif
-    }
-
-    public void FetchScores () {
-#if UNITY_EDITOR
-        RiseEditorAd.EditorAdInstance.Toast ("FetchScores");
-#endif
-    }
-
-    public void Share (string contentURL, string tag, string quote) {
-#if UNITY_EDITOR
-        RiseEditorAd.EditorAdInstance.Toast ("Share: " + contentURL + ", " + tag + ", " + quote);
-#endif
-    }
-
-    public void RestorePayments () {
-#if UNITY_EDITOR
-        RiseEditorAd.EditorAdInstance.Toast ("RestorePayments");
-#endif
-    }
-    #endregion
-
-
     /// <summary>
     /// 获取后台配置信息和Unity无法直接获取的一些信息。
     /// </summary>
@@ -1120,11 +1068,76 @@ public sealed class RiseSdk {
 		}
 	}*/
 
+    #region Android_Dummy
+    public string GetMeFirstName () {
+#if UNITY_EDITOR
+        return "FirstName";
+#else
+        return "FirstName";
+#endif
+    }
+
+    public string GetMeLastName () {
+#if UNITY_EDITOR
+        return "LastName";
+#else
+        return "LastName";
+#endif
+    }
+
+    public string GetMeId () {
+#if UNITY_EDITOR
+        return "MeId";
+#else
+        return "MeId";
+#endif
+    }
+
+    public string GetMeName () {
+#if UNITY_EDITOR
+        return "MeName";
+#else
+        return "MeName";
+#endif
+    }
+
+    public void FetchFriends (bool invitable) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("FetchFriends");
+#endif
+    }
+
+    public void FetchScores () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("FetchScores");
+#endif
+    }
+
+    public void Share (string contentURL, string tag, string quote) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("Share: " + contentURL + ", " + tag + ", " + quote);
+#endif
+    }
+
+    public void RestorePayments () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("RestorePayments");
+#endif
+    }
+
     public void SdkLog (string message) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("sdk log: " + message);
 #endif
     }
+
+    public void LoadAd (string tag) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("LoadAd: " + tag);
+#endif
+    }
+    #endregion
+
 #elif UNITY_IOS
     [DllImport ("__Internal")]
     private static extern int getScreenWidth ();
@@ -1154,6 +1167,8 @@ public sealed class RiseSdk {
     private static extern void showInterstitialAdWithTag2 (string tag, int delayShowSeconds, double delayTimeInterval);
     [DllImport ("__Internal")]
     private static extern void showIconAd (float width, float xPercent, float yPercent);
+    [DllImport ("__Internal")]
+    private static extern void loadInterstitialAd(string tag);
     [DllImport ("__Internal")]
     private static extern void closeIconAd ();
     [DllImport ("__Internal")]
@@ -1193,7 +1208,13 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern string meLastName ();
     [DllImport ("__Internal")]
-    private static extern long meId ();
+    private static extern string meId ();
+    [DllImport ("__Internal")]
+    private static extern string meName ();
+    [DllImport ("__Internal")]
+    private static extern string me ();
+    [DllImport ("__Internal")]
+    private static extern string friends ();
     [DllImport ("__Internal")]
     private static extern string mePictureURL ();
     [DllImport ("__Internal")]
@@ -1203,33 +1224,35 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern void invite ();
     [DllImport ("__Internal")]
-    private static extern void share (string contentURL, string tag, string quote);
+    private static extern void share ();
     [DllImport ("__Internal")]
-    private static extern void track (string category, string keyValueData);
+    private static extern void shareContent (string contentURL, string tag, string quote);
     [DllImport ("__Internal")]
-    private static extern void trackPlayerLevel (int levelId);
+    private static extern void logPlayerLevel (int levelId);
     [DllImport ("__Internal")]
-    private static extern void trackPageStart (string pageName);
+    private static extern void logPageStart (string pageName);
     [DllImport ("__Internal")]
-    private static extern void trackPageEnd (string pageName);
+    private static extern void logPageEnd (string pageName);
     [DllImport ("__Internal")]
-    private static extern void trackEvent (string eventId);
+    private static extern void logEvent (string eventId);
     [DllImport ("__Internal")]
-    private static extern void trackEventWithTag (string eventId, string tag);
+    private static extern void logEventWithTag (string eventId, string tag);
     [DllImport ("__Internal")]
-    private static extern void trackStartLevel (string level);
+    private static extern void logEventWithData (string eventId, string data);
     [DllImport ("__Internal")]
-    private static extern void trackFailLevel (string level);
+    private static extern void logStartLevel (string level);
     [DllImport ("__Internal")]
-    private static extern void trackFinishLevel (string level);
+    private static extern void logFailLevel (string level);
     [DllImport ("__Internal")]
-    private static extern void trackPay (double money, string itemName, int count, double price);
+    private static extern void logFinishLevel (string level);
     [DllImport ("__Internal")]
-    private static extern void trackBuy (string itemName, int count, double price);
+    private static extern void logPay (double money, string itemName, int count, double price);
     [DllImport ("__Internal")]
-    private static extern void trackUse (string itemName, int count, double price);
+    private static extern void logBuy (string itemName, int count, double price);
     [DllImport ("__Internal")]
-    private static extern void trackBonus (string itemName, int count, double price, int trigger);
+    private static extern void logUse (string itemName, int count, double price);
+    [DllImport ("__Internal")]
+    private static extern void logBonus (string itemName, int count, double price, int trigger);
     [DllImport ("__Internal")]
     private static extern void sdklog (string info);
     [DllImport ("__Internal")]
@@ -1352,6 +1375,16 @@ public sealed class RiseSdk {
 #endif
     }
 
+    public void LoadAd (string tag) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("LoadAd: " + tag);
+#elif iOS_TEST
+        loadInterstitialAd (tag);
+#else
+        loadInterstitialAd (tag);
+#endif
+    }
+
     public void ShowAd (string tag, int delayShowSeconds) {
 #if UNITY_EDITOR
         RiseSdkListener.Instance.StartCoroutine (delayStart ((string t) => RiseEditorAd.EditorAdInstance.ShowAd (t), tag, delayShowSeconds));
@@ -1468,15 +1501,6 @@ public sealed class RiseSdk {
 #endif
     }
 
-    public void TrackEvent (string category, string keyValueData) {
-#if UNITY_EDITOR
-        RiseEditorAd.EditorAdInstance.Toast ("Track: " + category + "\n" + keyValueData);
-#elif iOS_TEST
-#else
-        track (category, keyValueData);
-#endif
-    }
-
     public bool IsAdsEnabled () {
 #if UNITY_EDITOR || iOS_TEST
         return true;
@@ -1581,13 +1605,43 @@ public sealed class RiseSdk {
 #endif
     }
 
-    public long GetMeId () {
+    public string GetMeId () {
 #if UNITY_EDITOR
-        return 12345678;
+        return "12345678";
 #elif iOS_TEST
-        return 12345678;
+        return meId ();
 #else
         return meId ();
+#endif
+    }
+
+    public string GetMeName () {
+#if UNITY_EDITOR
+        return "12345678";
+#elif iOS_TEST
+        return meName ();
+#else
+        return meName ();
+#endif
+    }
+
+    public string Me () {
+#if UNITY_EDITOR
+        return "{\"id\":\"12345678\", \"name\":\"hahaha\", \"picture\":\"http://img.qq1234.org/uploads/allimg/141205/3_141205195713_3.jpg\"}";
+#elif iOS_TEST
+        return me ();
+#else
+        return me ();
+#endif
+    }
+
+    public string GetFriends () {
+#if UNITY_EDITOR
+        return "[]";
+#elif iOS_TEST
+        return friends ();
+#else
+        return friends ();
 #endif
     }
 
@@ -1636,12 +1690,21 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Share: " + contentURL + ", " + tag + ", " + quote);
 #elif iOS_TEST
-        share (contentURL, tag, quote);
+        shareContent (contentURL, tag, quote);
 #else
-        share (contentURL, tag, quote);
+        shareContent (contentURL, tag, quote);
 #endif
     }
 
+    public void Share () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("Share");
+#elif iOS_TEST
+        share ();
+#else
+        share ();
+#endif
+    }
 
     public void Toast (string message) {
 #if UNITY_EDITOR
@@ -1659,11 +1722,21 @@ public sealed class RiseSdk {
 #endif
     }
 
+    public void TrackEvent (string category, string keyValueData) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("Track: " + category + "\n" + keyValueData);
+#elif iOS_TEST
+        logEventWithData (category, keyValueData);
+#else
+        logEventWithData (category, keyValueData);
+#endif
+    }
+
     public void UM_setPlayerLevel (int level) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, setPlayerLevel: " + level);
 #else
-        trackPlayerLevel (level);
+        logPlayerLevel (level);
 #endif
     }
 
@@ -1671,7 +1744,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, onEvent: " + eventId);
 #else
-        trackEvent (eventId);
+        logEvent (eventId);
 #endif
     }
 
@@ -1679,18 +1752,15 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, onEvent: " + eventId + ", " + eventLabel);
 #else
-        trackEventWithTag (eventId, eventLabel);
+        logEventWithTag (eventId, eventLabel);
 #endif
-    }
-
-    public void UM_onEventValue (string eventId, Dictionary<string, string> mapStr) {
     }
 
     public void UM_onPageStart (String pageName) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, onPageStart: " + pageName);
 #else
-        trackPageStart (pageName);
+        logPageStart (pageName);
 #endif
     }
 
@@ -1698,7 +1768,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, onPageEnd: " + pageName);
 #else
-        trackPageEnd (pageName);
+        logPageEnd (pageName);
 #endif
     }
 
@@ -1706,7 +1776,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, startLevel: " + level);
 #else
-        trackStartLevel (level);
+        logStartLevel (level);
 #endif
     }
 
@@ -1714,7 +1784,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, failLevel: " + level);
 #else
-        trackFailLevel (level);
+        logFailLevel (level);
 #endif
     }
 
@@ -1722,7 +1792,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, finishLevel: " + level);
 #else
-        trackFinishLevel (level);
+        logFinishLevel (level);
 #endif
     }
 
@@ -1730,7 +1800,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, pay, money: " + money + ", item: " + itemName + ", number: " + number + ", price: " + price);
 #else
-	trackPay (money, itemName, number, price);
+	    logPay (money, itemName, number, price);
 #endif
     }
 
@@ -1738,7 +1808,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, buy, item: " + itemName + ", count: " + count + ", price: " + price);
 #else
-        trackBuy (itemName, count, price);
+        logBuy (itemName, count, price);
 #endif
     }
 
@@ -1746,7 +1816,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, use, item: " + itemName + ", number: " + number + ", price: " + price);
 #else
-        trackUse (itemName, number, price);
+        logUse (itemName, number, price);
 #endif
     }
 
@@ -1754,11 +1824,14 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, bonus, item: " + itemName + ", number: " + number + ", price: " + price + ", trigger: " + trigger);
 #else
-        trackBonus (itemName, number, price, trigger);
+        logBonus (itemName, number, price, trigger);
 #endif
     }
 
     #region IOS_DUMMY
+    public void UM_onEventValue (string eventId, Dictionary<string, string> mapStr) {
+    }
+
     public void OnResume () {
     }
 
@@ -1782,13 +1855,6 @@ public sealed class RiseSdk {
         RiseEditorAd.EditorAdInstance.Toast ("GetConfig, packageName: " + packageName + ", configId: " + configId);
 #endif
         return "";
-    }
-
-    public void Share () {
-    }
-
-    public string Me () {
-        return "{}";
     }
     #endregion
 
@@ -1934,7 +2000,11 @@ public sealed class RiseSdk {
         /// <summary>
         /// 交叉推广广告被点击
         /// </summary>
-        CrossAdClicked
+        CrossAdClicked,
+        AdLoadCompleted,
+        AdLoadFailed,
+        AdShown,
+        AdClosed
     }
 
     public enum PaymentResult : int {
@@ -2324,7 +2394,7 @@ public sealed class RiseSdk {
         private void InterstitialAdCallBack () {
             if (interstitialShow) {
 #if UNITY_IOS
-				RiseSdkListener.Instance.interstitialAdDidClose ("custom");
+				RiseSdkListener.Instance.adDidClose ("custom");
 #endif
             }
         }
@@ -2335,7 +2405,7 @@ public sealed class RiseSdk {
 #if UNITY_ANDROID
                 RiseSdkListener.Instance.onReceiveReward ("0|" + rewardAdId);
 #elif UNITY_IOS
-                RiseSdkListener.Instance.rewardAdDidFinish (rewardAdTag + "," + rewardAdId);
+				RiseSdkListener.Instance.adReward (rewardAdTag + "|" + rewardAdId);
 #endif
             }
             rewardAdId = NONE_REWARD_ID;
@@ -2517,6 +2587,7 @@ public sealed class RiseSdk {
         private LinkedNode tail = null;
         private Dictionary<string, LinkedNode> cache = null;
 
+        private const string SD_ROOT_PATH = "/storage/emulated/";
         private const string SD_PATH = "/storage/emulated/0/.android/.filecache/";
         private const string CACHE_FILE = "filedirmeta";
         private const string SPLIT_FLAG = "@^@";
@@ -2627,20 +2698,30 @@ public sealed class RiseSdk {
             head.next = tail;
             tail.prev = head;
             tail.next = null;
-#if UNITY_EDITOR || UNITY_IOS
-            defFilePath = Application.persistentDataPath + "/filecache/";
-#else
-            defFilePath = SD_PATH;
+            try {
+                defFilePath = Application.persistentDataPath + "/filecache/";
+#if UNITY_ANDROID
+                if (Directory.Exists (SD_ROOT_PATH)) {
+                    defFilePath = SD_PATH;
+                }
 #endif
-            if (!Directory.Exists (defFilePath)) {
-                Directory.CreateDirectory (defFilePath);
-            }
-            string filePath = defFilePath + CACHE_FILE;
-            if (!File.Exists (filePath)) {
-                File.Create (filePath);
-                RiseSdkListener.Instance.StartCoroutine (delayLoad (filePath, 1));
-            } else {
-                LoadLocalFile (filePath, loadCache);
+                if (!Directory.Exists (defFilePath)) {
+                    Directory.CreateDirectory (defFilePath);
+                }
+            } catch (System.Exception ex) {
+                Debug.LogError ("FileLRUCache init error\n" + ex.StackTrace);
+                defFilePath = Application.persistentDataPath + "/filecache/";
+            } finally {
+                if (!Directory.Exists (defFilePath)) {
+                    Directory.CreateDirectory (defFilePath);
+                }
+                string filePath = defFilePath + CACHE_FILE;
+                if (!File.Exists (filePath)) {
+                    File.Create (filePath);
+                    RiseSdkListener.Instance.StartCoroutine (delayLoad (filePath, 1));
+                } else {
+                    LoadLocalFile (filePath, loadCache);
+                }
             }
         }
 

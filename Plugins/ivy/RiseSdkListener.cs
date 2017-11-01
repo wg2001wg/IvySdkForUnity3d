@@ -12,7 +12,7 @@ public class RiseSdkListener : MonoBehaviour {
     /// <summary>
     /// 显示视频广告的结果回调事件
     /// </summary>
-    public static event Action<RiseSdk.AdEventType, int, string> OnRewardAdEvent;
+    //public static event Action<RiseSdk.AdEventType, int, string> OnRewardAdEvent;
 
     /// <summary>
     /// 支付的结果回调事件
@@ -46,7 +46,7 @@ public class RiseSdkListener : MonoBehaviour {
     /// </summary>
     public static event Action<string> OnReceiveNotificationData;
 
-    public static event Action<RiseSdk.AdEventType, string> OnAdEvent;
+    public static event Action<RiseSdk.AdEventType, int, string> OnAdEvent;
 
     private static RiseSdkListener _instance;
 
@@ -90,33 +90,6 @@ public class RiseSdkListener : MonoBehaviour {
 
     void Awake () {
         RiseSdk.Instance.OnStart ();
-    }
-
-    /// <summary>
-    /// 显示视频广告的结果回调方法，SDK自动调用。
-    /// </summary>
-    /// <param name="data">返回的结果数据</param>
-    public void onReceiveReward (string data) {
-        if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList ().Length > 0) {
-            bool success = false;
-            int id = 0;
-            string tag = "Default";
-            if (!string.IsNullOrEmpty (data)) {
-                string[] results = data.Split ('|');
-                if (results != null && results.Length > 1) {
-                    success = int.Parse (results[0]) == 0;
-                    id = int.Parse (results[1]);
-                    if (results.Length > 2) {
-                        tag = results[2];
-                    }
-                }
-            }
-            if (success) {
-                OnRewardAdEvent (RiseSdk.AdEventType.RewardAdShowFinished, id, tag);
-            } else {
-                OnRewardAdEvent (RiseSdk.AdEventType.RewardAdShowFailed, id, tag);
-            }
-        }
     }
 
     /// <summary>
@@ -288,6 +261,33 @@ public class RiseSdkListener : MonoBehaviour {
     }
 
     /// <summary>
+    /// 显示视频广告的结果回调方法，SDK自动调用。
+    /// </summary>
+    /// <param name="data">返回的结果数据</param>
+    public void onReceiveReward (string data) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            bool success = false;
+            int id = -1;
+            string tag = "Default";
+            if (!string.IsNullOrEmpty (data)) {
+                string[] results = data.Split ('|');
+                if (results != null && results.Length > 1) {
+                    success = int.Parse (results[0]) == 0;
+                    id = int.Parse (results[1]);
+                    if (results.Length > 2) {
+                        tag = results[2];
+                    }
+                }
+            }
+            if (success) {
+                OnAdEvent (RiseSdk.AdEventType.RewardAdShowFinished, id, tag);
+            } else {
+                OnAdEvent (RiseSdk.AdEventType.RewardAdShowFailed, id, tag);
+            }
+        }
+    }
+
+    /// <summary>
     /// 大屏广告被关闭的回调方法，SDK自动调用。
     /// </summary>
     /// <param name="data">返回的数据</param>
@@ -300,7 +300,7 @@ public class RiseSdkListener : MonoBehaviour {
                     tag = msg[0];
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.FullAdClosed, tag);
+            OnAdEvent (RiseSdk.AdEventType.FullAdClosed, -1, tag);
         }
     }
 
@@ -316,7 +316,7 @@ public class RiseSdkListener : MonoBehaviour {
                     tag = msg[0];
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.FullAdClicked, tag);
+            OnAdEvent (RiseSdk.AdEventType.FullAdClicked, -1, tag);
         }
     }
 
@@ -333,7 +333,7 @@ public class RiseSdkListener : MonoBehaviour {
                     tag = msg[0];
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.RewardAdClosed, tag);
+            OnAdEvent (RiseSdk.AdEventType.RewardAdClosed, -1, tag);
         }
     }
 
@@ -350,7 +350,7 @@ public class RiseSdkListener : MonoBehaviour {
                     tag = msg[0];
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.BannerAdClicked, tag);
+            OnAdEvent (RiseSdk.AdEventType.BannerAdClicked, -1, tag);
         }
     }
 
@@ -367,18 +367,18 @@ public class RiseSdkListener : MonoBehaviour {
                     tag = msg[0];
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.CrossAdClicked, tag);
+            OnAdEvent (RiseSdk.AdEventType.CrossAdClicked, -1, tag);
         }
     }
 #elif UNITY_IOS
     /// <summary>
-    /// 大屏广告的回调事件
+    /// 大屏和视频广告的回调事件
     /// </summary>
-    public static event Action<RiseSdk.AdEventType, string> OnAdEvent;
-    /// <summary>
-    /// 视频广告的回调事件
-    /// </summary>
-    public static event Action<RiseSdk.AdEventType, int, string> OnRewardAdEvent;
+    public static event Action<RiseSdk.AdEventType, int, string> OnAdEvent;
+    ///// <summary>
+    ///// 视频广告的回调事件
+    ///// </summary>
+    //public static event Action<RiseSdk.AdEventType, int, string> OnRewardAdEvent;
     /// <summary>
     /// 支付的回调事件
     /// </summary>
@@ -406,95 +406,44 @@ public class RiseSdkListener : MonoBehaviour {
         }
     }
 
-    public void interstitialAdDidReceive (string tag) {
+    public void adReward (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            OnAdEvent (RiseSdk.AdEventType.FullAdLoadCompleted, tag);
+            string tag = "Default";
+            int placementId = -1;
+            if (!string.IsNullOrEmpty (data)) {
+                string[] str = data.Split ('|');
+                if (str.Length == 1) {
+                    tag = str [0];
+                } else if (str.Length >= 2) {
+                    tag = str[0];
+                    int.TryParse (str[1], out placementId);
+                }
+            }
+            OnAdEvent (RiseSdk.AdEventType.RewardAdShowFinished, placementId, tag);
         }
     }
 
-    public void interstitialAdDidClose (string tag) {
+    public void adLoaded (string tag) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            OnAdEvent (RiseSdk.AdEventType.FullAdClosed, tag);
+            OnAdEvent (RiseSdk.AdEventType.AdLoadCompleted, -1, tag);
         }
     }
 
-	public void interstitialAdDidShown (string tag) {
-		if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-			OnAdEvent (RiseSdk.AdEventType.FullAdShown, tag);
-		}
-	}
-
-    public void interstitialAdFailed (string tag) {
-		if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-			OnAdEvent (RiseSdk.AdEventType.FullAdLoadFailed, tag);
-		}
-	}
-
-    public void rewardAdDidFinish (string data) {
-        if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList ().Length > 0) {
-            string tag = "Default";
-            int placementId = 0;
-            if (!string.IsNullOrEmpty (data)) {
-                string[] str = data.Split (',');
-                if (str.Length == 1) {
-                    int.TryParse (str[0], out placementId);
-                } else if (str.Length >= 2) {
-                    tag = str[0];
-                    placementId = int.Parse (str[1]);
-                }
-            }
-            OnRewardAdEvent (RiseSdk.AdEventType.RewardAdShowFinished, placementId, tag);
+    public void adFailed (string tag) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            OnAdEvent (RiseSdk.AdEventType.AdLoadFailed, -1, tag);
         }
     }
 
-    public void rewardAdLoadFail (string data) {
-        if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList ().Length > 0) {
-            string tag = "Default";
-            int placementId = 0;
-            if (!string.IsNullOrEmpty (data)) {
-                string[] str = data.Split (',');
-                if (str.Length == 1) {
-                    int.TryParse (str[0], out placementId);
-                } else if (str.Length >= 2) {
-                    tag = str[0];
-                    placementId = int.Parse (str[1]);
-                }
-            }
-            OnRewardAdEvent (RiseSdk.AdEventType.RewardAdLoadFailed, placementId, tag);
+    public void adDidShown (string tag) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            OnAdEvent (RiseSdk.AdEventType.AdShown, -1, tag);
         }
     }
 
-    public void rewardAdDidStart (string data) {
-        if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList ().Length > 0) {
-            string tag = "Default";
-            int placementId = 0;
-            if (!string.IsNullOrEmpty (data)) {
-                string[] str = data.Split (',');
-                if (str.Length == 1) {
-                    int.TryParse (str[0], out placementId);
-                } else if (str.Length >= 2) {
-                    tag = str[0];
-                    placementId = int.Parse (str[1]);
-                }
-            }
-            OnRewardAdEvent (RiseSdk.AdEventType.RewardAdShowStart, placementId, tag);
-        }
-    }
-
-    public void rewardAdDidReceive (string data) {
-        if (OnRewardAdEvent != null && OnRewardAdEvent.GetInvocationList ().Length > 0) {
-            string tag = "Default";
-            int placementId = 0;
-            if (!string.IsNullOrEmpty (data)) {
-                string[] str = data.Split (',');
-                if (str.Length == 1) {
-                    int.TryParse (str[0], out placementId);
-                } else if (str.Length >= 2) {
-                    tag = str[0];
-                    placementId = int.Parse (str[1]);
-                }
-            }
-            OnRewardAdEvent (RiseSdk.AdEventType.RewardAdLoadCompleted, placementId, tag);
+    public void adDidClose (string tag) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            OnAdEvent (RiseSdk.AdEventType.AdClosed, -1, tag);
         }
     }
 

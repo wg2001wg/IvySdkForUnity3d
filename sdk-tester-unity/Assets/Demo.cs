@@ -129,8 +129,8 @@ public class Demo : MonoBehaviour {
 
     void InitListeners () {
         // Set get free coin event
-        RiseSdkListener.OnRewardAdEvent -= GetFreeCoin;
-        RiseSdkListener.OnRewardAdEvent += GetFreeCoin;
+        RiseSdkListener.OnAdEvent -= GetFreeCoin;
+        RiseSdkListener.OnAdEvent += GetFreeCoin;
         // On payment result
         RiseSdkListener.OnPaymentEvent -= OnPaymentResult;
         RiseSdkListener.OnPaymentEvent += OnPaymentResult;
