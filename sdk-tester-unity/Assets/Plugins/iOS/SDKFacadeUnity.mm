@@ -47,52 +47,34 @@ extern "C" {
 }
 @end
 @implementation SDKFacadeUnity
-- (void)rewardAdDidFinish:(NSString *)tag placement:(int)placementId
+- (void)adReward:(NSString *)tag rewardId:(int)rewardId
 {
-    const char * _msg = [[NSString stringWithFormat:@"%@,%@", tag, [@(placementId) stringValue]] UTF8String];
-    Send("RiseSdkListener", "rewardAdDidFinish", _msg);
+    const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, rewardId] UTF8String];
+    Send("RiseSdkListener", "adReward", _msg);
 }
 
--(void)rewardAdLoadFail:(NSString *)tag placement:(int)placementId forError:(NSError *)error
+- (void)adLoaded:(NSString *)tag adType:(int)adType
 {
-    const char * _msg = [[NSString stringWithFormat:@"%@,%@", tag, [@(placementId) stringValue]] UTF8String];
-    Send("RiseSdkListener", "rewardAdLoadFail", _msg);
+    const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
+    Send("RiseSdkListener", "adLoaded", _msg);
 }
 
--(void)rewardAdDidStart:(NSString *)tag placement:(int)placementId
+-(void)adFailed:(NSString *)tag adType:(int)adType forError:(NSError *)error
 {
-    const char * _msg = [[NSString stringWithFormat:@"%@,%@", tag, [@(placementId) stringValue]] UTF8String];
-    Send("RiseSdkListener", "rewardAdDidStart", _msg);
+    const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
+    Send("RiseSdkListener", "adFailed", _msg);
 }
 
--(void)rewardAdDidReceive:(NSString *)tag placement:(int)placementId
+- (void)adDidShown:(NSString *)tag adType:(int)adType
 {
-    const char * _msg = [[NSString stringWithFormat:@"%@,%@", tag, [@(placementId) stringValue]] UTF8String];
-    Send("RiseSdkListener", "rewardAdDidReceive", _msg);
+    const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
+    Send("RiseSdkListener", "adDidShown", _msg);
 }
 
-- (void)interstitialAdDidReceive:(NSString *)tag
+- (void)adDidClose:(NSString *)tag adType:(int)adType
 {
-    const char * _msg = [tag UTF8String];
-    Send("RiseSdkListener", "interstitialAdDidReceive", _msg);
-}
-
--(void)interstitialAdFailed:(NSString *)tag forError:(NSError *)error
-{
-    const char * _msg = [tag UTF8String];
-    Send("RiseSdkListener", "interstitialAdFailed", _msg);
-}
-
-- (void)interstitialAdDidShown:(NSString *)tag
-{
-    const char * _msg = [tag UTF8String];
-    Send("RiseSdkListener", "interstitialAdDidShown", _msg);
-}
-
-- (void)interstitialAdDidClose:(NSString *)tag
-{
-    const char * _msg = [tag UTF8String];
-    Send("RiseSdkListener", "interstitialAdDidClose", _msg);
+    const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
+    Send("RiseSdkListener", "adDidClose", _msg);
 }
 
 - (void)onPaymentSuccess:(int)paymentId
@@ -282,16 +264,19 @@ extern "C" {
         return true;
     }
     
-    void showRewardVideo(int placementId)
+    void showRewardVideo(int rewardId)
     {
-        char* buffer = (char*)malloc(2);
-        sprintf(buffer, "%d", placementId);
-        toast(concat("show video : ", buffer));
+        toast("show video : default");
     }
     
-    void showRewardVideoWithTag(const char *tag, int placementId)
+    void showRewardVideoWithTag(const char *tag, int rewardId)
     {
         toast(concat("show video : ", tag));
+    }
+    
+    void loadInterstitialAd(const char *tag)
+    {
+        toast(concat("load interstitial : ", tag));
     }
     
     void showInterstitialAd(const char *tag)
@@ -425,9 +410,24 @@ extern "C" {
         return returnStr("LastName");
     }
     
-    const long meId()
+    const char *meName()
     {
-		return 12345678;
+        return returnStr("Me Name");
+    }
+    
+    const char *meId()
+    {
+        return returnStr("12345678");
+    }
+    
+    const char *me()
+    {
+        return returnStr("{\"id\":\"12345678\", \"name\":\"hahaha\", \"picture\":\"http://img.qq1234.org/uploads/allimg/141205/3_141205195713_3.jpg\"}");
+    }
+    
+    const char *friends()
+    {
+        return returnStr("[]");
     }
     
     const char *mePictureURL()
@@ -449,10 +449,15 @@ extern "C" {
     {
         toast("facebook invite");
     }
-
-    void share(const char *contentURL, const char *tag, const char *quote)
+    
+    void share()
     {
-        toast(concat("facebook share", contentURL));
+        toast("facebook share");
+    }
+    
+    void shareContent(const char *contentURL, const char *tag, const char *quote)
+    {
+        toast(concat("facebook shareContent", contentURL));
     }
     
     void shareSheet(const char *linkURL, const char *tag, const char *quote)
@@ -465,71 +470,98 @@ extern "C" {
         toast(concat("facebook shareSheetOS", linkURL));
     }
     
-    void track(const char *name, const char *data)
-    {
-        toast(concat("track ", name));
-    }
-    
-    void trackPlayerLevel(int levelId)
+    void logPlayerLevel(int levelId)
     {
         char* buffer = (char*)malloc(2);
         sprintf(buffer, "%d", levelId);
-        toast(concat("trackPlayerLevel : ", buffer));
+        toast(concat("logPlayerLevel : ", buffer));
     }
     
-    void trackPageStart(const char* pageName)
+    void logPageStart(const char* pageName)
     {
-        toast(concat("trackPageStart : ", pageName));
+        toast(concat("logPageStart : ", pageName));
     }
     
-    void trackPageEnd(const char* pageName)
+    void logPageEnd(const char* pageName)
     {
-        toast(concat("trackPageEnd : ", pageName));
+        toast(concat("logPageEnd : ", pageName));
     }
     
-    void trackEvent(const char* eventId)
+    void logEvent(const char* eventId)
     {
-        toast(concat("trackEvent : ", eventId));
+        toast(concat("logEvent : ", eventId));
     }
     
-    void trackEventWithTag(const char* eventId, const char* tag)
+    void logEventWithData(const char *eventId, const char *data)
     {
-        toast(concat("trackEventWithTag : ", eventId));
+        if(data != nullptr) {
+            NSString *objc_name = [NSString stringWithUTF8String:eventId];
+            NSMutableDictionary *objc_data = [[NSMutableDictionary alloc] init];
+            NSString *_data = [NSString stringWithUTF8String:data];
+            NSArray *arr = [_data componentsSeparatedByString:@","];
+            if(arr && arr.count > 1) {
+                for (int i=0; i<arr.count; i+=2) {
+                    NSString *key = [arr objectAtIndex:i];
+                    NSString *value = [arr objectAtIndex:i+1];
+                    [objc_data setObject:value forKey:key];
+                }
+                toast(concat("logEvent : ", eventId));
+            }
+        }
     }
     
-    void trackStartLevel(const char* level)
+    void logEventWithTag(const char* eventId, const char* tag)
     {
-        toast(concat("trackStartLevel : ", level));
+        toast(concat("logEventWithTag : ", eventId));
     }
     
-    void trackFailLevel(const char* level)
+    void logStartLevel(const char* level)
     {
-        toast(concat("trackFailLevel : ", level));
+        toast(concat("logStartLevel : ", level));
     }
     
-    void trackFinishLevel(const char* level)
+    void logFailLevel(const char* level)
     {
-        toast(concat("trackFinishLevel : ", level));
+        toast(concat("logFailLevel : ", level));
     }
     
-    void trackPay(double money, const char* itemName, int number, double price)
+    void logFinishLevel(const char* level)
     {
-        toast(concat("trackPay : ", itemName));
+        toast(concat("logFinishLevel : ", level));
     }
     
-    void trackBuy(const char* itemName, int count, double price)
+    void logPay(double money, const char* itemName, int number, double price)
     {
-        toast(concat("trackPay : ", itemName));
+        toast(concat("logPay : ", itemName));
     }
     
-    void trackUse(const char* itemName, int number, double price)
+    void logBuy(const char* itemName, int count, double price)
     {
-        toast(concat("trackUse : ", itemName));
+        toast(concat("logPay : ", itemName));
     }
     
-    void trackBonus(const char* itemName, int number, double price, int trigger)
+    void logUse(const char* itemName, int number, double price)
     {
-        toast(concat("trackBonus : ", itemName));
+        toast(concat("logUse : ", itemName));
+    }
+    
+    void logBonus(const char* itemName, int number, double price, int trigger)
+    {
+        toast(concat("logBonus : ", itemName));
+    }
+    
+    const char *cacheUrl(const char* url)
+    {
+        return returnStr("");
+    }
+    
+    void cacheUrlWithTag(const char* tag, const char* url)
+    {
+        NSString *_tag = tag != nullptr ? [NSString stringWithUTF8String:tag] : nil;
+        NSString *_url = url != nullptr ? [NSString stringWithUTF8String:url] : nil;
+        const char * _msg = [[NSString stringWithFormat:@"%@|%@", _tag, _url] UTF8String];
+        Send("RiseSdkListener", "cacheUrlSuccess", _msg);
+        Send("RiseSdkListener", "cacheUrlFailure", tag);
     }
     
 #ifdef __cplusplus

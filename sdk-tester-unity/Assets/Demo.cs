@@ -428,7 +428,7 @@ public class Demo : MonoBehaviour {
 
     // Get Free coin handler
 #if UNITY_ANDROID
-    void GetFreeCoin (RiseSdk.AdEventType result, int rewardId, string tag) {
+    void GetFreeCoin (RiseSdk.AdEventType result, int rewardId, string tag, int adType) {
         if (result == RiseSdk.AdEventType.RewardAdShowFinished) {
             switch (rewardId) {
                 case 1:

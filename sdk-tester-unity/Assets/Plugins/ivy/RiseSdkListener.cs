@@ -46,7 +46,7 @@ public class RiseSdkListener : MonoBehaviour {
     /// </summary>
     public static event Action<string> OnReceiveNotificationData;
 
-    public static event Action<RiseSdk.AdEventType, int, string> OnAdEvent;
+    public static event Action<RiseSdk.AdEventType, int, string, int> OnAdEvent;
 
     private static RiseSdkListener _instance;
 
@@ -280,9 +280,9 @@ public class RiseSdkListener : MonoBehaviour {
                 }
             }
             if (success) {
-                OnAdEvent (RiseSdk.AdEventType.RewardAdShowFinished, id, tag);
+                OnAdEvent (RiseSdk.AdEventType.RewardAdShowFinished, id, tag, RiseSdk.ADTYPE_VIDEO);
             } else {
-                OnAdEvent (RiseSdk.AdEventType.RewardAdShowFailed, id, tag);
+                OnAdEvent (RiseSdk.AdEventType.RewardAdShowFailed, id, tag, RiseSdk.ADTYPE_VIDEO);
             }
         }
     }
@@ -300,7 +300,7 @@ public class RiseSdkListener : MonoBehaviour {
                     tag = msg[0];
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.FullAdClosed, -1, tag);
+            OnAdEvent (RiseSdk.AdEventType.FullAdClosed, -1, tag, RiseSdk.ADTYPE_INTERTITIAL);
         }
     }
 
@@ -316,7 +316,7 @@ public class RiseSdkListener : MonoBehaviour {
                     tag = msg[0];
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.FullAdClicked, -1, tag);
+            OnAdEvent (RiseSdk.AdEventType.FullAdClicked, -1, tag, RiseSdk.ADTYPE_INTERTITIAL);
         }
     }
 
@@ -333,7 +333,7 @@ public class RiseSdkListener : MonoBehaviour {
                     tag = msg[0];
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.RewardAdClosed, -1, tag);
+            OnAdEvent (RiseSdk.AdEventType.RewardAdClosed, -1, tag, RiseSdk.ADTYPE_VIDEO);
         }
     }
 
@@ -350,7 +350,7 @@ public class RiseSdkListener : MonoBehaviour {
                     tag = msg[0];
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.BannerAdClicked, -1, tag);
+            OnAdEvent (RiseSdk.AdEventType.BannerAdClicked, -1, tag, RiseSdk.ADTYPE_BANNER);
         }
     }
 
@@ -367,14 +367,14 @@ public class RiseSdkListener : MonoBehaviour {
                     tag = msg[0];
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.CrossAdClicked, -1, tag);
+            OnAdEvent (RiseSdk.AdEventType.CrossAdClicked, -1, tag, RiseSdk.ADTYPE_OTHER);
         }
     }
 #elif UNITY_IOS
     /// <summary>
     /// 大屏和视频广告的回调事件
     /// </summary>
-    public static event Action<RiseSdk.AdEventType, int, string> OnAdEvent;
+    public static event Action<RiseSdk.AdEventType, int, string, int> OnAdEvent;
     ///// <summary>
     ///// 视频广告的回调事件
     ///// </summary>
@@ -419,31 +419,75 @@ public class RiseSdkListener : MonoBehaviour {
                     int.TryParse (str[1], out placementId);
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.RewardAdShowFinished, placementId, tag);
+            OnAdEvent (RiseSdk.AdEventType.RewardAdShowFinished, placementId, tag, RiseSdk.ADTYPE_VIDEO);
         }
     }
 
-    public void adLoaded (string tag) {
+    public void adLoaded (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            OnAdEvent (RiseSdk.AdEventType.AdLoadCompleted, -1, tag);
+            string tag = "Default";
+            int adType = -1;
+            if (!string.IsNullOrEmpty (data)) {
+                string[] str = data.Split ('|');
+                if (str.Length == 1) {
+                    tag = str [0];
+                } else if (str.Length >= 2) {
+                    tag = str[0];
+                    int.TryParse (str[1], out adType);
+                }
+            }
+            OnAdEvent (RiseSdk.AdEventType.AdLoadCompleted, -1, tag, adType);
         }
     }
 
-    public void adFailed (string tag) {
+    public void adFailed (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            OnAdEvent (RiseSdk.AdEventType.AdLoadFailed, -1, tag);
+            string tag = "Default";
+            int adType = -1;
+            if (!string.IsNullOrEmpty (data)) {
+                string[] str = data.Split ('|');
+                if (str.Length == 1) {
+                    tag = str [0];
+                } else if (str.Length >= 2) {
+                    tag = str[0];
+                    int.TryParse (str[1], out adType);
+                }
+            }
+            OnAdEvent (RiseSdk.AdEventType.AdLoadFailed, -1, tag, adType);
         }
     }
 
-    public void adDidShown (string tag) {
+    public void adDidShown (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            OnAdEvent (RiseSdk.AdEventType.AdShown, -1, tag);
+            string tag = "Default";
+            int adType = -1;
+            if (!string.IsNullOrEmpty (data)) {
+                string[] str = data.Split ('|');
+                if (str.Length == 1) {
+                    tag = str [0];
+                } else if (str.Length >= 2) {
+                    tag = str[0];
+                    int.TryParse (str[1], out adType);
+                }
+            }
+            OnAdEvent (RiseSdk.AdEventType.AdShown, -1, tag, adType);
         }
     }
 
-    public void adDidClose (string tag) {
+    public void adDidClose (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            OnAdEvent (RiseSdk.AdEventType.AdClosed, -1, tag);
+            string tag = "Default";
+            int adType = -1;
+            if (!string.IsNullOrEmpty (data)) {
+                string[] str = data.Split ('|');
+                if (str.Length == 1) {
+                    tag = str [0];
+                } else if (str.Length >= 2) {
+                    tag = str[0];
+                    int.TryParse (str[1], out adType);
+                }
+            }
+            OnAdEvent (RiseSdk.AdEventType.AdClosed, -1, tag, adType);
         }
     }
 

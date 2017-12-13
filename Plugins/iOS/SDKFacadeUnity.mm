@@ -53,27 +53,27 @@ extern "C" {
     Send("RiseSdkListener", "adReward", _msg);
 }
 
-- (void)adLoaded:(NSString *)tag
+- (void)adLoaded:(NSString *)tag adType:(int)adType
 {
-    const char * _msg = [tag UTF8String];
+    const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
     Send("RiseSdkListener", "adLoaded", _msg);
 }
 
--(void)adFailed:(NSString *)tag forError:(NSError *)error
+-(void)adFailed:(NSString *)tag adType:(int)adType forError:(NSError *)error
 {
-    const char * _msg = [tag UTF8String];
+    const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
     Send("RiseSdkListener", "adFailed", _msg);
 }
 
-- (void)adDidShown:(NSString *)tag
+- (void)adDidShown:(NSString *)tag adType:(int)adType
 {
-    const char * _msg = [tag UTF8String];
+    const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
     Send("RiseSdkListener", "adDidShown", _msg);
 }
 
-- (void)adDidClose:(NSString *)tag
+- (void)adDidClose:(NSString *)tag adType:(int)adType
 {
-    const char * _msg = [tag UTF8String];
+    const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
     Send("RiseSdkListener", "adDidClose", _msg);
 }
 
