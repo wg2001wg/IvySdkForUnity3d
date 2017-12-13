@@ -6,7 +6,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Security.Cryptography;
 using System.IO;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
 using UnityEngine.Networking;
+#endif
 using System.Runtime.InteropServices;
 
 #if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
@@ -35,12 +37,12 @@ public sealed class RiseSdk {
     private bool canShowBackHomeAd = false;
 
     /*
-	public const int SERVER_RESULT_RECEIVE_GAME_DATA = 1;
-	public const int SERVER_RESULT_SAVE_USER_DATA = 2;
-	public const int SERVER_RESULT_RECEIVE_USER_DATA = 3;
-	public const int SERVER_RESULT_VERIFY_CODE = 4;
-	public const int SERVER_RESULT_SALES_CLICK = 5;
-	*/
+    public const int SERVER_RESULT_RECEIVE_GAME_DATA = 1;
+    public const int SERVER_RESULT_SAVE_USER_DATA = 2;
+    public const int SERVER_RESULT_RECEIVE_USER_DATA = 3;
+    public const int SERVER_RESULT_VERIFY_CODE = 4;
+    public const int SERVER_RESULT_SALES_CLICK = 5;
+    */
 
     /// <summary>
     /// 配置计费系统的可用状态，SDK自动调用。
@@ -1961,7 +1963,7 @@ public sealed class RiseSdk {
         /// 大屏广告被关闭
         /// </summary>
         FullAdClosed,
-		FullAdShown,
+        FullAdShown,
         /// <summary>
         /// 大屏广告被点击
         /// </summary>
@@ -2735,9 +2737,11 @@ public sealed class RiseSdk {
         }
 
         private void writeCache () {
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
             if (writting != null) {
                 RiseSdkListener.Instance.StopCoroutine (writting);
             }
+#endif
             writting = RiseSdkListener.Instance.StartCoroutine (delayWrite ());
         }
 

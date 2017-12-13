@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
 using UnityEngine.UI;
+#endif
 
 public class Demo : MonoBehaviour {
 
     public GUISkin guiSkin;
     public TextAsset infoJson = null;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
     public Image avatarImg = null;
+#endif
     private string[] imgUrl = null;
 
 #if UNITY_ANDROID
@@ -93,6 +97,7 @@ public class Demo : MonoBehaviour {
                     obj = (Dictionary<string, object>) RiseJson.Deserialize (RiseJson.Serialize (data[i]));
                     avatar = obj["Avatar"].ToString ();
                     imgUrl[i] = avatar;
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
                     if (i == 0 && avatarImg != null) {
                         changeAvatarImg ();
                     } else {
@@ -100,6 +105,7 @@ public class Demo : MonoBehaviour {
                         RiseSdk.Instance.DownloadFile (avatar, null);
 #endif
                     }
+#endif
                 }
             }
         }
@@ -118,7 +124,9 @@ public class Demo : MonoBehaviour {
                 Texture2D tex = new Texture2D (128, 128, TextureFormat.ARGB32, false);
                 tex.LoadImage (www.bytes);
                 Sprite sp = Sprite.Create (tex, new Rect (0, 0, tex.width, tex.height), new Vector2 (0, 0));
+#if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
                 avatarImg.sprite = sp;
+#endif
             }
         });
 #endif
