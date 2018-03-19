@@ -78,6 +78,8 @@ public class Demo : MonoBehaviour {
             guiSkin.button.fontSize = 50;
         }
 #endif
+
+        RiseSdk.Instance.enableBackHomeAd (true, RiseSdk.M_PAUSE, 5000);
     }
 
     void Start () {

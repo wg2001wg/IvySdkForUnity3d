@@ -1,4 +1,4 @@
-#region Using
+﻿#region Using
 using System;
 using UnityEngine;
 using System.Collections;
@@ -35,6 +35,7 @@ public sealed class RiseSdk {
     private bool BACK_HOME_AD_ENABLE = false;
     private double BACK_HOME_AD_TIME = 0;
     private bool canShowBackHomeAd = false;
+    private double homeAdMinPauseMillisecond = 1000;
 
     /*
     public const int SERVER_RESULT_RECEIVE_GAME_DATA = 1;
@@ -284,9 +285,10 @@ public sealed class RiseSdk {
         }
     }
 
-    public void enableBackHomeAd (bool enabled, String adPos) {
+    public void enableBackHomeAd (bool enabled, String adPos, double minPauseMillisecond) {
         BACK_HOME_ADPOS = adPos;
         BACK_HOME_AD_ENABLE = enabled;
+        homeAdMinPauseMillisecond = minPauseMillisecond;
     }
 
     /// <summary>
@@ -299,11 +301,14 @@ public sealed class RiseSdk {
         if (BACK_HOME_AD_ENABLE) {
             if (canShowBackHomeAd && BACK_HOME_AD_TIME <= 0) {
                 canShowBackHomeAd = false;
-                ShowAd (BACK_HOME_ADPOS);
+                if (GetCurrentTimeInMills () - pauseTime > homeAdMinPauseMillisecond) {
+                    ShowAd (BACK_HOME_ADPOS);
+                }
             }
         }
     }
 
+    private double pauseTime = 0;
     /// <summary>
     /// 游戏失去焦点，SDK自动调用。
     /// </summary>
@@ -318,6 +323,7 @@ public sealed class RiseSdk {
             if (canShowBackHomeAd) {
                 BACK_HOME_AD_TIME = 0;
             }
+            pauseTime = now;
         }
     }
 
@@ -328,7 +334,6 @@ public sealed class RiseSdk {
         if (_class != null) {
             _class.CallStatic ("onStart");
         }
-
     }
 
     /// <summary>
@@ -463,12 +468,29 @@ public sealed class RiseSdk {
     /// <param name="tag"></param>
     /// <param name="yPercent"></param>
     public void ShowNativeAd (string tag, int yPercent) {
-        BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
+        //BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("ShowNativeAd");
 #endif
         if (_class != null) {
             _class.CallStatic ("showNative", tag, yPercent);
+        }
+    }
+
+    public bool ShowNativeAdWithJson (string tag, int xPixel, int yPixel, string configJson) {
+        //BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowNativeAdWithJson");
+#endif
+        if (_class != null) {
+            return _class.CallStatic<bool> ("showNativeBanner", tag, xPixel, yPixel, configJson);
+        }
+        return false;
+    }
+
+    public void CloseNativeBanner (string tag) {
+        if (_class != null) {
+            _class.CallStatic ("closeNativeBanner", tag);
         }
     }
 
@@ -662,10 +684,11 @@ public sealed class RiseSdk {
 
     public string GetMePictureURL () {
 #if UNITY_EDITOR
-        return "http://img.qq1234.org/uploads/allimg/141205/3_141205195713_3.jpg";
+        //return "http://img.qq1234.org/uploads/allimg/141205/3_141205195713_3.jpg";
+        return "";
 #else
         string me = Me ();
-        string meImgPath = "http://img.qq1234.org/uploads/allimg/141205/3_141205195713_3.jpg";
+        string meImgPath = "";
         if (!string.IsNullOrEmpty (me) && me.Length > 5) {
             Dictionary<string, object> meData = (Dictionary<string, object>) RiseJson.Deserialize (me);
             if (meData.ContainsKey ("picture")) {
@@ -838,7 +861,7 @@ public sealed class RiseSdk {
     /// </summary>
     /// <returns>true可用， false不可用</returns>
     public bool IsNetworkConnected () {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || CLOUD_TEST
         return true;
 #endif
         if (_class != null) {
@@ -1168,6 +1191,12 @@ public sealed class RiseSdk {
         RiseEditorAd.EditorAdInstance.Toast ("LoadAd: " + tag);
 #endif
     }
+
+    public void ShowPopupIconAd () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowPopupIconAd");
+#endif
+    }
     #endregion
 
 #elif UNITY_IOS
@@ -1200,7 +1229,25 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern void showIconAd (float width, float xPercent, float yPercent);
     [DllImport ("__Internal")]
-    private static extern void loadInterstitialAd(string tag);
+    private static extern void showPopupIconAds ();
+    [DllImport ("__Internal")]
+    private static extern void showNativeAdWithJson (string tag, float xPercent, float yPercent, string json);
+    [DllImport ("__Internal")]
+    private static extern void showNativeAdWithSize (string tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio);
+
+    [DllImport ("__Internal")]
+    private static extern void closeNativeAd (string tag);
+
+    [DllImport ("__Internal")]
+    private static extern void setAdmobNativeNib (string tag, string nibName);
+    [DllImport ("__Internal")]
+    private static extern void setFBNativeNib (string tag, string nibName);
+    [DllImport ("__Internal")]
+    private static extern void setOurNativeNib (string tag, string nibName);
+    [DllImport ("__Internal")]
+    private static extern void setNativeBundle (string tag, string bundleName);
+    [DllImport ("__Internal")]
+    private static extern void loadInterstitialAd (string tag);
     [DllImport ("__Internal")]
     private static extern void closeIconAd ();
     [DllImport ("__Internal")]
@@ -1225,6 +1272,8 @@ public sealed class RiseSdk {
     private static extern void restorePayments ();
     [DllImport ("__Internal")]
     private static extern string getPaymentDatas ();
+    [DllImport ("__Internal")]
+    private static extern string getPopupIconAdsData ();
     [DllImport ("__Internal")]
     private static extern string getExtraData ();
     [DllImport ("__Internal")]
@@ -1260,6 +1309,8 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern void shareContent (string contentURL, string tag, string quote);
     [DllImport ("__Internal")]
+    private static extern bool isIPhoneX ();
+    [DllImport ("__Internal")]
     private static extern void logPlayerLevel (int levelId);
     [DllImport ("__Internal")]
     private static extern void logPageStart (string pageName);
@@ -1291,7 +1342,6 @@ public sealed class RiseSdk {
     private static extern void toast (string info);
     private static RiseSdk _instance = null;
     private static bool hasInit = false;
-
 
     public static RiseSdk Instance {
         get {
@@ -1328,6 +1378,14 @@ public sealed class RiseSdk {
         return Screen.height;
 #else
         return getScreenHeight ();
+#endif
+    }
+
+    public bool IsIPhoneX () {
+#if UNITY_EDITOR
+        return false;
+#else
+        return isIPhoneX ();
 #endif
     }
 
@@ -1437,6 +1495,61 @@ public sealed class RiseSdk {
 #endif
     }
 
+    public void ShowPopupIconAd () {
+#if UNITY_EDITOR
+#else
+        showPopupIconAds ();
+#endif
+    }
+
+    public void ShowNativeAdWithJson (string tag, float xPercent, float yPercent, string json) {
+#if UNITY_EDITOR
+#else
+        showNativeAdWithJson (tag, xPercent, yPercent, json);
+#endif
+    }
+
+    public void ShowNativeAdWithSize (string tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio) {
+#if UNITY_EDITOR
+#else
+        showNativeAdWithSize (tag, xPercent, yPercent, wPercent, hPercent, whRatio);
+#endif
+    }
+
+    public void CloseNativeAd (string tag) {
+#if UNITY_EDITOR
+#else
+        closeNativeAd(tag);
+#endif
+    }
+
+    public void SetAdmobNativeNib (string tag, string nibName) {
+#if UNITY_EDITOR
+#else
+        setAdmobNativeNib(tag, nibName);
+#endif
+    }
+    public void SetFBNativeNib (string tag, string nibName) {
+#if UNITY_EDITOR
+#else
+        setFBNativeNib(tag, nibName);
+#endif
+    }
+
+    public void SetOurNativeNib (string tag, string nibName) {
+#if UNITY_EDITOR
+#else
+        setOurNativeNib(tag, nibName);
+#endif
+    }
+
+    public void SeNativeBundle (string tag, string bundleName) {
+#if UNITY_EDITOR
+#else
+        setNativeBundle(tag, bundleName);
+#endif
+    }
+
     public void CloseIconAd () {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.CloseIconAd ();
@@ -1531,6 +1644,14 @@ public sealed class RiseSdk {
         return "";
 #else
         return getPaymentDatas ();
+#endif
+    }
+
+    public string GetPopupIconAdsData () {
+#if UNITY_EDITOR
+        return "";
+#else
+        return getPopupIconAdsData();
 #endif
     }
 
@@ -1630,7 +1751,6 @@ public sealed class RiseSdk {
         return mePictureURL ();
 #endif
     }
-
 
     public void FetchFriends (bool invitable) {
 #if UNITY_EDITOR
@@ -1825,6 +1945,7 @@ public sealed class RiseSdk {
 #endif
 
     private FileLRUCache lruCache = null;
+
     public void DownloadFile (string url, Action<string, WWW> resultEvent) {
         lruCache.DownloadFile (url, resultEvent);
     }
@@ -1832,7 +1953,6 @@ public sealed class RiseSdk {
     public void LoadLocalFile (string filePath, Action<string, WWW> resultEvent) {
         lruCache.LoadLocalFile (filePath, resultEvent);
     }
-
 
     //其他广告类型
     public const int ADTYPE_OTHER = -1;
@@ -2025,6 +2145,7 @@ public sealed class RiseSdk {
 
     public static string CalculateMD5Hash (string input) {
         StringBuilder sb = new StringBuilder ();
+
         try {
             MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider ();
             byte[] inputBytes = UTF8Encoding.Default.GetBytes (input);
@@ -2040,12 +2161,10 @@ public sealed class RiseSdk {
         return sb.ToString ();
     }
 
-
     /// <summary>
     /// Editor模式下的广告测试类，不可以调用该类的方法。
     /// </summary>
     private class RiseEditorAd : MonoBehaviour {
-
         private static RiseEditorAd _editorAdInstance = null;
         public static bool hasInit = false;
         private Rect bannerPos;
@@ -2353,8 +2472,13 @@ public sealed class RiseSdk {
 
         void Update () {
             if (Input.GetKeyDown (KeyCode.Escape)) {
-                interstitialShow = false;
-                rewardShow = false;
+                if (interstitialShow) {
+                    interstitialShow = false;
+                    InterstitialAdCallBack ();
+                } else if (rewardShow) {
+                    rewardShow = false;
+                    RewardAdCallBack ();
+                }
 #if UNITY_5 || UNITY_4_6 || UNITY_4_7 || UNITY_4_8 || UNITY_4_9
                 if (EventSystem.current != null) {
                     EventSystem.current.enabled = true;
@@ -2370,6 +2494,8 @@ public sealed class RiseSdk {
             if (interstitialShow) {
 #if UNITY_IOS
 				RiseSdkListener.Instance.adDidClose ("custom");
+#elif UNITY_ANDROID
+                RiseSdkListener.Instance.onFullAdClosed ("EditorAd");
 #endif
             }
         }
@@ -2378,7 +2504,7 @@ public sealed class RiseSdk {
             if (rewardAdId != NONE_REWARD_ID) {
                 Toast ("Show Reward Ad Success");
 #if UNITY_ANDROID
-                RiseSdkListener.Instance.onReceiveReward ("0|" + rewardAdId);
+                RiseSdkListener.Instance.onReceiveReward ("0|" + rewardAdId + "|EditorVideo");
 #elif UNITY_IOS
 				RiseSdkListener.Instance.adReward (rewardAdTag + "|" + rewardAdId);
 #endif
@@ -2550,12 +2676,9 @@ public sealed class RiseSdk {
             }
 #endif
         }
-
     }
 
-
     private class FileLRUCache {
-
         private int maxCapacity = 10;
         private int size = 0;
         private LinkedNode head = null;
@@ -2576,7 +2699,9 @@ public sealed class RiseSdk {
                 }
                 return;
             }
+
             string saveName = CalculateMD5Hash (url);
+
             if (!File.Exists (defFilePath + saveName)) {
                 RiseSdkListener.Instance.StartCoroutine (Download (url, saveName, resultEvent));
             } else {
@@ -2641,6 +2766,7 @@ public sealed class RiseSdk {
             if (saveName == null) {
                 saveName = "";
             }
+
             string path = "file:///" + filePath + saveName;
             WWW www = new WWW (path);
             yield return www;
@@ -2691,6 +2817,7 @@ public sealed class RiseSdk {
                     Directory.CreateDirectory (defFilePath);
                 }
                 string filePath = defFilePath + CACHE_FILE;
+
                 if (!File.Exists (filePath)) {
                     File.Create (filePath);
                     RiseSdkListener.Instance.StartCoroutine (delayLoad (filePath, 1));
@@ -2708,12 +2835,14 @@ public sealed class RiseSdk {
         private void loadCache (string path, WWW www) {
             if (www != null) {
                 string data = www.text;
+
                 if (!string.IsNullOrEmpty (data)) {
                     string[] keyValues = data.Split (SPLIT_FLAG.ToCharArray ());
                     LinkedNode node = null;
                     LinkedNode tailPrev = null;
                     size = 0;
                     string[] keyValue = null;
+
                     for (int i = 0, len = keyValues.Length; i < len; i++) {
                         keyValue = null;
                         if (!string.IsNullOrEmpty (keyValues[i])) {
@@ -2746,10 +2875,13 @@ public sealed class RiseSdk {
         }
 
         private Coroutine writting = null;
+
         private IEnumerator delayWrite () {
             yield return new WaitForSeconds (1);
+
             string str = "";
             LinkedNode node = head.next;
+
             while (node != null && node != tail) {
                 str += node.key + KEY_VALUE_SPLIT_FLAG + node.value + SPLIT_FLAG;
                 node = node.next;
@@ -2767,7 +2899,9 @@ public sealed class RiseSdk {
             if (string.IsNullOrEmpty (key) || string.IsNullOrEmpty (value)) {
                 return;
             }
+
             LinkedNode node = null;
+
             if (cache.ContainsKey (key)) {
                 node = cache[key];
                 moveToFront (node);
@@ -2808,6 +2942,7 @@ public sealed class RiseSdk {
         private void moveToFront (LinkedNode node) {
             LinkedNode prevNode = node.prev;
             LinkedNode nextNode = node.next;
+
             if (prevNode == null || nextNode == null) {
                 return;
             }
@@ -2819,6 +2954,7 @@ public sealed class RiseSdk {
         private void removeLast () {
             LinkedNode tailPrev = tail.prev;
             LinkedNode tailPrevPrev = tailPrev.prev;
+
             if (tailPrev == head || tailPrevPrev == null) {
                 return;
             }
@@ -2828,7 +2964,6 @@ public sealed class RiseSdk {
             File.Delete (tailPrev.value);
         }
     }
-
 
     private class LinkedNode {
         public string key = null;

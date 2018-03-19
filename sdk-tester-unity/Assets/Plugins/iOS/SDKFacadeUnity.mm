@@ -5,7 +5,7 @@
 //  Created by 余冰星 on 2017/7/25.
 //
 //
-
+#ifdef DEBUG
 #import "SDKFacadeUnity.h"
 #import <QuartzCore/QuartzCore.h>
 #import <objc/runtime.h>
@@ -75,6 +75,11 @@ extern "C" {
 {
     const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
     Send("RiseSdkListener", "adDidClose", _msg);
+}
+
+- (void)onPaymentReady
+{
+    Send("RiseSdkListener", "onPaymentReady", "");
 }
 
 - (void)onPaymentSuccess:(int)paymentId
@@ -264,6 +269,11 @@ extern "C" {
         return true;
     }
     
+    void loadRewardVideo(const char * _Nonnull tag)
+    {
+        toast(concat("load video : ", tag));
+    }
+    
     void showRewardVideo(int rewardId)
     {
         toast("show video : default");
@@ -299,9 +309,79 @@ extern "C" {
         toast("show icon ad");
     }
     
+    void showPopupIconAds()
+    {
+        toast("show popup icon ads");
+    }
+    
+    void hidePopupIconAds()
+    {
+        toast("hide popup icon ads");
+    }
+    
+    const char * getPopupIconAdsData()
+    {
+        return "[]";
+    }
+    
     void closeIconAd()
     {
         toast("close icon ad");
+    }
+    
+    bool isNativeAvaliable(const char *tag)
+    {
+        return false;
+    }
+    
+    const char * _Nullable fetchNativeAdJson(const char * _Nonnull tag)
+    {
+        return "";
+    }
+    
+    void loadNativeAd(const char * _Nonnull tag)
+    {
+        toast(concat("load native ad : ", tag));
+    }
+    
+    void closeNativeAd(const char * _Nonnull tag)
+    {
+        toast(concat("close native ad : ", tag));
+    }
+    
+    void showNativeAd(const char * _Nonnull tag, float xPercent, float yPercent)
+    {
+        toast(concat("show native ad : ", tag));
+    }
+    
+    void showNativeAdWithSize(const char *_Nonnull tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio)
+    {
+        toast(concat("show native ad : ", tag));
+    }
+    
+    void showNativeAdWithJson(const char * _Nonnull tag, float xPercent, float yPercent, const char * _Nonnull json)
+    {
+        toast(concat("show native ad with json: ", tag));
+    }
+    
+    void setAdmobNativeAppInstallNib(const char *_Nonnull tag, const char *_Nonnull nibName)
+    {
+    }
+    
+    void setAdmobNativeContentNib(const char *_Nonnull tag, const char *_Nonnull nibName)
+    {
+    }
+    
+    void setFBNativeNib(const char *_Nonnull tag, const char *_Nonnull nibName)
+    {
+    }
+    
+    void setOurNativeNib(const char *_Nonnull tag, const char *_Nonnull nibName)
+    {
+    }
+    
+    void setNativeBundle(const char *_Nonnull tag, const char *_Nonnull bundleName)
+    {
     }
     
     void rateUs()
@@ -356,9 +436,9 @@ extern "C" {
         [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alertController animated:YES completion:nil];
     }
     
-    void isSubscriptionActive(int payId)
+    void isSubscriptionActive()
     {
-        [[[SDKFacadeUnity alloc] init] onCheckSubscriptionResult:payId isActive:YES];
+        [[[SDKFacadeUnity alloc] init] onCheckSubscriptionResult:1 isActive:YES];
     }
     
     void restorePayments()
@@ -530,12 +610,32 @@ extern "C" {
         toast(concat("logFinishLevel : ", level));
     }
     
+    void logStartLevel2(const char* _Nonnull world, const char* _Nonnull stage, const char* _Nonnull level, int score)
+    {
+        toast(concat("logStartLevel : ", level));
+    }
+    
+    void logFailLevel2(const char* _Nonnull world, const char* _Nonnull stage, const char* _Nonnull level, int score)
+    {
+        toast(concat("logFailLevel : ", level));
+    }
+    
+    void logFinishLevel2(const char* _Nonnull world, const char* _Nonnull stage, const char* _Nonnull level, int score)
+    {
+        toast(concat("logFinishLevel : ", level));
+    }
+    
     void logPay(double money, const char* itemName, int number, double price)
     {
         toast(concat("logPay : ", itemName));
     }
     
-    void logBuy(const char* itemName, int count, double price)
+    void logBuy(const char* _Nonnull itemName, int count, double price)
+    {
+        toast(concat("logPay : ", itemName));
+    }
+    
+    void logBuy2(const char* _Nonnull itemName, const char* _Nonnull itemType, int count, double price)
     {
         toast(concat("logPay : ", itemName));
     }
@@ -562,6 +662,26 @@ extern "C" {
         const char * _msg = [[NSString stringWithFormat:@"%@|%@", _tag, _url] UTF8String];
         Send("RiseSdkListener", "cacheUrlSuccess", _msg);
         Send("RiseSdkListener", "cacheUrlFailure", tag);
+    }
+    
+    void registerPush()
+    {
+        toast("registerPush");
+    }
+    
+    bool isPushRegistered()
+    {
+        return false;
+    }
+    
+    bool isIPhoneX()
+    {
+        return UIScreen.mainScreen.bounds.size.height / UIScreen.mainScreen.bounds.size.width > 2;;
+    }
+    
+    bool isIPad()
+    {
+        return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
     }
     
 #ifdef __cplusplus
@@ -1096,3 +1216,4 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 }
 
 @end
+#endif

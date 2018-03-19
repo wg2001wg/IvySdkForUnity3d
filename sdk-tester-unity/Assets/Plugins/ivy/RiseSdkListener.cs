@@ -305,7 +305,7 @@ public class RiseSdkListener : MonoBehaviour {
     }
 
     /// <summary>
-    /// 大屏广告被点击的回调方法，SDK自动饔谩⑸    /// </summary>
+    /// 大屏广告被点击的回调方法，SDK自动调用。    /// </summary>
     /// <param name="data">返回的数据</param>
     public void onFullAdClicked (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {

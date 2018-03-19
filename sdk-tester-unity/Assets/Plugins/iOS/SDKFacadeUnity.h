@@ -5,7 +5,7 @@
 //  Created by 余冰星 on 2017/8/10.
 //  Copyright © 2017年 yubingxing. All rights reserved.
 //
-
+#ifdef DEBUG
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 @interface SDKUnityApplication : NSObject
@@ -46,7 +46,7 @@ fetchCompletionHandler:(nullable void (^)(UIBackgroundFetchResult))completionHan
  
  @param message The message to be displayed
  */
-- (void)makeToast:(NSString *)message;
+- (void)makeToast:(nonnull NSString *)message;
 
 /**
  Creates and presents a new toast view with a message. Duration and position
@@ -57,9 +57,9 @@ fetchCompletionHandler:(nullable void (^)(UIBackgroundFetchResult))completionHan
  @param position The toast's center point. Can be one of the predefined CSToastPosition
  constants or a `CGPoint` wrapped in an `NSValue` object.
  */
-- (void)makeToast:(NSString *)message
+- (void)makeToast:(nonnull NSString *)message
          duration:(NSTimeInterval)duration
-         position:(id)position;
+         position:(nonnull id)position;
 
 /**
  Creates and presents a new toast view with a message. Duration, position, and
@@ -71,10 +71,10 @@ fetchCompletionHandler:(nullable void (^)(UIBackgroundFetchResult))completionHan
  constants or a `CGPoint` wrapped in an `NSValue` object.
  @param style The style. The shared style will be used when nil
  */
-- (void)makeToast:(NSString *)message
+- (void)makeToast:(nonnull NSString *)message
          duration:(NSTimeInterval)duration
-         position:(id)position
-            style:(CSToastStyle *)style;
+         position:(nonnull id)position
+            style:(nullable CSToastStyle *)style;
 
 /**
  Creates and presents a new toast view with a message, title, and image. Duration,
@@ -92,13 +92,13 @@ fetchCompletionHandler:(nullable void (^)(UIBackgroundFetchResult))completionHan
  @param completion The completion block, executed after the toast view disappears.
  didTap will be `YES` if the toast view was dismissed from a tap.
  */
-- (void)makeToast:(NSString *)message
+- (void)makeToast:(nonnull NSString *)message
          duration:(NSTimeInterval)duration
-         position:(id)position
-            title:(NSString *)title
-            image:(UIImage *)image
-            style:(CSToastStyle *)style
-       completion:(void(^)(BOOL didTap))completion;
+         position:(nonnull id)position
+            title:(nonnull NSString *)title
+            image:(nonnull UIImage *)image
+            style:(nullable CSToastStyle *)style
+       completion:(void(^ _Nullable)(BOOL didTap))completion;
 
 /**
  Creates a new toast view with any combination of message, title, and image.
@@ -422,3 +422,4 @@ fetchCompletionHandler:(nullable void (^)(UIBackgroundFetchResult))completionHan
 + (id)defaultPosition;
 
 @end
+#endif
