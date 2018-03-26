@@ -35,7 +35,7 @@ public sealed class RiseSdk {
     private bool BACK_HOME_AD_ENABLE = false;
     private double BACK_HOME_AD_TIME = 0;
     private bool canShowBackHomeAd = false;
-    private double homeAdMinPauseMillisecond = 1000;
+    private int homeAdMinPauseMillisecond = 1000;
 
     /*
     public const int SERVER_RESULT_RECEIVE_GAME_DATA = 1;
@@ -285,7 +285,7 @@ public sealed class RiseSdk {
         }
     }
 
-    public void enableBackHomeAd (bool enabled, String adPos, double minPauseMillisecond) {
+    public void enableBackHomeAd (bool enabled, String adPos, int minPauseMillisecond = 2000) {
         BACK_HOME_ADPOS = adPos;
         BACK_HOME_AD_ENABLE = enabled;
         homeAdMinPauseMillisecond = minPauseMillisecond;
