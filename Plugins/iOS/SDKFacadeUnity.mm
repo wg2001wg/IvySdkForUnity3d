@@ -18,34 +18,6 @@ extern "C" {
 #ifdef __cplusplus
 } // extern "C"
 #endif
-@implementation SDKUnityApplication
--(BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    return YES;
-}
--(void)applicationDidBecomeActive:(UIApplication *)application
-{
-}
--(void)applicationDidEnterBackground:(UIApplication *)application
-{
-}
--(void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
-{
-}
--(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
-{
-}
--(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
-{
-}
--(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
-{
-}
--(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-{
-    return NO;
-}
-@end
 @implementation SDKFacadeUnity
 - (void)adReward:(NSString *)tag rewardId:(int)rewardId
 {
@@ -117,6 +89,10 @@ extern "C" {
     Send("RiseSdkListener", "snsShareSuccess", "");
 }
 
+-(void)snsLoginCancel
+{
+    Send("RiseSdkListener", "snsLoginCancel", "");
+}
 -(void)snsShareFailure
 {
     Send("RiseSdkListener", "snsShareFailure", "");
@@ -349,9 +325,14 @@ extern "C" {
         toast(concat("close native ad : ", tag));
     }
     
-    void showNativeAd(const char * _Nonnull tag, float xPercent, float yPercent)
+    void showNativeAd(const char * _Nonnull tag, float x, float y, const char * _Nonnull json)
     {
         toast(concat("show native ad : ", tag));
+    }
+    
+    void showNativeAdByPercent(const char * _Nonnull tag, float xPercent, float yPercent, const char * _Nonnull json)
+    {
+        toast(concat("show native ad by percent : ", tag));
     }
     
     void showNativeAdWithSize(const char *_Nonnull tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio)
@@ -359,30 +340,21 @@ extern "C" {
         toast(concat("show native ad : ", tag));
     }
     
-    void showNativeAdWithJson(const char * _Nonnull tag, float xPercent, float yPercent, const char * _Nonnull json)
-    {
-        toast(concat("show native ad with json: ", tag));
-    }
+    //void setAdmobNativeNib(const char *_Nonnull tag, const char *_Nonnull nibName)
+    //{
+    //}
     
-    void setAdmobNativeAppInstallNib(const char *_Nonnull tag, const char *_Nonnull nibName)
-    {
-    }
+    //void setFBNativeNib(const char *_Nonnull tag, const char *_Nonnull nibName)
+    //{
+    //}
     
-    void setAdmobNativeContentNib(const char *_Nonnull tag, const char *_Nonnull nibName)
-    {
-    }
+    //void setOurNativeNib(const char *_Nonnull tag, const char *_Nonnull nibName)
+    //{
+    //}
     
-    void setFBNativeNib(const char *_Nonnull tag, const char *_Nonnull nibName)
-    {
-    }
-    
-    void setOurNativeNib(const char *_Nonnull tag, const char *_Nonnull nibName)
-    {
-    }
-    
-    void setNativeBundle(const char *_Nonnull tag, const char *_Nonnull bundleName)
-    {
-    }
+    //void setNativeBundle(const char *_Nonnull tag, const char *_Nonnull bundleName)
+    //{
+    //}
     
     void rateUs()
     {
@@ -550,28 +522,6 @@ extern "C" {
         toast(concat("facebook shareSheetOS", linkURL));
     }
     
-    void logPlayerLevel(int levelId)
-    {
-        char* buffer = (char*)malloc(2);
-        sprintf(buffer, "%d", levelId);
-        toast(concat("logPlayerLevel : ", buffer));
-    }
-    
-    void logPageStart(const char* pageName)
-    {
-        toast(concat("logPageStart : ", pageName));
-    }
-    
-    void logPageEnd(const char* pageName)
-    {
-        toast(concat("logPageEnd : ", pageName));
-    }
-    
-    void logEvent(const char* eventId)
-    {
-        toast(concat("logEvent : ", eventId));
-    }
-    
     void logEventWithData(const char *eventId, const char *data)
     {
         if(data != nullptr) {
@@ -590,6 +540,27 @@ extern "C" {
         }
     }
     
+    void logPlayerLevel(int levelId)
+    {
+        char* buffer = (char*)malloc(2);
+        sprintf(buffer, "%d", levelId);
+        toast(concat("logPlayerLevel : ", buffer));
+    }
+    
+    void logPageStart(char* pageName)
+    {
+	toast(concat("logPageStart : ", pageName));
+    }
+    
+    void logPageEnd(const char* pageName)
+    {
+        toast(concat("logPageEnd : ", pageName));
+    }
+    
+    void logEvent(const char* eventId)
+    {
+        toast(concat("logEvent : ", eventId));
+    }
     void logEventWithTag(const char* eventId, const char* tag)
     {
         toast(concat("logEventWithTag : ", eventId));

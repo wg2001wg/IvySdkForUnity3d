@@ -8,20 +8,6 @@
 #ifdef DEBUG
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-@interface SDKUnityApplication : NSObject
--(BOOL)application:(nullable UIApplication *)application didFinishLaunchingWithOptions:(nullable NSDictionary *)launchOptions;
--(BOOL)application:(nullable UIApplication *)application openURL:(nullable NSURL *)url sourceApplication:(nullable NSString *)sourceApplication annotation:(nullable id)annotation;
--(void)applicationDidBecomeActive:(nullable UIApplication *)application;
--(void)applicationDidEnterBackground:(nullable UIApplication *)application;
-
-//push
-- (void)application:(nullable UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(nullable NSData *)deviceToken;
-- (void)application:(nullable UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(nullable NSError *)error;
-- (void)application:(nullable UIApplication *)application didReceiveRemoteNotification:(nullable NSDictionary *)userInfo
-fetchCompletionHandler:(nullable void (^)(UIBackgroundFetchResult))completionHandler;
-- (void)application:(nullable UIApplication *)application didReceiveRemoteNotification:(nullable NSDictionary *)userInfo;
-@end
-
 @interface SDKFacadeUnity : NSObject
 
 @end

@@ -463,7 +463,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 显示Native广告，暂时不对外开放。
+    /// 显示Native广告。
     /// </summary>
     /// <param name="tag"></param>
     /// <param name="yPercent"></param>
@@ -477,7 +477,7 @@ public sealed class RiseSdk {
         }
     }
 
-    public bool ShowNativeAdWithJson (string tag, int xPixel, int yPixel, string configJson) {
+    public bool ShowNativeAd (string tag, int xPixel, int yPixel, string configJson) {
         //BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("ShowNativeAdWithJson");
@@ -488,7 +488,7 @@ public sealed class RiseSdk {
         return false;
     }
 
-    public void CloseNativeBanner (string tag) {
+    public void CloseNativeAd (string tag) {
         if (_class != null) {
             _class.CallStatic ("closeNativeBanner", tag);
         }
@@ -623,7 +623,7 @@ public sealed class RiseSdk {
         if (_class != null) {
             return _class.CallStatic<string> ("me");
         } else {
-            return "{}";
+            return "";
         }
     }
 
@@ -657,7 +657,7 @@ public sealed class RiseSdk {
         if (_class != null) {
             return _class.CallStatic<string> ("friends");
         } else {
-            return "[]";
+            return "";
         }
     }
 
@@ -868,6 +868,29 @@ public sealed class RiseSdk {
             return _class.CallStatic<bool> ("isNetworkConnected");
         }
         return true;
+    }
+
+    /// <summary>
+    /// 判断用户是不是属于欧盟区
+    /// </summary>
+    /// <returns></returns>
+    public bool HasGDPR () {
+#if UNITY_EDITOR
+        return true;
+#endif
+        if (_class != null) {
+            return _class.CallStatic<bool> ("hasGDPR");
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 显示广告设置界面
+    /// </summary>
+    public void ResetGDPR () {
+        if (_class != null) {
+            _class.CallStatic ("resetGDPR");
+        }
     }
 
     #region Umeng
@@ -1231,21 +1254,23 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern void showPopupIconAds ();
     [DllImport ("__Internal")]
-    private static extern void showNativeAdWithJson (string tag, float xPercent, float yPercent, string json);
+    private static extern void showNativeAd (string tag, float xPixel, float yPixel, string json);
+    //[DllImport ("__Internal")]
+    //private static extern void showNativeAdWithSize (string tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio);
     [DllImport ("__Internal")]
-    private static extern void showNativeAdWithSize (string tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio);
+    private static extern void showNativeAdByPercent (string tag, float xPercent, float yPercent, string json);
 
     [DllImport ("__Internal")]
     private static extern void closeNativeAd (string tag);
 
-    [DllImport ("__Internal")]
-    private static extern void setAdmobNativeNib (string tag, string nibName);
-    [DllImport ("__Internal")]
-    private static extern void setFBNativeNib (string tag, string nibName);
-    [DllImport ("__Internal")]
-    private static extern void setOurNativeNib (string tag, string nibName);
-    [DllImport ("__Internal")]
-    private static extern void setNativeBundle (string tag, string bundleName);
+    //[DllImport ("__Internal")]
+    //private static extern void setAdmobNativeNib (string tag, string nibName);
+    //[DllImport ("__Internal")]
+    //private static extern void setFBNativeNib (string tag, string nibName);
+    //[DllImport ("__Internal")]
+    //private static extern void setOurNativeNib (string tag, string nibName);
+    //[DllImport ("__Internal")]
+    //private static extern void setNativeBundle (string tag, string bundleName);
     [DllImport ("__Internal")]
     private static extern void loadInterstitialAd (string tag);
     [DllImport ("__Internal")]
@@ -1502,17 +1527,24 @@ public sealed class RiseSdk {
 #endif
     }
 
-    public void ShowNativeAdWithJson (string tag, float xPercent, float yPercent, string json) {
+    public void ShowNativeAd (string tag, float xPixel, float yPixel, string json) {
 #if UNITY_EDITOR
 #else
-        showNativeAdWithJson (tag, xPercent, yPercent, json);
+        showNativeAd (tag, xPixel, yPixel, json);
 #endif
     }
 
-    public void ShowNativeAdWithSize (string tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio) {
+//    public void ShowNativeAdWithSize (string tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio) {
+//#if UNITY_EDITOR
+//#else
+//        showNativeAdWithSize (tag, xPercent, yPercent, wPercent, hPercent, whRatio);
+//#endif
+//    }
+
+    public void ShowNativeAdByPercent (string tag, float xPercent, float yPercent, string json) {
 #if UNITY_EDITOR
 #else
-        showNativeAdWithSize (tag, xPercent, yPercent, wPercent, hPercent, whRatio);
+        showNativeAdByPercent (tag, xPercent, yPercent, json);
 #endif
     }
 
@@ -1523,32 +1555,32 @@ public sealed class RiseSdk {
 #endif
     }
 
-    public void SetAdmobNativeNib (string tag, string nibName) {
-#if UNITY_EDITOR
-#else
-        setAdmobNativeNib(tag, nibName);
-#endif
-    }
-    public void SetFBNativeNib (string tag, string nibName) {
-#if UNITY_EDITOR
-#else
-        setFBNativeNib(tag, nibName);
-#endif
-    }
+//    public void SetAdmobNativeNib (string tag, string nibName) {
+//#if UNITY_EDITOR
+//#else
+//        setAdmobNativeNib(tag, nibName);
+//#endif
+//    }
+//    public void SetFBNativeNib (string tag, string nibName) {
+//#if UNITY_EDITOR
+//#else
+//        setFBNativeNib(tag, nibName);
+//#endif
+//    }
 
-    public void SetOurNativeNib (string tag, string nibName) {
-#if UNITY_EDITOR
-#else
-        setOurNativeNib(tag, nibName);
-#endif
-    }
+//    public void SetOurNativeNib (string tag, string nibName) {
+//#if UNITY_EDITOR
+//#else
+//        setOurNativeNib(tag, nibName);
+//#endif
+//    }
 
-    public void SeNativeBundle (string tag, string bundleName) {
-#if UNITY_EDITOR
-#else
-        setNativeBundle(tag, bundleName);
-#endif
-    }
+//    public void SeNativeBundle (string tag, string bundleName) {
+//#if UNITY_EDITOR
+//#else
+//        setNativeBundle(tag, bundleName);
+//#endif
+//    }
 
     public void CloseIconAd () {
 #if UNITY_EDITOR
@@ -1940,6 +1972,24 @@ public sealed class RiseSdk {
 #endif
         return "";
     }
+
+    /// <summary>
+    /// 判断用户是不是属于欧盟区
+    /// </summary>
+    /// <returns></returns>
+    public bool HasGDPR () {
+#if UNITY_EDITOR
+        return true;
+#endif
+        return true;
+    }
+
+    /// <summary>
+    /// 显示广告设置界面
+    /// </summary>
+    public void ResetGDPR () {
+    }
+
     #endregion
 
 #endif
