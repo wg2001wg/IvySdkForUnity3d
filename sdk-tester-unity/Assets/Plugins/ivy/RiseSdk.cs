@@ -159,6 +159,13 @@ public sealed class RiseSdk {
         }
     }
 
+    public bool HasBanner (string tag) {
+        if (_class != null) {
+            return _class.CallStatic<bool> ("hasBanner", tag);
+        }
+        return false;
+    }
+
     /// <summary>
     /// 关闭banner广告。
     /// </summary>
@@ -480,10 +487,21 @@ public sealed class RiseSdk {
     public bool ShowNativeAd (string tag, int xPixel, int yPixel, string configJson) {
         //BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
-        RiseEditorAd.EditorAdInstance.Toast ("ShowNativeAdWithJson");
+        RiseEditorAd.EditorAdInstance.Toast ("ShowNativeAd");
 #endif
         if (_class != null) {
             return _class.CallStatic<bool> ("showNativeBanner", tag, xPixel, yPixel, configJson);
+        }
+        return false;
+    }
+
+    public bool ShowNativeAdWithFrame (string tag, float xPixel, float yPixel, float width, float height, string json) {
+        //BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowNativeAdWithFrame");
+#endif
+        if (_class != null) {
+            return _class.CallStatic<bool> ("showNativeBanner", tag, xPixel, yPixel, width, height, json);
         }
         return false;
     }
@@ -1255,10 +1273,13 @@ public sealed class RiseSdk {
     private static extern void showPopupIconAds ();
     [DllImport ("__Internal")]
     private static extern void showNativeAd (string tag, float xPixel, float yPixel, string json);
+    [DllImport ("__Internal")]
+    private static extern void showNativeAdWithFrame (string tag, float xPixel, float yPixel, float width, float height, string json);
     //[DllImport ("__Internal")]
     //private static extern void showNativeAdWithSize (string tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio);
-    [DllImport ("__Internal")]
-    private static extern void showNativeAdByPercent (string tag, float xPercent, float yPercent, string json);
+    //[DllImport ("__Internal")]
+    //private static extern void showNativeAdByPercent (string tag, float xPercent, float yPercent, string json);
+
 
     [DllImport ("__Internal")]
     private static extern void closeNativeAd (string tag);
@@ -1531,6 +1552,13 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
 #else
         showNativeAd (tag, xPixel, yPixel, json);
+#endif
+    }
+
+    public void ShowNativeAdWithFrame (string tag, float xPixel, float yPixel, float width, float height, string json) {
+#if UNITY_EDITOR
+#else
+        showNativeAdWithFrame (tag, xPixel, yPixel, width, height, json);
 #endif
     }
 
@@ -2116,6 +2144,10 @@ public sealed class RiseSdk {
     /// 获取应用的包名参数常量
     /// </summary>
     public const int CONFIG_KEY_PACKAGE_NAME = 10;
+    /// <summary>
+    /// 获取用户的UID（根据设备ID）参数常量
+    /// </summary>
+    public const int CONFIG_KEY_UUID = 11;
 
     /// <summary>
     /// 广告事件类型

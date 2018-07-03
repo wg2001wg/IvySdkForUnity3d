@@ -66,9 +66,9 @@ extern "C" {
     Send("RiseSdkListener", "onPaymentFailure", _msg);
 }
 
-- (void)onCheckSubscriptionResult:(int)paymentId isActive:(BOOL)active
+- (void)onCheckSubscriptionResult:(int)paymentId remainSeconds:(long)remainSeconds
 {
-    const char * _msg = [[NSString stringWithFormat:@"%@,%d", [@(paymentId) stringValue], active ? 1 : 0] UTF8String];
+    const char * _msg = [[NSString stringWithFormat:@"%@,%ld", [@(paymentId) stringValue], remainSeconds] UTF8String];
     Send("RiseSdkListener", "onCheckSubscriptionResult", _msg);
 }
 
@@ -220,12 +220,27 @@ extern "C" {
         sdklog("onCreate");
     }
     
+    bool isBannerAvaliable()
+    {
+        return YES;
+    }
+    
+    bool isBannerAvaliableWithTag(const char *tag)
+    {
+        return YES;
+    }
+    
     void showBanner(int pos)
     {
         toast("show banner");
     }
     
     void showBannerWithTag(const char *tag, int pos)
+    {
+        toast(concat("show banner ", tag));
+    }
+    
+    void showBannerCustom(const char *tag, float x, float y, float w, float h)
     {
         toast(concat("show banner ", tag));
     }
@@ -330,31 +345,10 @@ extern "C" {
         toast(concat("show native ad : ", tag));
     }
     
-    void showNativeAdByPercent(const char * _Nonnull tag, float xPercent, float yPercent, const char * _Nonnull json)
-    {
-        toast(concat("show native ad by percent : ", tag));
-    }
-    
-    void showNativeAdWithSize(const char *_Nonnull tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio)
+    void showNativeAdWithFrame(const char *_Nonnull tag, float x, float y, float w, float h, const char * _Nonnull json)
     {
         toast(concat("show native ad : ", tag));
     }
-    
-    //void setAdmobNativeNib(const char *_Nonnull tag, const char *_Nonnull nibName)
-    //{
-    //}
-    
-    //void setFBNativeNib(const char *_Nonnull tag, const char *_Nonnull nibName)
-    //{
-    //}
-    
-    //void setOurNativeNib(const char *_Nonnull tag, const char *_Nonnull nibName)
-    //{
-    //}
-    
-    //void setNativeBundle(const char *_Nonnull tag, const char *_Nonnull bundleName)
-    //{
-    //}
     
     void rateUs()
     {
@@ -410,7 +404,7 @@ extern "C" {
     
     void isSubscriptionActive()
     {
-        [[[SDKFacadeUnity alloc] init] onCheckSubscriptionResult:1 isActive:YES];
+        [[[SDKFacadeUnity alloc] init] onCheckSubscriptionResult:1 remainSeconds:10000000];
     }
     
     void restorePayments()
@@ -653,6 +647,11 @@ extern "C" {
     bool isIPad()
     {
         return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad);
+    }
+    
+    bool hasNotch()
+    {
+        return isIPhoneX();
     }
     
 #ifdef __cplusplus
