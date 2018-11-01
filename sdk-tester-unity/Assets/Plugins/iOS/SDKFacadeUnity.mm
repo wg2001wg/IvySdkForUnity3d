@@ -43,10 +43,22 @@ extern "C" {
     Send("RiseSdkListener", "adDidShown", _msg);
 }
 
+-(void)adShowFailed:(NSString *)tag adType:(int)adType
+{
+    const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
+    Send("RiseSdkListener", "adShowFailed", _msg);
+}
+
 - (void)adDidClose:(NSString *)tag adType:(int)adType
 {
     const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
     Send("RiseSdkListener", "adDidClose", _msg);
+}
+
+-(void)adDidClick:(NSString *)tag adType:(int)adType
+{
+    const char * _msg = [[NSString stringWithFormat:@"%@|%d", tag, adType] UTF8String];
+    Send("RiseSdkListener", "adDidClick", _msg);
 }
 
 - (void)onPaymentReady
@@ -98,9 +110,9 @@ extern "C" {
     Send("RiseSdkListener", "snsShareFailure", "");
 }
 
--(void)snsShareDidCancel
+-(void)snsShareCancel
 {
-    Send("RiseSdkListener", "snsShareDidCancel", "");
+    Send("RiseSdkListener", "snsShareCancel", "");
 }
 
 -(void)snsLoginSuccess
@@ -173,6 +185,19 @@ extern "C" {
         return result;
     }
     
+    void toast(const char * msg)
+    {
+        UIView *view = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+        if(view) {
+            [view makeToast:[NSString stringWithUTF8String:msg]];
+        }
+    }
+    
+    const char *getPushData()
+    {
+        return returnStr("{}");
+    }
+    
     const char *getConfig(int cid)
     {
         return returnStr("");
@@ -187,6 +212,14 @@ extern "C" {
     {
     }
     
+    bool hasGdpr() {
+        return false;
+    }
+    
+    void resetGdpr() {
+        toast("resetGdpr");
+    }
+    
     int getScreenWidth()
     {
         return [UIScreen mainScreen].currentMode.size.width;
@@ -197,17 +230,19 @@ extern "C" {
         return [UIScreen mainScreen].currentMode.size.height;
     }
     
+    int getScreenDesignWidth()
+    {
+        return [UIScreen mainScreen].bounds.size.width;
+    }
+    
+    int getScreenDesignHeight()
+    {
+        return [UIScreen mainScreen].bounds.size.height;
+    }
+    
     const char *getExtraData()
     {
         return returnStr("{}");
-    }
-    
-    void toast(const char * msg)
-    {
-        UIView *view = [UIApplication sharedApplication].keyWindow.rootViewController.view;
-        if(view) {
-            [view makeToast:[NSString stringWithUTF8String:msg]];
-        }
     }
     
     void sdklog(const char * info)
@@ -220,12 +255,12 @@ extern "C" {
         sdklog("onCreate");
     }
     
-    bool isBannerAvaliable()
+    bool isBannerAvailable()
     {
         return YES;
     }
     
-    bool isBannerAvaliableWithTag(const char *tag)
+    bool isBannerAvailableWithTag(const char *tag)
     {
         return YES;
     }
@@ -250,12 +285,12 @@ extern "C" {
         toast("close banner");
     }
     
-    bool isVideoAvaliable()
+    bool isVideoAvailable()
     {
         return true;
     }
     
-    bool isVideoAvaliableWithTag(const char *tag)
+    bool isVideoAvailableWithTag(const char *tag)
     {
         return true;
     }
@@ -273,6 +308,11 @@ extern "C" {
     void showRewardVideoWithTag(const char *tag, int rewardId)
     {
         toast(concat("show video : ", tag));
+    }
+    
+    bool isInterstitialAvailable(const char *tag)
+    {
+        return true;
     }
     
     void loadInterstitialAd(const char *tag)
@@ -320,7 +360,7 @@ extern "C" {
         toast("close icon ad");
     }
     
-    bool isNativeAvaliable(const char *tag)
+    bool isNativeAvailable(const char *tag)
     {
         return false;
     }
@@ -350,6 +390,36 @@ extern "C" {
         toast(concat("show native ad : ", tag));
     }
     
+    bool isDeliciousAdAvailable()
+    {
+        return YES;
+    }
+    
+    void showDeliciousInterstitialAd(const char * _Nonnull json)
+    {
+        toast(concat("showDeliciousInterstitialAd : ", json));
+    }
+    
+    void showDeliciousBannerAd(float x, float y, float w, float h, const char * _Nonnull json)
+    {
+        toast(concat("showDeliciousBannerAd : ", json));
+    }
+    
+    void closeDeliciousBannerAd()
+    {
+        toast("closeDeliciousBannerAd");
+    }
+    
+    void showDeliciousIconAd(float x, float y, float w, float h, const char * _Nonnull json)
+    {
+        toast(concat("showDeliciousIconAd : ", json));
+    }
+    
+    void closeDeliciousIconAd()
+    {
+        toast("closeDeliciousIconAd");
+    }
+    
     void rateUs()
     {
         toast("rateUs");
@@ -360,7 +430,17 @@ extern "C" {
         toast("rateInApp");
     }
     
-    bool isNetworkAvaliable()
+    void rateUsWithStar(float star)
+    {
+        toast("rateUs");
+    }
+    
+    void rateInAppWithStar(float star)
+    {
+        toast("rateInApp");
+    }
+    
+    bool isNetworkAvailable()
     {
         return true;
     }
@@ -425,10 +505,52 @@ extern "C" {
     
     void clearPurchasedIds()
     {
+        toast("clearPurchasedIds");
     }
     
     void clearPurchasedId(int paymentId)
     {
+        toast("clearPurchasedIds");
+    }
+    
+    bool isGameCenterAvailable()
+    {
+        return true;
+    }
+    
+    void showLeaderboards()
+    {
+        toast("showLeaderboards");
+    }
+    
+    void showLeaderboard(int leaderboardId)
+    {
+        toast("showLeaderboards");
+    }
+    
+    void showAchievements()
+    {
+        toast("showLeaderboards");
+    }
+    
+    void submitScore(int leaderboardId, long long score)
+    {
+        toast("submitScore");
+    }
+    
+    long long myHighScore(int leaderboardId)
+    {
+        return 0;
+    }
+    
+    void submitAchievement(int achievementId, double percent)
+    {
+        toast("submitAchievement");
+    }
+    
+    double getAchievementProgress(int achievementId)
+    {
+        return 0;
     }
     
     void login()
@@ -445,10 +567,10 @@ extern "C" {
     {
         return false;
     }
-	
-	const char *meFirstName()
+    
+    const char *meFirstName()
     {
-		return returnStr("FirstName");
+        return returnStr("FirstName");
     }
     
     const char *meLastName()
@@ -483,10 +605,10 @@ extern "C" {
     
     void fetchFriends(bool invitable)
     {
-		toast("facebook fetchFriends");
+        toast("facebook fetchFriends");
     }
-	
-	void fetchScores()
+    
+    void fetchScores()
     {
         toast("facebook fetchScores");
     }
@@ -543,7 +665,7 @@ extern "C" {
     
     void logPageStart(char* pageName)
     {
-	toast(concat("logPageStart : ", pageName));
+    toast(concat("logPageStart : ", pageName));
     }
     
     void logPageEnd(const char* pageName)
@@ -555,9 +677,15 @@ extern "C" {
     {
         toast(concat("logEvent : ", eventId));
     }
+    
     void logEventWithTag(const char* eventId, const char* tag)
     {
         toast(concat("logEventWithTag : ", eventId));
+    }
+    
+    void logEventLikeGA(const char* eventId, const char* action, const char* label, double value)
+    {
+        toast(concat("logEventLikeGA : ", eventId));
     }
     
     void logStartLevel(const char* level)
@@ -575,22 +703,17 @@ extern "C" {
         toast(concat("logFinishLevel : ", level));
     }
     
-    void logStartLevel2(const char* _Nonnull world, const char* _Nonnull stage, const char* _Nonnull level, int score)
+    void logFinishAchievement(const char* achievement)
     {
-        toast(concat("logStartLevel : ", level));
+        toast(concat("logFinishAchievement : ", achievement));
     }
     
-    void logFailLevel2(const char* _Nonnull world, const char* _Nonnull stage, const char* _Nonnull level, int score)
+    void logFinishTutorial(const char* tutorial)
     {
-        toast(concat("logFailLevel : ", level));
+        toast(concat("logFinishTutorial : ", tutorial));
     }
     
-    void logFinishLevel2(const char* _Nonnull world, const char* _Nonnull stage, const char* _Nonnull level, int score)
-    {
-        toast(concat("logFinishLevel : ", level));
-    }
-    
-    void logPay(double money, const char* itemName, int number, double price)
+    void logPay(double money, const char* itemName, int number, const char* currency)
     {
         toast(concat("logPay : ", itemName));
     }
@@ -652,6 +775,11 @@ extern "C" {
     bool hasNotch()
     {
         return isIPhoneX();
+    }
+    
+    bool justShowFullAd()
+    {
+        return false;
     }
     
 #ifdef __cplusplus

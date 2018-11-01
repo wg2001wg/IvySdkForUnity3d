@@ -220,6 +220,7 @@ public sealed class RiseSdk {
     public bool HasRewardAd () {
 #if UNITY_EDITOR
         return true;
+        //return false;
 #endif
         if (_class != null) {
             return _class.CallStatic<bool> ("hasRewardAd");
@@ -235,6 +236,7 @@ public sealed class RiseSdk {
     public bool HasRewardAd (string tag) {
 #if UNITY_EDITOR
         return true;
+        //return false;
 #endif
         if (_class != null) {
             return _class.CallStatic<bool> ("hasRewardAd", tag);
@@ -439,7 +441,7 @@ public sealed class RiseSdk {
     }
 
     /// <summary>
-    /// 统计数据到Google Analytics。
+    /// 统计数据。
     /// </summary>
     /// <param name="category">需要统计的数据分类名称</param>
     /// <param name="action">需要统计的数据属性名称</param>
@@ -453,6 +455,46 @@ public sealed class RiseSdk {
             return;
         }
         _class.CallStatic ("trackEvent", category, action, label, value);
+    }
+
+    public void TrackEvent (string category, string keyValueData) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("Track: " + category + ", keyValueData: " + keyValueData);
+#endif
+        if (_class == null) {
+            return;
+        }
+        _class.CallStatic ("trackEvent", category, keyValueData);
+    }
+
+    public void TrackFinishLevel (string level) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("TrackFinishLevel: " + level);
+#endif
+        if (_class == null) {
+            return;
+        }
+        _class.CallStatic ("logFinishLevel", level);
+    }
+
+    public void TrackFinishAchievement (string achievement) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("TrackFinishAchievement: " + achievement);
+#endif
+        if (_class == null) {
+            return;
+        }
+        _class.CallStatic ("logFinishAchievement", achievement);
+    }
+
+    public void TrackFinishTutorial (string tutorial) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("TrackFinishTutorial: " + tutorial);
+#endif
+        if (_class == null) {
+            return;
+        }
+        _class.CallStatic ("logFinishTutorial", tutorial);
     }
 
     /// <summary>
@@ -495,13 +537,13 @@ public sealed class RiseSdk {
         return false;
     }
 
-    public bool ShowNativeAdWithFrame (string tag, float xPixel, float yPixel, float width, float height, string json) {
+    public bool ShowNativeAdWithFrame (string tag, float xPixel, float yPixel, float width, float height, string configJson) {
         //BACK_HOME_AD_TIME = GetCurrentTimeInMills ();
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("ShowNativeAdWithFrame");
 #endif
         if (_class != null) {
-            return _class.CallStatic<bool> ("showNativeBanner", tag, xPixel, yPixel, width, height, json);
+            return _class.CallStatic<bool> ("showNativeBanner", tag, xPixel, yPixel, width, height, configJson);
         }
         return false;
     }
@@ -530,9 +572,60 @@ public sealed class RiseSdk {
     public bool HasNativeAd (string tag) {
         if (_class != null) {
             return _class.CallStatic<bool> ("hasNative", tag);
-        } else {
-            return false;
         }
+        return false;
+    }
+
+    public void ShowDeliciousIconAd (float x, float y, float w, float h, string configJson) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowDeliciousIconAd");
+#endif
+        if (_class != null) {
+            _class.CallStatic ("showDeliciousIconAd", (int) x, (int) y, (int) w, (int) h, configJson);
+        }
+    }
+
+    public void CloseDeliciousIconAd () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("CloseDeliciousIconAd");
+#endif
+        if (_class != null) {
+            _class.CallStatic ("closeDeliciousIconAd");
+        }
+    }
+
+    public void ShowDeliciousBannerAd (float x, float y, float w, float h, string configJson) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowDeliciousBannerAd");
+#endif
+        if (_class != null) {
+            _class.CallStatic ("showDeliciousBannerAd", (int) x, (int) y, (int) w, (int) h, configJson);
+        }
+    }
+
+    public void CloseDeliciousBannerAd () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("CloseDeliciousBannerAd");
+#endif
+        if (_class != null) {
+            _class.CallStatic ("closeDeliciousBannerAd");
+        }
+    }
+
+    public void ShowDeliciousVideoAd (string configJson) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowDeliciousVideoAd");
+#endif
+        if (_class != null) {
+            _class.CallStatic ("showDeliciousVideoAd", configJson);
+        }
+    }
+
+    public bool HasDeliciousAd () {
+        if (_class != null) {
+            return _class.CallStatic<bool> ("hasDeliciousAd");
+        }
+        return false;
     }
 
     /// <summary>
@@ -911,6 +1004,58 @@ public sealed class RiseSdk {
         }
     }
 
+#region RemoteConfig
+    public int GetRemoteConfigInt (string remoteKey) {
+#if UNITY_EDITOR
+        return 0;
+#endif
+        if (_class != null) {
+            return _class.CallStatic<int> ("getRemoteConfigInt", remoteKey);
+        }
+        return 0;
+    }
+
+    public long GetRemoteConfigLong (string remoteKey) {
+#if UNITY_EDITOR
+        return 0L;
+#endif
+        if (_class != null) {
+            return _class.CallStatic<long> ("getRemoteConfigLong", remoteKey);
+        }
+        return 0L;
+    }
+
+    public double GetRemoteConfigDouble (string remoteKey) {
+#if UNITY_EDITOR
+        return 0D;
+#endif
+        if (_class != null) {
+            return _class.CallStatic<double> ("getRemoteConfigDouble", remoteKey);
+        }
+        return 0D;
+    }
+
+    public bool GetRemoteConfigBoolean (string remoteKey) {
+#if UNITY_EDITOR
+        return false;
+#endif
+        if (_class != null) {
+            return _class.CallStatic<bool> ("getRemoteConfigBoolean", remoteKey);
+        }
+        return false;
+    }
+
+    public string GetRemoteConfigString (string remoteKey) {
+#if UNITY_EDITOR
+        return "";
+#endif
+        if (_class != null) {
+            return _class.CallStatic<string> ("getRemoteConfigString", remoteKey);
+        }
+        return "";
+    }
+#endregion
+
     #region Umeng
 
     /// <summary>
@@ -1115,55 +1260,6 @@ public sealed class RiseSdk {
 
     #endregion
 
-    /*
-	public void SubmitScore(string leaderBoardId, long score, string extra) {
-		if (_class != null) {
-			_class.CallStatic ("submitScore", leaderBoardId, score, extra);
-		}
-	}
-
-	public void LoadFriendLeaderBoard(string leaderBoardId, int start, int end, string friends) {
-		if (_class != null) {
-			_class.CallStatic ("loadLeaderBoard", leaderBoardId, start, end, friends);
-		}
-	}
-
-	public void LoadGlobalLeaderBoard(string leaderBoardId, int start, int end) {
-		if (_class != null) {
-			_class.CallStatic ("loadGlobalLeaderBoard", leaderBoardId, start, end);
-		}
-	}
-
-	public void LoadGameData(int version) {
-		if (_class != null) {
-			_class.CallStatic ("loadExtra", version);
-		}
-	}
-
-	public void LoadUserData() {
-		if (_class != null) {
-			_class.CallStatic ("loadData");
-		}
-	}
-
-	public void SaveUserData(string data) {
-		if (_class != null) {
-			_class.CallStatic ("saveData", data);
-		}
-	}
-
-	public void VerifyCode(string code) {
-		if (_class != null) {
-			_class.CallStatic ("verifyCode", code);
-		}
-	}
-
-	public void ShowSales(int saleId) {
-		if (_class != null) {
-			_class.CallStatic ("showSales", saleId);
-		}
-	}*/
-
     #region Android_Dummy
     public string GetMeFirstName () {
 #if UNITY_EDITOR
@@ -1246,7 +1342,15 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern int getScreenHeight ();
     [DllImport ("__Internal")]
+    private static extern int getScreenDesignWidth ();
+    [DllImport ("__Internal")]
+    private static extern int getScreenDesignHeight ();
+    [DllImport ("__Internal")]
     private static extern void onCreate ();
+    [DllImport ("__Internal")]
+    private static extern bool isBannerAvailable ();
+    [DllImport ("__Internal")]
+    private static extern bool isBannerAvailableWithTag (string tag);
     [DllImport ("__Internal")]
     private static extern void showBanner (int pos);
     [DllImport ("__Internal")]
@@ -1254,13 +1358,15 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern void closeBanner ();
     [DllImport ("__Internal")]
-    private static extern bool isVideoAvaliable ();
+    private static extern bool isVideoAvailable ();
     [DllImport ("__Internal")]
-    private static extern bool isVideoAvaliableWithTag (string tag);
+    private static extern bool isVideoAvailableWithTag (string tag);
     [DllImport ("__Internal")]
     private static extern void showRewardVideo (int placementId);
     [DllImport ("__Internal")]
     private static extern void showRewardVideoWithTag (string tag, int placementId);
+    [DllImport ("__Internal")]
+    private static extern bool isInterstitialAvailable (string tag);
     [DllImport ("__Internal")]
     private static extern void showInterstitialAd (string tag);
     [DllImport ("__Internal")]
@@ -1272,38 +1378,46 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern void showPopupIconAds ();
     [DllImport ("__Internal")]
-    private static extern void showNativeAd (string tag, float xPixel, float yPixel, string json);
+    private static extern bool isNativeAvailable (string tag);
     [DllImport ("__Internal")]
-    private static extern void showNativeAdWithFrame (string tag, float xPixel, float yPixel, float width, float height, string json);
-    //[DllImport ("__Internal")]
-    //private static extern void showNativeAdWithSize (string tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio);
-    //[DllImport ("__Internal")]
-    //private static extern void showNativeAdByPercent (string tag, float xPercent, float yPercent, string json);
-
-
+    private static extern void showNativeAd (string tag, float xPixel, float yPixel, string configJson);
+    [DllImport ("__Internal")]
+    private static extern void showNativeAdWithFrame (string tag, float x, float y, float width, float height, string configJson);
     [DllImport ("__Internal")]
     private static extern void closeNativeAd (string tag);
-
-    //[DllImport ("__Internal")]
-    //private static extern void setAdmobNativeNib (string tag, string nibName);
-    //[DllImport ("__Internal")]
-    //private static extern void setFBNativeNib (string tag, string nibName);
-    //[DllImport ("__Internal")]
-    //private static extern void setOurNativeNib (string tag, string nibName);
-    //[DllImport ("__Internal")]
-    //private static extern void setNativeBundle (string tag, string bundleName);
     [DllImport ("__Internal")]
     private static extern void loadInterstitialAd (string tag);
     [DllImport ("__Internal")]
     private static extern void closeIconAd ();
+
+    [DllImport ("__Internal")]
+    private static extern bool isDeliciousAdAvailable();
+    [DllImport ("__Internal")]
+    private static extern void showDeliciousInterstitialAd(string configJson);
+    [DllImport ("__Internal")]
+    private static extern void showDeliciousBannerAd(float x, float y, float w, float h, string configJson);
+    [DllImport ("__Internal")]
+    private static extern void closeDeliciousBannerAd();
+    [DllImport ("__Internal")]
+    private static extern void showDeliciousIconAd(float x, float y, float w, float h, string configJson);
+    [DllImport ("__Internal")]
+    private static extern void closeDeliciousIconAd();
+
+    [DllImport ("__Internal")]
+    private static extern void rateUs ();
     [DllImport ("__Internal")]
     private static extern void rateInApp ();
     [DllImport ("__Internal")]
-    private static extern bool isNetworkAvaliable ();
+    private static extern void rateUsWithStar (float star);
+    [DllImport ("__Internal")]
+    private static extern void rateInAppWithStar (float star);
+
+    [DllImport ("__Internal")]
+    private static extern bool isNetworkAvailable ();
     [DllImport ("__Internal")]
     private static extern void pay (int billingId);
     [DllImport ("__Internal")]
-    private static extern void isSubscriptionActive (int billingId);
+    private static extern void isSubscriptionActive ();
     [DllImport ("__Internal")]
     private static extern int[] getPurchasedIds ();
     [DllImport ("__Internal")]
@@ -1315,6 +1429,10 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern void setAdsEnable (bool enable);
     [DllImport ("__Internal")]
+    private static extern bool hasGdpr ();
+    [DllImport ("__Internal")]
+    private static extern void resetGdpr ();
+    [DllImport ("__Internal")]
     private static extern void restorePayments ();
     [DllImport ("__Internal")]
     private static extern string getPaymentDatas ();
@@ -1322,6 +1440,8 @@ public sealed class RiseSdk {
     private static extern string getPopupIconAdsData ();
     [DllImport ("__Internal")]
     private static extern string getExtraData ();
+    [DllImport ("__Internal")]
+    private static extern string getPushData ();
     [DllImport ("__Internal")]
     private static extern string getConfig (int configId);
     [DllImport ("__Internal")]
@@ -1369,6 +1489,8 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern void logEventWithData (string eventId, string data);
     [DllImport ("__Internal")]
+    private static extern void logEventLikeGA (string category, string action, string label, int value);
+    [DllImport ("__Internal")]
     private static extern void logStartLevel (string level);
     [DllImport ("__Internal")]
     private static extern void logFailLevel (string level);
@@ -1386,6 +1508,34 @@ public sealed class RiseSdk {
     private static extern void sdklog (string info);
     [DllImport ("__Internal")]
     private static extern void toast (string info);
+
+    [DllImport ("__Internal")]
+    private static extern void logFinishAchievement (string achievement);
+    [DllImport ("__Internal")]
+    private static extern void logFinishTutorial (string tutorial);
+
+    [DllImport ("__Internal")]
+    private static extern bool hasNotch ();
+    [DllImport ("__Internal")]
+    private static extern bool justShowFullAd ();
+
+    [DllImport ("__Internal")]
+    private static extern bool isGameCenterAvailable ();
+    [DllImport ("__Internal")]
+    private static extern void showLeaderboards ();
+    [DllImport ("__Internal")]
+    private static extern void showLeaderboard (int leaderboardId);
+    [DllImport ("__Internal")]
+    private static extern void showAchievements ();
+    [DllImport ("__Internal")]
+    private static extern void submitScore (int leaderboardId, long score);
+    [DllImport ("__Internal")]
+    private static extern long myHighScore (int leaderboardId);
+    [DllImport ("__Internal")]
+    private static extern void submitAchievement (int achievementId, double percent);
+    [DllImport ("__Internal")]
+    private static extern double getAchievementProgress (int achievementId);
+
     private static RiseSdk _instance = null;
     private static bool hasInit = false;
 
@@ -1427,6 +1577,22 @@ public sealed class RiseSdk {
 #endif
     }
 
+    public int GetScreenDesignWidth () {
+#if UNITY_EDITOR
+        return Screen.width;
+#else
+        return getScreenDesignWidth ();
+#endif
+    }
+
+    public int GetScreenDesignHeight () {
+#if UNITY_EDITOR
+        return Screen.height;
+#else
+        return getScreenDesignHeight ();
+#endif
+    }
+
     public bool IsIPhoneX () {
 #if UNITY_EDITOR
         return false;
@@ -1459,11 +1625,27 @@ public sealed class RiseSdk {
 #endif
     }
 
+    public bool HasBanner () {
+#if UNITY_EDITOR
+        return true;
+#else
+        return isBannerAvailable ();
+#endif
+    }
+
+    public bool HasBanner (string tag) {
+#if UNITY_EDITOR
+        return true;
+#else
+        return isBannerAvailableWithTag (tag);
+#endif
+    }
+
     public bool HasRewardAd () {
 #if UNITY_EDITOR
         return true;
 #else
-        return isVideoAvaliable ();
+        return isVideoAvailable ();
 #endif
     }
 
@@ -1471,7 +1653,7 @@ public sealed class RiseSdk {
 #if UNITY_EDITOR
         return true;
 #else
-        return isVideoAvaliableWithTag (tag);
+        return isVideoAvailableWithTag (tag);
 #endif
     }
 
@@ -1488,6 +1670,14 @@ public sealed class RiseSdk {
         RiseEditorAd.EditorAdInstance.ShowRewardAd (tag, placementId);
 #else
         showRewardVideoWithTag (tag, placementId);
+#endif
+    }
+
+    public bool HasInterstitial (string tag) {
+#if UNITY_EDITOR
+        return true;
+#else
+        return isInterstitialAvailable (tag);
 #endif
     }
 
@@ -1548,31 +1738,25 @@ public sealed class RiseSdk {
 #endif
     }
 
-    public void ShowNativeAd (string tag, float xPixel, float yPixel, string json) {
+    public bool HasNativeAd (string tag) {
 #if UNITY_EDITOR
+        return true;
 #else
-        showNativeAd (tag, xPixel, yPixel, json);
+        return isNativeAvailable (tag);
 #endif
     }
 
-    public void ShowNativeAdWithFrame (string tag, float xPixel, float yPixel, float width, float height, string json) {
+    public void ShowNativeAd (string tag, float xPixel, float yPixel, string configJson) {
 #if UNITY_EDITOR
 #else
-        showNativeAdWithFrame (tag, xPixel, yPixel, width, height, json);
+        showNativeAd (tag, xPixel, yPixel, configJson);
 #endif
     }
 
-//    public void ShowNativeAdWithSize (string tag, float xPercent, float yPercent, float wPercent, float hPercent, float whRatio) {
-//#if UNITY_EDITOR
-//#else
-//        showNativeAdWithSize (tag, xPercent, yPercent, wPercent, hPercent, whRatio);
-//#endif
-//    }
-
-    public void ShowNativeAdByPercent (string tag, float xPercent, float yPercent, string json) {
+    public void ShowNativeAdWithFrame (string tag, float x, float y, float width, float height, string configJson) {
 #if UNITY_EDITOR
 #else
-        showNativeAdByPercent (tag, xPercent, yPercent, json);
+        showNativeAdWithFrame (tag, x, y, width, height, configJson);
 #endif
     }
 
@@ -1583,33 +1767,6 @@ public sealed class RiseSdk {
 #endif
     }
 
-//    public void SetAdmobNativeNib (string tag, string nibName) {
-//#if UNITY_EDITOR
-//#else
-//        setAdmobNativeNib(tag, nibName);
-//#endif
-//    }
-//    public void SetFBNativeNib (string tag, string nibName) {
-//#if UNITY_EDITOR
-//#else
-//        setFBNativeNib(tag, nibName);
-//#endif
-//    }
-
-//    public void SetOurNativeNib (string tag, string nibName) {
-//#if UNITY_EDITOR
-//#else
-//        setOurNativeNib(tag, nibName);
-//#endif
-//    }
-
-//    public void SeNativeBundle (string tag, string bundleName) {
-//#if UNITY_EDITOR
-//#else
-//        setNativeBundle(tag, bundleName);
-//#endif
-//    }
-
     public void CloseIconAd () {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.CloseIconAd ();
@@ -1618,7 +1775,62 @@ public sealed class RiseSdk {
 #endif
     }
 
+    public void ShowDeliciousIconAd (float x, float y, float w, float h, string configJson) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowDeliciousIconAd");
+#else
+        showDeliciousIconAd (x, y, w, h, configJson);
+#endif
+    }
+
+    public void CloseDeliciousIconAd () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("CloseDeliciousIconAd");
+#else
+        closeDeliciousIconAd ();
+#endif
+    }
+
+    public void ShowDeliciousBannerAd (float x, float y, float w, float h, string configJson) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowDeliciousBannerAd");
+#else
+        showDeliciousBannerAd (x, y, w, h, configJson);
+#endif
+    }
+
+    public void CloseDeliciousBannerAd () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("CloseDeliciousBannerAd");
+#else
+        closeDeliciousBannerAd ();
+#endif
+    }
+
+    public void ShowDeliciousVideoAd (string configJson) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowDeliciousVideoAd");
+#else
+        showDeliciousInterstitialAd (configJson);
+#endif
+    }
+
+    public bool HasDeliciousAd () {
+#if !UNITY_EDITOR
+        return isDeliciousAdAvailable ();
+#endif
+        return false;
+    }
+
     public void Rate () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("Rate");
+#else
+        rateUs ();
+#endif
+    }
+
+    public void RateInApp () {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Rate");
 #else
@@ -1626,11 +1838,27 @@ public sealed class RiseSdk {
 #endif
     }
 
+    public void RateWithStar (float star) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("RateWithStar, star: " + star);
+#else
+        rateUsWithStar (star);
+#endif
+    }
+
+    public void RateInAppWithStar (float star) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("RateInAppWithStar, star: " + star);
+#else
+        rateInAppWithStar (star);
+#endif
+    }
+
     public bool IsNetworkConnected () {
 #if UNITY_EDITOR
         return true;
 #else
-        return isNetworkAvaliable ();
+        return isNetworkAvailable ();
 #endif
     }
 
@@ -1642,11 +1870,11 @@ public sealed class RiseSdk {
 #endif
     }
 
-    public void CheckSubscriptionActive (int billingId) {
+    public void CheckSubscriptionActive () {
 #if UNITY_EDITOR
-        RiseSdkListener.Instance.onCheckSubscriptionResult (billingId + "," + 0);
+        RiseSdkListener.Instance.onCheckSubscriptionResult (billingId + "," + 888888);
 #else
-        isSubscriptionActive (billingId);
+        isSubscriptionActive ();
 #endif
     }
 
@@ -1690,6 +1918,29 @@ public sealed class RiseSdk {
 #endif
     }
 
+    /// <summary>
+    /// 判断用户是不是属于欧盟区
+    /// </summary>
+    /// <returns></returns>
+    public bool HasGDPR () {
+#if UNITY_EDITOR
+        return true;
+#else
+        return hasGdpr ();
+#endif
+    }
+
+    /// <summary>
+    /// 显示广告设置界面
+    /// </summary>
+    public void ResetGDPR () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ResetGDPR");
+#else
+        resetGdpr ();
+#endif
+    }
+
     public void RestorePayments () {
 #if UNITY_EDITOR
         RiseSdkListener.Instance.onRestoreSuccess ("1");
@@ -1701,6 +1952,7 @@ public sealed class RiseSdk {
 
     public string GetPaymentDatas () {
 #if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("GetPaymentDatas");
         return "";
 #else
         return getPaymentDatas ();
@@ -1709,6 +1961,7 @@ public sealed class RiseSdk {
 
     public string GetPopupIconAdsData () {
 #if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("GetPopupIconAdsData");
         return "";
 #else
         return getPopupIconAdsData();
@@ -1717,9 +1970,19 @@ public sealed class RiseSdk {
 
     public string GetExtraData () {
 #if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("GetExtraData");
         return "";
 #else
         return getExtraData ();
+#endif
+    }
+
+    public string GetPushData () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("GetPushData");
+        return "";
+#else
+        return getPushData ();
 #endif
     }
 
@@ -1876,6 +2139,38 @@ public sealed class RiseSdk {
 #endif
     }
 
+    public void TrackEvent (string category, string action, string label, int value) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("Track: " + category + ", action: " + action + ", label: " + label + ", value: " + value);
+#else
+        logEventLikeGA (category, action, label, value);
+#endif
+    }
+
+    public void TrackFinishLevel (string level) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("TrackFinishLevel: " + level);
+#else
+        logFinishLevel (level);
+#endif
+    }
+
+    public void TrackFinishAchievement (string achievement) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("TrackFinishAchievement: " + achievement);
+#else
+        logFinishAchievement (achievement);
+#endif
+    }
+
+    public void TrackFinishTutorial (string tutorial) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("TrackFinishTutorial: " + tutorial);
+#else
+        logFinishTutorial (tutorial);
+#endif
+    }
+
     public void UM_setPlayerLevel (int level) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, setPlayerLevel: " + level);
@@ -1884,6 +2179,7 @@ public sealed class RiseSdk {
 #endif
     }
 
+#region Umeng
     public void UM_onEvent (String eventId) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, onEvent: " + eventId);
@@ -1971,6 +2267,94 @@ public sealed class RiseSdk {
         logBonus (itemName, number, price, trigger);
 #endif
     }
+#endregion
+
+#region GameCenter
+    public bool IsGameCenterAvailable () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("IsGameCenterAvailable");
+        return true;
+#else
+        return isGameCenterAvailable (itemName, number, price);
+#endif
+    }
+
+    public void ShowLeaderboards () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowLeaderboards");
+#else
+        showLeaderboards ();
+#endif
+    }
+
+    public void ShowLeaderboard (int leaderboardId) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowLeaderboard: " + leaderboardId);
+#else
+        showLeaderboard (leaderboardId);
+#endif
+    }
+
+    public void ShowAchievements () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("ShowAchievements");
+#else
+        showAchievements ();
+#endif
+    }
+
+    public void submitScore (int leaderboardId, long score) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("submitScore: " + leaderboardId + ", " + score);
+#else
+        submitScore (leaderboardId, score);
+#endif
+    }
+
+    public long GetMyHighScore (int leaderboardId) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("GetMyHighScore: " + leaderboardId);
+        return 888;
+#else
+        return myHighScore (leaderboardId);
+#endif
+    }
+
+    public void SubmitAchievement (int achievementId, double percent) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("submitScore: " + achievementId + ", " + percent);
+#else
+        submitAchievement (achievementId, percent);
+#endif
+    }
+
+    public double GetAchievementProgress (int achievementId) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("GetAchievementProgress: " + achievementId);
+        return 20;
+#else
+        return getAchievementProgress (achievementId);
+#endif
+    }
+#endregion
+
+    public bool HasNotch () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("HasNotch");
+        return false;
+#else
+        return hasNotch ();
+#endif
+    }
+
+    public bool JustShowFullAd () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("JustShowFullAd");
+        return false;
+#else
+        return justShowFullAd ();
+#endif
+    }
 
     #region IOS_DUMMY
     public void UM_onEventValue (string eventId, Dictionary<string, string> mapStr) {
@@ -2000,24 +2384,6 @@ public sealed class RiseSdk {
 #endif
         return "";
     }
-
-    /// <summary>
-    /// 判断用户是不是属于欧盟区
-    /// </summary>
-    /// <returns></returns>
-    public bool HasGDPR () {
-#if UNITY_EDITOR
-        return true;
-#endif
-        return true;
-    }
-
-    /// <summary>
-    /// 显示广告设置界面
-    /// </summary>
-    public void ResetGDPR () {
-    }
-
     #endregion
 
 #endif
@@ -2031,17 +2397,6 @@ public sealed class RiseSdk {
     public void LoadLocalFile (string filePath, Action<string, WWW> resultEvent) {
         lruCache.LoadLocalFile (filePath, resultEvent);
     }
-
-    //其他广告类型
-    public const int ADTYPE_OTHER = -1;
-    //大屏广告类型
-    public const int ADTYPE_INTERTITIAL = 1;
-    //横幅广告类型
-    public const int ADTYPE_BANNER = 2;
-    //视频广告类型
-    public const int ADTYPE_VIDEO = 3;
-    //icon广告类型
-    public const int ADTYPE_ICON = 4;
 
     /// <summary>
     /// 在左上角显示banner广告参数常量
@@ -2149,6 +2504,25 @@ public sealed class RiseSdk {
     /// </summary>
     public const int CONFIG_KEY_UUID = 11;
 
+    //其他广告类型
+    public const int ADTYPE_OTHER = -1;
+    //大屏广告类型
+    public const int ADTYPE_INTERTITIAL = 1;
+    //横幅广告类型
+    public const int ADTYPE_BANNER = 2;
+    //视频广告类型
+    public const int ADTYPE_VIDEO = 3;
+    //icon广告类型
+    public const int ADTYPE_ICON = 4;
+
+    public enum TAdType : int {
+        Other = -1,//其他广告类型
+        Interstitial = 1,//大屏广告类型
+        Banner = 2,//横幅广告类型
+        Video = 3,//视频广告类型
+        Icon = 4//icon广告类型
+    }
+
     /// <summary>
     /// 广告事件类型
     /// </summary>
@@ -2161,27 +2535,16 @@ public sealed class RiseSdk {
         RewardAdShowFinished,
         RewardAdShowFailed,
         RewardAdClosed,
-        /// <summary>
-        /// 大屏广告被关闭
-        /// </summary>
-        FullAdClosed,
-        FullAdShown,
-        /// <summary>
-        /// 大屏广告被点击
-        /// </summary>
-        FullAdClicked,
-        /// <summary>
-        /// bannner广告被点击
-        /// </summary>
-        BannerAdClicked,
-        /// <summary>
-        /// 交叉推广广告被点击
-        /// </summary>
-        CrossAdClicked,
-        AdLoadCompleted,
-        AdLoadFailed,
-        AdShown,
-        AdClosed
+        FullAdClosed,// 大屏广告被关闭
+        FullAdShown,// 大屏广告展示成功
+        FullAdClicked,// 大屏广告被点击
+        BannerAdClicked,// bannner广告被点击
+        CrossAdClicked,// 交叉推广广告被点击
+        AdLoadCompleted,//广告加载成功(only ios)
+        AdLoadFailed,//广告加载失败(only ios)
+        AdShown,// 广告展示成功(大屏或bannner)(only ios)
+        AdClosed,//广告被关闭(only ios)
+        AdClicked//广告被点击(only ios)
     }
 
     public enum PaymentResult : int {
@@ -2813,57 +3176,61 @@ public sealed class RiseSdk {
         }
 
         IEnumerator Download (string url, string saveName, Action<string, WWW> resultEvent) {
-#if USE_WEB_REQUEST
-        UnityWebRequest www = UnityWebRequest.Get (url);
-        yield return www.Send ();
-        Debug.LogWarning ("download isdone? " + www.isDone + ", data.Length: " + www.downloadHandler.data.Length + ", url: " + url);
-        if (string.IsNullOrEmpty (www.error)) {
-            if (www.downloadHandler != null && www.downloadHandler.data != null && www.downloadHandler.data.Length > 100) {
-                byte [] bytesData = www.downloadHandler.data;
-#else
-            WWW www = new WWW (url);
-            yield return www;
-            set (saveName, defFilePath + saveName);
-            if (string.IsNullOrEmpty (www.error)) {
-                if (www.bytes != null && www.bytes.Length > 20) {
-                    byte[] bytesData = www.bytes;
-#endif
-                    File.WriteAllBytes (defFilePath + saveName, bytesData);
-                    if (resultEvent != null) {
-                        resultEvent (defFilePath + saveName, www);
+            if (string.IsNullOrEmpty (url)) {
+                if (resultEvent != null) {
+                    resultEvent (defFilePath + saveName, null);
+                    Debug.LogWarning ("Download File error, url: " + url + ", saveName: " + saveName);
+                }
+            } else {
+                WWW www = new WWW (url);
+                yield return www;
+                set (saveName, defFilePath + saveName);
+                if (string.IsNullOrEmpty (www.error)) {
+                    if (www.bytes != null && www.bytes.Length > 1000) {
+                        byte[] bytesData = www.bytes;
+                        File.WriteAllBytes (defFilePath + saveName, bytesData);
+                        if (resultEvent != null) {
+                            resultEvent (defFilePath + saveName, www);
+                        }
+                    } else if (resultEvent != null) {
+                        resultEvent (defFilePath + saveName, null);
                     }
                 } else if (resultEvent != null) {
                     resultEvent (defFilePath + saveName, null);
+                    Debug.LogError ("Download File error, url: " + url + ", saveName: " + saveName + ", www.error: " + www.error);
                 }
-            } else if (resultEvent != null) {
-                resultEvent (defFilePath + saveName, null);
-                Debug.LogError ("Download File error, url: " + url + ", saveName: " + saveName + ", www.error: " + www.error);
             }
         }
 
         IEnumerator LoadLocal (string filePath, string saveName, Action<string, WWW> resultEvent) {
-            if (string.IsNullOrEmpty (filePath)) {
-                filePath = defFilePath;
-            }
-            if (saveName == null) {
-                saveName = "";
-            }
-
-            string path = "file:///" + filePath + saveName;
-            WWW www = new WWW (path);
-            yield return www;
-            set (saveName, filePath + saveName);
-            if (string.IsNullOrEmpty (www.error)) {
-                if (www.bytes != null && www.bytes.Length > 20) {
-                    if (resultEvent != null) {
-                        resultEvent (filePath + saveName, www);
+            if (string.IsNullOrEmpty (filePath) || string.IsNullOrEmpty (saveName)) {
+                if (resultEvent != null) {
+                    resultEvent (filePath + saveName, null);
+                    Debug.LogWarning ("LoadLocal File error, filePath: " + filePath + ", saveName: " + saveName);
+                }
+            } else {
+                if (string.IsNullOrEmpty (filePath)) {
+                    filePath = defFilePath;
+                }
+                if (saveName == null) {
+                    saveName = "";
+                }
+                string path = "file:///" + filePath + saveName;
+                WWW www = new WWW (path);
+                yield return www;
+                set (saveName, filePath + saveName);
+                if (string.IsNullOrEmpty (www.error)) {
+                    if (www.bytes != null && www.bytes.Length > 1000) {
+                        if (resultEvent != null) {
+                            resultEvent (filePath + saveName, www);
+                        }
+                    } else if (resultEvent != null) {
+                        resultEvent (filePath + saveName, null);
                     }
                 } else if (resultEvent != null) {
                     resultEvent (filePath + saveName, null);
+                    Debug.LogError ("LoadLocal File error, filePath: " + filePath + ", saveName: " + saveName + ", www.error: " + www.error);
                 }
-            } else if (resultEvent != null) {
-                resultEvent (filePath + saveName, null);
-                Debug.LogError ("LoadLocal File error, filePath: " + filePath + ", saveName: " + saveName + ", www.error: " + www.error);
             }
         }
 

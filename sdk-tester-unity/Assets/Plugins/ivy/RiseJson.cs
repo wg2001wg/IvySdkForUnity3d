@@ -25,18 +25,18 @@ public static class RiseJson {
         private const string WORD_BREAK = " \t\n\r{}[],:\"";
 
         private Parser (string jsonString) {
-            this.json = new StringReader (jsonString);
+            json = new StringReader (jsonString);
         }
 
         public void Dispose () {
-            this.json.Dispose ();
-            this.json = null;
+            json.Dispose ();
+            json = null;
         }
 
         private void EatWhitespace () {
-            while (" \t\n\r".IndexOf (this.PeekChar) != -1) {
-                this.json.Read ();
-                if (this.json.Peek () == -1) {
+            while (" \t\n\r".IndexOf (PeekChar) != -1) {
+                json.Read ();
+                if (json.Peek () == -1) {
                     break;
                 }
             }
@@ -50,11 +50,11 @@ public static class RiseJson {
 
         private List<object> ParseArray () {
             List<object> list = new List<object> ();
-            this.json.Read ();
+            json.Read ();
             bool flag = true;
 
             while (flag) {
-                TOKEN nextSymbol = this.NextSymbol;
+                TOKEN nextSymbol = NextSymbol;
 
                 switch (nextSymbol) {
                     case TOKEN.SQUARED_CLOSE: {
@@ -68,7 +68,7 @@ public static class RiseJson {
                         return null;
                 }
 
-                object item = this.ParseBySymbol (nextSymbol);
+                object item = ParseBySymbol (nextSymbol);
                 list.Add (item);
             }
             return list;
@@ -77,16 +77,16 @@ public static class RiseJson {
         private object ParseBySymbol (TOKEN symbol) {
             switch (symbol) {
                 case TOKEN.CURLY_OPEN:
-                    return this.ParseObject ();
+                    return ParseObject ();
 
                 case TOKEN.SQUARED_OPEN:
-                    return this.ParseArray ();
+                    return ParseArray ();
 
                 case TOKEN.STRING:
-                    return this.ParseString ();
+                    return ParseString ();
 
                 case TOKEN.NUMBER:
-                    return this.ParseNumber ();
+                    return ParseNumber ();
 
                 case TOKEN.TRUE:
                     return true;
@@ -102,7 +102,7 @@ public static class RiseJson {
 
         private object ParseNumber () {
             double num2;
-            string nextWord = this.NextWord;
+            string nextWord = NextWord;
 
             if (nextWord.IndexOf ('.') == -1) {
                 long num;
@@ -115,9 +115,9 @@ public static class RiseJson {
 
         private Dictionary<string, object> ParseObject () {
             Dictionary<string, object> dictionary = new Dictionary<string, object> ();
-            this.json.Read ();
+            json.Read ();
             while (true) {
-                TOKEN nextSymbol = this.NextSymbol;
+                TOKEN nextSymbol = NextSymbol;
 
                 switch (nextSymbol) {
                     case TOKEN.NONE:
@@ -127,35 +127,35 @@ public static class RiseJson {
                         return dictionary;
                 }
                 if (nextSymbol != TOKEN.COMMA) {
-                    string str = this.ParseString ();
+                    string str = ParseString ();
 
                     if (str == null) {
                         return null;
                     }
-                    if (this.NextSymbol != TOKEN.COLON) {
+                    if (NextSymbol != TOKEN.COLON) {
                         return null;
                     }
-                    this.json.Read ();
-                    dictionary [str] = this.ParseValue ();
+                    json.Read ();
+                    dictionary [str] = ParseValue ();
                 }
             }
         }
 
         private string ParseString () {
             StringBuilder builder = new StringBuilder ();
-            this.json.Read ();
+            json.Read ();
             bool flag = true;
 
             while (flag) {
                 StringBuilder builder2 = null;
                 int num = 0;
 
-                if (this.json.Peek () == -1) {
+                if (json.Peek () == -1) {
                     flag = false;
                     break;
                 }
 
-                char nextChar = this.NextChar;
+                char nextChar = NextChar;
                 char ch2 = nextChar;
 
                 if (ch2 == '"') {
@@ -165,11 +165,11 @@ public static class RiseJson {
                 if (ch2 != '\\') {
                     goto Label_0171;
                 }
-                if (this.json.Peek () == -1) {
+                if (json.Peek () == -1) {
                     flag = false;
                     continue;
                 }
-                nextChar = this.NextChar;
+                nextChar = NextChar;
 
                 char ch3 = nextChar;
 
@@ -212,7 +212,7 @@ public static class RiseJson {
                 builder.Append ('\f');
                 continue;
                 Label_0137:
-                builder2.Append (this.NextChar);
+                builder2.Append (NextChar);
                 num++;
                 Label_014A:
                 if (num < 4) {
@@ -227,26 +227,26 @@ public static class RiseJson {
         }
 
         private object ParseValue () {
-            TOKEN nextSymbol = this.NextSymbol;
-            return this.ParseBySymbol (nextSymbol);
+            TOKEN nextSymbol = NextSymbol;
+            return ParseBySymbol (nextSymbol);
         }
 
         private char NextChar {
             get {
-                return Convert.ToChar (this.json.Read ());
+                return Convert.ToChar (json.Read ());
             }
         }
 
         private TOKEN NextSymbol {
             get {
-                if (this.json.Peek () != -1) {
-                    this.EatWhitespace ();
-                    switch (this.PeekChar) {
+                if (json.Peek () != -1) {
+                    EatWhitespace ();
+                    switch (PeekChar) {
                         case '"':
                             return TOKEN.STRING;
 
                         case ',':
-                            this.json.Read ();
+                            json.Read ();
                             return TOKEN.COMMA;
 
                         case '-':
@@ -269,17 +269,17 @@ public static class RiseJson {
                             return TOKEN.SQUARED_OPEN;
 
                         case ']':
-                            this.json.Read ();
+                            json.Read ();
                             return TOKEN.SQUARED_CLOSE;
 
                         case '{':
                             return TOKEN.CURLY_OPEN;
 
                         case '}':
-                            this.json.Read ();
+                            json.Read ();
                             return TOKEN.CURLY_CLOSE;
                     }
-                    string nextWord = this.NextWord;
+                    string nextWord = NextWord;
 
                     if (nextWord != null) {
                         int num;
@@ -313,9 +313,9 @@ public static class RiseJson {
             get {
                 StringBuilder builder = new StringBuilder ();
 
-                while (" \t\n\r{}[],:\"".IndexOf (this.PeekChar) == -1) {
-                    builder.Append (this.NextChar);
-                    if (this.json.Peek () == -1) {
+                while (" \t\n\r{}[],:\"".IndexOf (PeekChar) == -1) {
+                    builder.Append (NextChar);
+                    if (json.Peek () == -1) {
                         break;
                     }
                 }
@@ -325,7 +325,7 @@ public static class RiseJson {
 
         private char PeekChar {
             get {
-                return Convert.ToChar (this.json.Peek ());
+                return Convert.ToChar (json.Peek ());
             }
         }
 
@@ -358,7 +358,7 @@ public static class RiseJson {
         }
 
         private void SerializeArray (IList anArray) {
-            this.builder.Append ('[');
+            builder.Append ('[');
 
             bool flag = true;
             IEnumerator enumerator = anArray.GetEnumerator ();
@@ -368,9 +368,9 @@ public static class RiseJson {
                     object current = enumerator.Current;
 
                     if (!flag) {
-                        this.builder.Append (',');
+                        builder.Append (',');
                     }
-                    this.SerializeValue (current);
+                    SerializeValue (current);
                     flag = false;
                 }
             } finally {
@@ -380,12 +380,12 @@ public static class RiseJson {
                 } else
                     disposable.Dispose ();
             }
-            this.builder.Append (']');
+            builder.Append (']');
         }
 
         private void SerializeObject (IDictionary obj) {
             bool flag = true;
-            this.builder.Append ('{');
+            builder.Append ('{');
             IEnumerator enumerator = obj.Keys.GetEnumerator ();
 
             try {
@@ -393,11 +393,11 @@ public static class RiseJson {
                     object current = enumerator.Current;
 
                     if (!flag) {
-                        this.builder.Append (',');
+                        builder.Append (',');
                     }
-                    this.SerializeString (current.ToString ());
-                    this.builder.Append (':');
-                    this.SerializeValue (obj [current]);
+                    SerializeString (current.ToString ());
+                    builder.Append (':');
+                    SerializeValue (obj [current]);
                     flag = false;
                 }
             } finally {
@@ -407,88 +407,88 @@ public static class RiseJson {
                 } else
                     disposable.Dispose ();
             }
-            this.builder.Append ('}');
+            builder.Append ('}');
         }
 
         private void SerializeOther (object value) {
             if ((((value is float) || (value is int)) || ((value is uint) || (value is long))) || ((((value is double) || (value is sbyte)) || ((value is byte) || (value is short))) || (((value is ushort) || (value is ulong)) || (value is decimal)))) {
-                this.builder.Append (value.ToString ());
+                builder.Append (value.ToString ());
             } else {
-                this.SerializeString (value.ToString ());
+                SerializeString (value.ToString ());
             }
         }
 
         private void SerializeString (string str) {
-            this.builder.Append ('"');
+            builder.Append ('"');
             foreach (char ch in str.ToCharArray ()) {
                 switch (ch) {
                     case '\b':
-                        this.builder.Append (@"\b");
+                        builder.Append (@"\b");
                         break;
 
                     case '\t':
-                        this.builder.Append (@"\t");
+                        builder.Append (@"\t");
                         break;
 
                     case '\n':
-                        this.builder.Append (@"\n");
+                        builder.Append (@"\n");
                         break;
 
                     case '\f':
-                        this.builder.Append (@"\f");
+                        builder.Append (@"\f");
                         break;
 
                     case '\r':
-                        this.builder.Append (@"\r");
+                        builder.Append (@"\r");
                         break;
 
                     case '"':
-                        this.builder.Append ("\\\"");
+                        builder.Append ("\\\"");
                         break;
 
                     case '\\':
-                        this.builder.Append (@"\\");
+                        builder.Append (@"\\");
                         break;
 
                     default: {
                             int num2 = Convert.ToInt32 (ch);
 
                             if ((num2 >= 0x20) && (num2 <= 0x7e)) {
-                                this.builder.Append (ch);
+                                builder.Append (ch);
                             } else {
-                                this.builder.Append (@"\u" + Convert.ToString (num2, 0x10).PadLeft (4, '0'));
+                                builder.Append (@"\u" + Convert.ToString (num2, 0x10).PadLeft (4, '0'));
                             }
                             break;
                         }
                 }
             }
-            this.builder.Append ('"');
+            builder.Append ('"');
         }
 
         private void SerializeValue (object value) {
             if (value == null) {
-                this.builder.Append ("null");
+                builder.Append ("null");
             } else {
                 string str = value as string;
 
                 if (str != null) {
-                    this.SerializeString (str);
+                    SerializeString (str);
                 } else if (value is bool) {
-                    this.builder.Append (value.ToString ().ToLower ());
+                    builder.Append (value.ToString ().ToLower ());
                 } else {
                     IList anArray = value as IList;
 
                     if (anArray != null) {
-                        this.SerializeArray (anArray);
+                        SerializeArray (anArray);
                     } else {
                         IDictionary dictionary = value as IDictionary;
 
                         if (dictionary != null) {
-                            this.SerializeObject (dictionary);
+                            SerializeObject (dictionary);
                         } else if (value is char) {
-                            this.SerializeString (value.ToString ());
+                            SerializeString (value.ToString ());
                         } else {
-                            this.SerializeOther (value);
+                            SerializeOther (value);
                         }
                     }
                 }

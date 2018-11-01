@@ -10,11 +10,6 @@ using UnityEngine;
 public class RiseSdkListener : MonoBehaviour {
 #if UNITY_ANDROID
     /// <summary>
-    /// 显示视频广告的结果回调事件
-    /// </summary>
-    //public static event Action<RiseSdk.AdEventType, int, string> OnRewardAdEvent;
-
-    /// <summary>
     /// 支付的结果回调事件
     /// </summary>
     public static event Action<RiseSdk.PaymentResult, int> OnPaymentEvent;
@@ -46,6 +41,13 @@ public class RiseSdkListener : MonoBehaviour {
     /// </summary>
     public static event Action<string> OnReceiveNotificationData;
 
+    /// <summary>
+    /// 1.RiseSdk.AdEventType
+    /// 2.rewardId
+    /// 3.ad tag
+    /// 4.RiseSdk.ADTYPE_
+    /// 5.video skipped  //max 4 param limited.
+    /// </summary>
     public static event Action<RiseSdk.AdEventType, int, string, int> OnAdEvent;
 
     private static RiseSdkListener _instance;
@@ -269,6 +271,7 @@ public class RiseSdkListener : MonoBehaviour {
             bool success = false;
             int id = -1;
             string tag = "Default";
+            bool skippedVideo = false;
             if (!string.IsNullOrEmpty (data)) {
                 string[] results = data.Split ('|');
                 if (results != null && results.Length > 1) {
@@ -276,6 +279,9 @@ public class RiseSdkListener : MonoBehaviour {
                     id = int.Parse (results[1]);
                     if (results.Length > 2) {
                         tag = results[2];
+                        if (results.Length > 3) {
+                            skippedVideo = int.Parse (results[3]) == 0 ? true : false;
+                        }
                     }
                 }
             }
@@ -305,7 +311,8 @@ public class RiseSdkListener : MonoBehaviour {
     }
 
     /// <summary>
-    /// 大屏广告被点击的回调方法，SDK自动调用。    /// </summary>
+    /// 大屏广告被点击的回调方法，SDK自动调用。    
+    /// </summary>
     /// <param name="data">返回的数据</param>
     public void onFullAdClicked (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
@@ -317,6 +324,44 @@ public class RiseSdkListener : MonoBehaviour {
                 }
             }
             OnAdEvent (RiseSdk.AdEventType.FullAdClicked, -1, tag, RiseSdk.ADTYPE_INTERTITIAL);
+        }
+    }
+
+    /// <summary>
+    /// 大屏广告展示成功的回调方法，SDK自动调用。
+    /// </summary>
+    /// <param name="data">返回的数据</param>
+    public void onAdShow (string data) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            string tag = "";
+            int type = RiseSdk.ADTYPE_INTERTITIAL;
+            if (!string.IsNullOrEmpty (data)) {
+                string[] msg = data.Split ('|');
+                if (msg != null && msg.Length > 1) {
+                    int.TryParse (msg[0], out type);
+                    tag = msg[1];
+                }
+            }
+            OnAdEvent (RiseSdk.AdEventType.FullAdShown, -1, tag, type);
+        }
+    }
+
+    /// <summary>
+    /// 大屏广告被点击的回调方法，SDK自动调用。    
+    /// </summary
+    /// <param name="data">返回的数据</param>
+    public void onAdClicked (string data) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            string tag = "";
+            int type = RiseSdk.ADTYPE_INTERTITIAL;
+            if (!string.IsNullOrEmpty (data)) {
+                string[] msg = data.Split ('|');
+                if (msg != null && msg.Length > 1) {
+                    int.TryParse (msg[0], out type);
+                    tag = msg[1];
+                }
+            }
+            OnAdEvent (RiseSdk.AdEventType.FullAdClicked, -1, tag, type);
         }
     }
 
@@ -373,6 +418,11 @@ public class RiseSdkListener : MonoBehaviour {
 #elif UNITY_IOS
     /// <summary>
     /// 大屏和视频广告的回调事件
+    /// 1.RiseSdk.AdEventType
+    /// 2.rewardId
+    /// 3.ad tag
+    /// 4.RiseSdk.ADTYPE_
+    /// 5.video skipped  //max 4 param limited.
     /// </summary>
     public static event Action<RiseSdk.AdEventType, int, string, int> OnAdEvent;
     ///// <summary>
@@ -383,7 +433,7 @@ public class RiseSdkListener : MonoBehaviour {
     /// 支付的回调事件
     /// </summary>
     public static event Action<RiseSdk.PaymentResult, int> OnPaymentEvent;
-    public static event Action<int, bool> OnCheckSubscriptionResult;
+    public static event Action<int, long> OnCheckSubscriptionResult;
     public static event Action OnRestoreFailureEvent;
     public static event Action<int> OnRestoreSuccessEvent;
     public static event Action<RiseSdk.SnsEventType, int> OnSNSEvent;
@@ -440,7 +490,7 @@ public class RiseSdkListener : MonoBehaviour {
         }
     }
 
-    public void adFailed (string data) {
+    public void adShowFailed (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
             string tag = "Default";
             int adType = -1;
@@ -491,6 +541,23 @@ public class RiseSdkListener : MonoBehaviour {
         }
     }
 
+    public void adDidClick (string data) {
+        if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
+            string tag = "Default";
+            int adType = -1;
+            if (!string.IsNullOrEmpty (data)) {
+                string[] str = data.Split ('|');
+                if (str.Length == 1) {
+                    tag = str[0];
+                } else if (str.Length >= 2) {
+                    tag = str[0];
+                    int.TryParse (str[1], out adType);
+                }
+            }
+            OnAdEvent (RiseSdk.AdEventType.AdClicked, -1, tag, adType);
+        }
+    }
+
     public void onPaymentSuccess (string billingId) {
         if (OnPaymentEvent != null && OnPaymentEvent.GetInvocationList ().Length > 0) {
             OnPaymentEvent (RiseSdk.PaymentResult.Success, int.Parse (billingId));
@@ -506,15 +573,15 @@ public class RiseSdkListener : MonoBehaviour {
     public void onCheckSubscriptionResult (string data) {
         if (OnCheckSubscriptionResult != null && OnCheckSubscriptionResult.GetInvocationList ().Length > 0) {
             int billingId = -1;
-            bool active = false;
+            long remainSeconds = 0;
             if (!string.IsNullOrEmpty (data)) {
                 string[] str = data.Split (',');
-                if (str.Length == 2) {
+                if (str.Length >= 2) {
                     billingId = int.Parse (str[0]);
-                    active = int.Parse (str[1]) > 0 ? true : false;
+                    remainSeconds = long.Parse (str[1]);
                 }
             }
-            OnCheckSubscriptionResult (billingId, active);
+            OnCheckSubscriptionResult (billingId, remainSeconds);
         }
     }
 
@@ -542,7 +609,7 @@ public class RiseSdkListener : MonoBehaviour {
         }
     }
 
-    public void snsShareDidCancel (string data) {
+    public void snsShareCancel (string data) {
         if (OnSNSEvent != null && OnSNSEvent.GetInvocationList ().Length > 0) {
             OnSNSEvent (RiseSdk.SnsEventType.ShareCancel, 0);
         }
