@@ -1536,6 +1536,28 @@ public sealed class RiseSdk {
     [DllImport ("__Internal")]
     private static extern double getAchievementProgress (int achievementId);
 
+    [DllImport ("__Internal")]
+    private static extern int getRemoteConfigIntValue (string key);
+    [DllImport ("__Internal")]
+    private static extern long getRemoteConfigLongValue (string key);
+    [DllImport ("__Internal")]
+    private static extern double getRemoteConfigDoubleValue (string key);
+    [DllImport ("__Internal")]
+    private static extern bool getRemoteConfigBoolValue (string key);
+    [DllImport ("__Internal")]
+    private static extern string getRemoteConfigStringValue (string key);
+
+    [DllImport ("__Internal")]
+    private static extern void cancelLocalNotification (string key);
+    [DllImport ("__Internal")]
+    private static extern void cancelAllLocalNotifications ();
+    [DllImport ("__Internal")]
+    private static extern string getLocalNotificationDataJson ();
+    [DllImport ("__Internal")]
+    private static extern void pushLocalNotification (string key, string title, string msg, string action, int seconds, int interval, string userInfo);
+    [DllImport ("__Internal")]
+    private static extern void pushLocalNotificationWithDateStr (string key, string title, string msg, string action, string dateStr, int interval, string userInfo);
+
     private static RiseSdk _instance = null;
     private static bool hasInit = false;
 
@@ -2179,7 +2201,7 @@ public sealed class RiseSdk {
 #endif
     }
 
-#region Umeng
+    #region Umeng
     public void UM_onEvent (String eventId) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("Umeng, onEvent: " + eventId);
@@ -2267,9 +2289,9 @@ public sealed class RiseSdk {
         logBonus (itemName, number, price, trigger);
 #endif
     }
-#endregion
+    #endregion
 
-#region GameCenter
+    #region GameCenter
     public bool IsGameCenterAvailable () {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("IsGameCenterAvailable");
@@ -2336,7 +2358,7 @@ public sealed class RiseSdk {
         return getAchievementProgress (achievementId);
 #endif
     }
-#endregion
+    #endregion
 
     public bool HasNotch () {
 #if UNITY_EDITOR
@@ -2355,6 +2377,117 @@ public sealed class RiseSdk {
         return justShowFullAd ();
 #endif
     }
+
+    #region RemoteConfig
+    public int GetRemoteConfigInt (string remoteKey) {
+#if UNITY_EDITOR
+        return 0;
+#else
+        return getRemoteConfigIntValue (remoteKey);
+#endif
+    }
+
+    public long GetRemoteConfigLong (string remoteKey) {
+#if UNITY_EDITOR
+        return 0L;
+#else
+        return getRemoteConfigLongValue (remoteKey);
+#endif
+    }
+
+    public double GetRemoteConfigDouble (string remoteKey) {
+#if UNITY_EDITOR
+        return 0D;
+#else
+        return getRemoteConfigDoubleValue (remoteKey);
+#endif
+    }
+
+    public bool GetRemoteConfigBoolean (string remoteKey) {
+#if UNITY_EDITOR
+        return false;
+#else
+        return getRemoteConfigBoolValue (remoteKey);
+#endif
+    }
+
+    public string GetRemoteConfigString (string remoteKey) {
+#if UNITY_EDITOR
+        return "";
+#else
+        return getRemoteConfigStringValue (remoteKey);
+#endif
+    }
+    #endregion
+
+    #region PushNotification
+    [DllImport ("__Internal")]
+    private static extern void pushLocalNotification (string key, string title, string msg, string action, int seconds, int interval, string userInfo);
+    [DllImport ("__Internal")]
+    private static extern void pushLocalNotificationWithDateStr (string key, string title, string msg, string action, int seconds, string dateStr, string userInfo);
+
+    public void CancelLocalNotification (string notiKey) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("CancelLocalNotification");
+#else
+        cancelLocalNotification (notiKey);
+#endif
+    }
+
+    public void CancelAllLocalNotifications () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("CancelAllLocalNotifications");
+#else
+        cancelAllLocalNotifications ();
+#endif
+    }
+
+    //返回自己传的userInfo json数据
+    public string GetLocalNotificationDataJson () {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("GetLocalNotificationDataJson");
+        return "{}";
+#else
+        return getLocalNotificationDataJson ();
+#endif
+    }
+
+    /** 发送本地通知
+     @param key 本地通知表示，在将来可以通过key来取消通知
+     @param title 本地通知的标题
+     @param msg 本地通知的内容
+     @param action 锁屏状态的解锁文字
+     @param seconds 从当前开始延迟seconds秒后弹通知
+     @param interval 通知的循环周期，0表示不循环，可以设置按年，月，日，时，分循环
+     @param userInfo 用户自定义数据，当点击通知打开应用的时候获取到
+     */
+    public void PushLocalNotification (string key, string title, string msg, string action, int seconds, LocalPushType pushType, string userInfo) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("PushLocalNotification");
+#else
+        pushLocalNotification (key, title, msg, action, seconds, (int)pushType, userInfo);
+#endif
+    }
+
+    /** 发送本地通知
+     @param key 本地通知表示，在将来可以通过key来取消通知
+     @param title 本地通知的标题
+     @param msg 本地通知的内容
+     @param action 锁屏状态的解锁文字
+     @param dateStr 通知触发日期，按照 yyyy-MM-dd HH:mm:ss 的时间格式定义
+     @param interval 通知的循环周期，0表示不循环，可以设置按年，月，日，时，分循环
+     @param userInfo 用户自定义数据，当点击通知打开应用的时候获取到
+     */
+    public void PushLocalNotificationWithDateStr (string key, string title, string msg, string action, string dateStr, LocalPushType pushType, string userInfo) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("PushLocalNotificationWithDateStr");
+#else
+        pushLocalNotificationWithDateStr (key, title, msg, action, dateStr, (int)pushType, userInfo);
+#endif
+    }
+
+
+    #endregion
 
     #region IOS_DUMMY
     public void UM_onEventValue (string eventId, Dictionary<string, string> mapStr) {
@@ -2581,6 +2714,18 @@ public sealed class RiseSdk {
         ShareSuccess,
         ShareFailed,
         ShareCancel
+    }
+
+    public enum LocalPushType : int {
+        NoCycle = 0,
+        YearCycle = 1 << 2,
+        MonthCycle = 1 << 3,
+        DayCycle = 1 << 4,
+        HourCycle = 1 << 5,
+        MinuteCycle = 1 << 6,
+        SecondCycle = 1 << 7,
+        WeekDayCycle = 1 << 9,
+        WeekDayOrDinalCycle = 1 << 10
     }
 
     public static double GetCurrentTimeInMills () {

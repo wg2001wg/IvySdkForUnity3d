@@ -553,6 +553,31 @@ extern "C" {
         return 0;
     }
     
+    int getRemoteConfigIntValue(const char * _Nonnull key)
+    {
+        return 0;
+    }
+    
+    long getRemoteConfigLongValue(const char * _Nonnull key)
+    {
+        return 0;
+    }
+    
+    double getRemoteConfigDoubleValue(const char * _Nonnull key)
+    {
+        return 0;
+    }
+    
+    bool getRemoteConfigBoolValue(const char * _Nonnull key)
+    {
+        return false;
+    }
+    
+    const char * _Nonnull getRemoteConfigStringValue(const char * _Nonnull key)
+    {
+        return returnStr("null");
+    }
+    
     void login()
     {
         toast("facebook login");
@@ -760,6 +785,31 @@ extern "C" {
     bool isPushRegistered()
     {
         return false;
+    }
+    
+    void cancelLocalNotification(const char* _Nonnull key)
+    {
+        toast(concat("cancelLocalNotification : ", key));
+    }
+    
+    void cancelAllLocalNotifications()
+    {
+        toast("cancelAllLocalNotifications");
+    }
+    
+    const char* _Nullable getLocalNotificationDataJson()
+    {
+        return returnStr("{}");
+    }
+    
+    void pushLocalNotification(const char* _Nonnull key, const char* _Nonnull title, const char* _Nonnull msg, const char* _Nonnull action, int seconds, int interval, const char* _Nonnull userInfo)
+    {
+        toast("pushLocalNotification");
+    }
+    
+    void pushLocalNotificationWithDateStr(const char* _Nonnull key, const char* _Nonnull title, const char* _Nonnull msg, const char* _Nonnull action, const char* _Nonnull dateStr, int interval, const char* _Nonnull userInfo)
+    {
+        toast("pushLocalNotification");
     }
     
     bool isIPhoneX()
