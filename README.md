@@ -11,7 +11,7 @@ Copy the folder named Plugins into your Unity3D project Assets folder
 * if you use proguard to obfuscate your java source code, you should add these rules to your proguard rules file:
 ```java
 -dontwarn com.unity3d.**
--keep class com.android.client.** {
+-keep class com.android.** {
     <methods>;
 }
 
