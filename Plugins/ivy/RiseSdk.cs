@@ -1892,7 +1892,7 @@ public sealed class RiseSdk {
 #endif
     }
 
-    public void CheckSubscriptionActive () {
+	public void CheckSubscriptionActive (int billingId) {
 #if UNITY_EDITOR
         RiseSdkListener.Instance.onCheckSubscriptionResult (billingId + "," + 888888);
 #else
@@ -2325,7 +2325,7 @@ public sealed class RiseSdk {
 #endif
     }
 
-    public void submitScore (int leaderboardId, long score) {
+    public void SubmitScore (int leaderboardId, long score) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("submitScore: " + leaderboardId + ", " + score);
 #else
@@ -2421,11 +2421,6 @@ public sealed class RiseSdk {
     #endregion
 
     #region PushNotification
-    [DllImport ("__Internal")]
-    private static extern void pushLocalNotification (string key, string title, string msg, string action, int seconds, int interval, string userInfo);
-    [DllImport ("__Internal")]
-    private static extern void pushLocalNotificationWithDateStr (string key, string title, string msg, string action, int seconds, string dateStr, string userInfo);
-
     public void CancelLocalNotification (string notiKey) {
 #if UNITY_EDITOR
         RiseEditorAd.EditorAdInstance.Toast ("CancelLocalNotification");
