@@ -708,7 +708,7 @@ extern "C" {
         toast(concat("logEventWithTag : ", eventId));
     }
     
-    void logEventLikeGA(const char* eventId, const char* action, const char* label, double value)
+    void logEventLikeGA(const char* eventId, const char* action, const char* label, long value)
     {
         toast(concat("logEventLikeGA : ", eventId));
     }
@@ -810,6 +810,28 @@ extern "C" {
     void pushLocalNotificationWithDateStr(const char* _Nonnull key, const char* _Nonnull title, const char* _Nonnull msg, const char* _Nonnull action, const char* _Nonnull dateStr, int interval, const char* _Nonnull userInfo)
     {
         toast("pushLocalNotification");
+    }
+    
+    void saveBase64ImageToCameraRoll(const char* _Nonnull base64Image)
+    {
+        toast("saveBase64ImageToCameraRoll");
+    }
+    
+    void takeScreenshotToCameraRoll()
+    {
+        toast("takeScreenshotToCameraRoll");
+    }
+    
+    const char * _Nonnull takeScreenshotToDocumentsDirectory()
+    {
+        toast("takeScreenshotToDocumentsDirectory");
+        return returnStr("");
+    }
+    
+    const char * _Nonnull takeScreenshotToDirectoryAtPath(const char* _Nonnull path)
+    {
+        toast("takeScreenshotToDirectoryAtPath");
+        return returnStr(path);
     }
     
     bool isIPhoneX()

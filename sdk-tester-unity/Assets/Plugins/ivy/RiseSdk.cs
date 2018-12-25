@@ -159,6 +159,16 @@ public sealed class RiseSdk {
         }
     }
 
+    public void ShowBanner (string tag, int pos, int animate) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.ShowBanner (tag, pos);
+#endif
+        if (_class != null) {
+            _class.CallStatic ("showBanner", tag, pos, animate);
+            Debug.LogWarning ("showBanner");
+        }
+    }
+
     public bool HasBanner (string tag) {
         if (_class != null) {
             return _class.CallStatic<bool> ("hasBanner", tag);
@@ -197,6 +207,15 @@ public sealed class RiseSdk {
 #endif
         if (_class != null) {
             _class.CallStatic ("showFullAd", tag);
+        }
+    }
+
+    public bool HasInterstitial (string tag) {
+#if UNITY_EDITOR
+        return true;
+#endif
+        if (_class != null) {
+            _class.CallStatic ("hasFull", tag);
         }
     }
 
@@ -972,7 +991,7 @@ public sealed class RiseSdk {
     /// </summary>
     /// <returns>true可用， false不可用</returns>
     public bool IsNetworkConnected () {
-#if UNITY_EDITOR || CLOUD_TEST
+#if UNITY_EDITOR || CLOUD_TEST || SUBSCRIBE_LOCAL_Test
         return true;
 #endif
         if (_class != null) {
@@ -1004,7 +1023,7 @@ public sealed class RiseSdk {
         }
     }
 
-#region RemoteConfig
+    #region RemoteConfig
     public int GetRemoteConfigInt (string remoteKey) {
 #if UNITY_EDITOR
         return 0;
@@ -1054,7 +1073,7 @@ public sealed class RiseSdk {
         }
         return "";
     }
-#endregion
+    #endregion
 
     #region Umeng
 
@@ -1557,6 +1576,8 @@ public sealed class RiseSdk {
     private static extern void pushLocalNotification (string key, string title, string msg, string action, int seconds, int interval, string userInfo);
     [DllImport ("__Internal")]
     private static extern void pushLocalNotificationWithDateStr (string key, string title, string msg, string action, string dateStr, int interval, string userInfo);
+    [DllImport("__Internal")]
+    private static extern void saveBase64ImageToCameraRoll(string base64Image);
 
     private static RiseSdk _instance = null;
     private static bool hasInit = false;
@@ -1892,7 +1913,7 @@ public sealed class RiseSdk {
 #endif
     }
 
-	public void CheckSubscriptionActive (int billingId) {
+    public void CheckSubscriptionActive () {
 #if UNITY_EDITOR
         RiseSdkListener.Instance.onCheckSubscriptionResult (billingId + "," + 888888);
 #else
@@ -2297,7 +2318,7 @@ public sealed class RiseSdk {
         RiseEditorAd.EditorAdInstance.Toast ("IsGameCenterAvailable");
         return true;
 #else
-        return isGameCenterAvailable (itemName, number, price);
+        return isGameCenterAvailable ();
 #endif
     }
 
@@ -2480,9 +2501,15 @@ public sealed class RiseSdk {
         pushLocalNotificationWithDateStr (key, title, msg, action, dateStr, (int)pushType, userInfo);
 #endif
     }
-
-
     #endregion
+
+    public void SaveBase64ImageToCameraRoll(string imagebase64) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast("SaveBase64ImageToCameraRoll");
+#else
+        saveBase64ImageToCameraRoll(imagebase64);
+#endif
+    }
 
     #region IOS_DUMMY
     public void UM_onEventValue (string eventId, Dictionary<string, string> mapStr) {
@@ -2556,6 +2583,13 @@ public sealed class RiseSdk {
     public const int POS_BANNER_RIGHT_BOTTOM = 7;
     public const int POS_BANNER_LEFT_MIDDLE = 8;
     public const int POS_BANNER_RIGHT_MIDDLE = 9;
+
+    public const int ANIMATE_BANNER_NONE = 0;
+    public const int ANIMATE_BANNER_TOP = 1;
+    public const int ANIMATE_BANNER_BOTTOM = 2;
+    public const int ANIMATE_BANNER_LEFT = 4;
+    public const int ANIMATE_BANNER_RIGHT = 8;
+    public const int ANIMATE_BANNER_ROTATION = 16;
 
     /// <summary>
     /// 游戏打开时显示大屏广告参数常量
@@ -2730,15 +2764,14 @@ public sealed class RiseSdk {
 
     public static string CalculateMD5Hash (string input) {
         StringBuilder sb = new StringBuilder ();
-
         try {
-            MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider ();
-            byte[] inputBytes = UTF8Encoding.Default.GetBytes (input);
+            MD5 md5 = MD5.Create ();
+            byte[] inputBytes = Encoding.UTF8.GetBytes (input);
             inputBytes = md5.ComputeHash (inputBytes);
             for (int i = 0; i < inputBytes.Length; i++) {
                 sb.Append (inputBytes[i].ToString ("X2"));
             }
-            return sb.ToString ();
+            return sb.ToString ().ToLower ();
         } catch (System.Exception ex) {
             Debug.LogError ("CalculateMD5Hash error:\n" + ex.StackTrace);
         } finally {
@@ -2779,7 +2812,7 @@ public sealed class RiseSdk {
 
         private const int NONE_REWARD_ID = -10;
         private const string DEFAULT_REWARD_TAG = "DEFAULT";
-        private const string BANNER_DEFAULT_TXT = "Banner AD: ";
+        private const string BANNER_DEFAULT_TXT = "Banner AD";
         private const string INTERSTITIAL_DEFAULT_TXT = "\nInterstitial AD Test";
         private const string REWARD_DEFAULT_TXT = "Free Coin AD Test: ";
         private const int SCREEN_WIDTH = 854;
@@ -3101,7 +3134,7 @@ public sealed class RiseSdk {
 
         public void ShowBanner (int pos) {
 #if UNITY_EDITOR
-            bannerContent = BANNER_DEFAULT_TXT + "default";
+            bannerContent = BANNER_DEFAULT_TXT + ", tag: default, pos: " + pos;
             bannerShow = true;
             SetBannerPos (pos);
 #endif
@@ -3109,7 +3142,15 @@ public sealed class RiseSdk {
 
         public void ShowBanner (string tag, int pos) {
 #if UNITY_EDITOR
-            bannerContent = BANNER_DEFAULT_TXT + tag;
+            bannerContent = BANNER_DEFAULT_TXT + ", tag: " + tag + ", pos: " + pos;
+            bannerShow = true;
+            SetBannerPos (pos);
+#endif
+        }
+
+        public void ShowBanner (string tag, int pos, int animate) {
+#if UNITY_EDITOR
+            bannerContent = BANNER_DEFAULT_TXT + ", tag: " + tag + ", pos: " + pos + ", animate: " + animate;
             bannerShow = true;
             SetBannerPos (pos);
 #endif
