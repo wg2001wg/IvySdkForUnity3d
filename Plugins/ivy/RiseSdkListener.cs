@@ -299,7 +299,7 @@ public class RiseSdkListener : MonoBehaviour {
     /// <param name="data">返回的数据</param>
     public void onFullAdClosed (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            string tag = "";
+            string tag = "Default";
             if (!string.IsNullOrEmpty (data)) {
                 string[] msg = data.Split ('|');
                 if (msg != null && msg.Length > 0) {
@@ -316,7 +316,7 @@ public class RiseSdkListener : MonoBehaviour {
     /// <param name="data">返回的数据</param>
     public void onFullAdClicked (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            string tag = "";
+            string tag = "Default";
             if (!string.IsNullOrEmpty (data)) {
                 string[] msg = data.Split ('|');
                 if (msg != null && msg.Length > 0) {
@@ -333,7 +333,7 @@ public class RiseSdkListener : MonoBehaviour {
     /// <param name="data">返回的数据</param>
     public void onAdShow (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            string tag = "";
+            string tag = "Default";
             int type = RiseSdk.ADTYPE_INTERTITIAL;
             if (!string.IsNullOrEmpty (data)) {
                 string[] msg = data.Split ('|');
@@ -352,16 +352,35 @@ public class RiseSdkListener : MonoBehaviour {
     /// <param name="data">返回的数据</param>
     public void onAdClicked (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            string tag = "";
-            int type = RiseSdk.ADTYPE_INTERTITIAL;
+            string tag = "Default";
+            int adType = RiseSdk.ADTYPE_INTERTITIAL;
             if (!string.IsNullOrEmpty (data)) {
                 string[] msg = data.Split ('|');
                 if (msg != null && msg.Length > 1) {
-                    int.TryParse (msg[0], out type);
+                    int.TryParse (msg[0], out adType);
                     tag = msg[1];
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.FullAdClicked, -1, tag, type);
+            RiseSdk.AdEventType eventType = RiseSdk.AdEventType.FullAdClicked;
+            switch (adType) {
+                case RiseSdk.ADTYPE_INTERTITIAL:
+                    eventType = RiseSdk.AdEventType.FullAdClicked;
+                    break;
+                case RiseSdk.ADTYPE_VIDEO:
+                    eventType = RiseSdk.AdEventType.VideoAdClicked;
+                    break;
+                case RiseSdk.ADTYPE_BANNER:
+                    eventType = RiseSdk.AdEventType.BannerAdClicked;
+                    break;
+                case RiseSdk.ADTYPE_ICON:
+                    eventType = RiseSdk.AdEventType.IconAdClicked;
+                    break;
+                case RiseSdk.ADTYPE_NATIVE:
+                    eventType = RiseSdk.AdEventType.NativeAdClicked;
+                    break;
+            }
+            //OnAdEvent (RiseSdk.AdEventType.AdClicked, -1, tag, adType);
+            OnAdEvent (eventType, -1, tag, adType);
         }
     }
 
@@ -371,7 +390,7 @@ public class RiseSdkListener : MonoBehaviour {
     /// <param name="data">返回的数据</param>
     public void onVideoAdClosed (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            string tag = "";
+            string tag = "Default";
             if (!string.IsNullOrEmpty (data)) {
                 string[] msg = data.Split ('|');
                 if (msg != null && msg.Length > 0) {
@@ -388,7 +407,7 @@ public class RiseSdkListener : MonoBehaviour {
     /// <param name="data">返回的数据</param>
     public void onBannerAdClicked (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            string tag = "";
+            string tag = "Default";
             if (!string.IsNullOrEmpty (data)) {
                 string[] msg = data.Split ('|');
                 if (msg != null && msg.Length > 0) {
@@ -405,7 +424,7 @@ public class RiseSdkListener : MonoBehaviour {
     /// <param name="data">返回的数据</param>
     public void onCrossAdClicked (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
-            string tag = "";
+            string tag = "Default";
             if (!string.IsNullOrEmpty (data)) {
                 string[] msg = data.Split ('|');
                 if (msg != null && msg.Length > 0) {
@@ -544,7 +563,7 @@ public class RiseSdkListener : MonoBehaviour {
     public void adDidClick (string data) {
         if (OnAdEvent != null && OnAdEvent.GetInvocationList ().Length > 0) {
             string tag = "Default";
-            int adType = -1;
+            int adType = RiseSdk.ADTYPE_INTERTITIAL;
             if (!string.IsNullOrEmpty (data)) {
                 string[] str = data.Split ('|');
                 if (str.Length == 1) {
@@ -554,7 +573,26 @@ public class RiseSdkListener : MonoBehaviour {
                     int.TryParse (str[1], out adType);
                 }
             }
-            OnAdEvent (RiseSdk.AdEventType.AdClicked, -1, tag, adType);
+            RiseSdk.AdEventType eventType = RiseSdk.AdEventType.FullAdClicked;
+            switch (adType) {
+                case RiseSdk.ADTYPE_INTERTITIAL:
+                    eventType = RiseSdk.AdEventType.FullAdClicked;
+                    break;
+                case RiseSdk.ADTYPE_VIDEO:
+                    eventType = RiseSdk.AdEventType.VideoAdClicked;
+                    break;
+                case RiseSdk.ADTYPE_BANNER:
+                    eventType = RiseSdk.AdEventType.BannerAdClicked;
+                    break;
+                case RiseSdk.ADTYPE_ICON:
+                    eventType = RiseSdk.AdEventType.IconAdClicked;
+                    break;
+                case RiseSdk.ADTYPE_NATIVE:
+                    eventType = RiseSdk.AdEventType.NativeAdClicked;
+                    break;
+            }
+            //OnAdEvent (RiseSdk.AdEventType.AdClicked, -1, tag, adType);
+            OnAdEvent (eventType, -1, tag, adType);
         }
     }
 

@@ -239,8 +239,8 @@ public sealed class RiseSdk {
     /// <returns>true完成，false失败</returns>
     public bool HasRewardAd () {
 #if UNITY_EDITOR
-        return true;
-        //return false;
+        //return true;
+        return false;
 #endif
         if (_class != null) {
             return _class.CallStatic<bool> ("hasRewardAd");
@@ -255,8 +255,8 @@ public sealed class RiseSdk {
     /// <returns>true完成，false失败</returns>
     public bool HasRewardAd (string tag) {
 #if UNITY_EDITOR
-        return true;
-        //return false;
+        //return true;
+        return false;
 #endif
         if (_class != null) {
             return _class.CallStatic<bool> ("hasRewardAd", tag);
@@ -837,8 +837,8 @@ public sealed class RiseSdk {
     /// 返回json数据，格式为：
     /// {
     /// "currency":"USD",//价格单位
-    /// "1":"0.99",//计费点价格 
-    /// "2":"1.99"//计费点价格
+    /// "1":"US$0.99",//计费点价格 
+    /// "2":"US$1.99"//计费点价格
     /// }
     /// </returns>
     public string GetPaymentsPrices () {
@@ -1057,7 +1057,8 @@ public sealed class RiseSdk {
 
     public bool GetRemoteConfigBoolean (string remoteKey) {
 #if UNITY_EDITOR
-        return false;
+        //return false;
+        return true;
 #endif
         if (_class != null) {
             return _class.CallStatic<bool> ("getRemoteConfigBoolean", remoteKey);
@@ -1073,6 +1074,24 @@ public sealed class RiseSdk {
             return _class.CallStatic<string> ("getRemoteConfigString", remoteKey);
         }
         return "";
+    }
+
+    public void SetUserTag (string tag) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("setUserTag: " + tag);
+#endif
+        if (_class != null) {
+            _class.CallStatic ("setUserTag", tag);
+        }
+    }
+
+    public void SetUserProperty (string key, string value) {
+#if UNITY_EDITOR
+        RiseEditorAd.EditorAdInstance.Toast ("key: " + key + ", value: " + value);
+#endif
+        if (_class != null) {
+            _class.CallStatic ("setUserProperty", key, value);
+        }
     }
     #endregion
 
@@ -1916,7 +1935,7 @@ public sealed class RiseSdk {
 
     public void CheckSubscriptionActive () {
 #if UNITY_EDITOR
-        RiseSdkListener.Instance.onCheckSubscriptionResult (billingId + "," + 888888);
+        RiseSdkListener.Instance.onCheckSubscriptionResult ("CheckSubscriptionActive");
 #else
         isSubscriptionActive ();
 #endif
@@ -2671,20 +2690,14 @@ public sealed class RiseSdk {
     public const int ADTYPE_OTHER = -1;
     //大屏广告类型
     public const int ADTYPE_INTERTITIAL = 1;
-    //横幅广告类型
-    public const int ADTYPE_BANNER = 2;
     //视频广告类型
-    public const int ADTYPE_VIDEO = 3;
-    //icon广告类型
+    public const int ADTYPE_VIDEO = 2;
+    //横幅广告类型
+    public const int ADTYPE_BANNER = 3;
+    //icon广告类型  ios has
     public const int ADTYPE_ICON = 4;
-
-    public enum TAdType : int {
-        Other = -1,//其他广告类型
-        Interstitial = 1,//大屏广告类型
-        Banner = 2,//横幅广告类型
-        Video = 3,//视频广告类型
-        Icon = 4//icon广告类型
-    }
+    //native广告类型
+    public const int ADTYPE_NATIVE = 5;
 
     /// <summary>
     /// 广告事件类型
@@ -2698,6 +2711,7 @@ public sealed class RiseSdk {
         RewardAdShowFinished,
         RewardAdShowFailed,
         RewardAdClosed,
+        VideoAdClicked,
         FullAdClosed,// 大屏广告被关闭
         FullAdShown,// 大屏广告展示成功
         FullAdClicked,// 大屏广告被点击
@@ -2707,7 +2721,9 @@ public sealed class RiseSdk {
         AdLoadFailed,//广告加载失败(only ios)
         AdShown,// 广告展示成功(大屏或bannner)(only ios)
         AdClosed,//广告被关闭(only ios)
-        AdClicked//广告被点击(only ios)
+        AdClicked,//广告被点击(only ios)
+        IconAdClicked,
+        NativeAdClicked
     }
 
     public enum PaymentResult : int {
