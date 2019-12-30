@@ -1023,6 +1023,17 @@ public sealed class RiseSdk {
             _class.CallStatic ("resetGDPR");
         }
     }
+    
+    /// <summary>
+    /// 玩家反馈
+    /// </summary>
+    /// <param name="email"></param>
+    /// <param name="data"></param>
+    public void Support (string email, string data) {
+        if (_class != null) {
+            _class.CallStatic ("support", email, data);
+        }
+    }
 
     #region RemoteConfig
     public int GetRemoteConfigInt (string remoteKey) {
