@@ -1029,9 +1029,9 @@ public sealed class RiseSdk {
     /// </summary>
     /// <param name="email"></param>
     /// <param name="data"></param>
-    public void Support (string email, string data) {
+    public void Support (string email, String title, string data) {
         if (_class != null) {
-            _class.CallStatic ("support", email, data);
+            _class.CallStatic ("support", email, title, data);
         }
     }
 
