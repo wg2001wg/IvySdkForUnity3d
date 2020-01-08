@@ -88,9 +88,13 @@ RiseSdk.Instance.Share();
 RiseSdk.Instance.ShowMore();
 ```
 
-### Google Analytics events 谷歌后台统计分析
+### Firebase events 谷歌后台统计分析
 ```csharp
 RiseSdk.Instance.TrackEvent ("your category", "your action", "your label", 1);
+```
+
+```csharp
+RiseSdk.Instance.TrackEvent ("eventName", "key1,value1,key2,value2");
 ```
 
 ### 友盟统计相关接口
