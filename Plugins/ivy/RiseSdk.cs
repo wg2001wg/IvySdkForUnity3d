@@ -215,7 +215,7 @@ public sealed class RiseSdk {
         return true;
 #endif
         if (_class != null) {
-            _class.CallStatic ("hasFull", tag);
+           return _class.CallStatic<bool> ("hasFull", tag);
         }
         return false;
     }
