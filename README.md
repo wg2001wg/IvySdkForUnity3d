@@ -494,8 +494,8 @@ void OnAdResult (RiseSdk.AdEventType type) {
 	case RiseSdk.AdEventType.FullAdClicked: //大屏广告被点击
       Debug.Log ("OnAdResult, FullAdClicked");
     break;
-	case RiseSdk.AdEventType.VideoAdClosed: //视频广告被关闭
-	  Debug.Log ("OnAdResult, VideoAdClosed");
+	case RiseSdk.AdEventType.RewardAdClosed: //视频广告被关闭
+	  Debug.Log ("OnAdResult, RewardAdClosed");
     break;
 	case RiseSdk.AdEventType.BannerAdClicked: //bannner广告被点击
 	  Debug.Log ("OnAdResult, BannerAdClicked");
