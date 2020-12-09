@@ -842,6 +842,9 @@ public sealed class RiseSdk {
     "id" : "google sku"
     "currency" : "USD",
     "type" : "inapp or sub",
+    "price_amount" : 浮点型的本地价格,
+    "title" : "后台配置的商品标题",
+    "desc" : "后台配置的商品描述"
     ...
   },
   "billId2" : {    
@@ -849,6 +852,9 @@ public sealed class RiseSdk {
     "id" : "google sku"
     "currency" : "USD",
     "type" : "inapp or sub",
+    "price_amount" : 浮点型的本地价格,
+    "title" : "后台配置的商品标题",
+    "desc" : "后台配置的商品描述"
     ...
   }
 }
