@@ -835,11 +835,24 @@ public sealed class RiseSdk {
     /// </summary>
     /// <returns>
     /// 返回json数据，格式为：
-    /// {
-    /// "currency":"USD",//价格单位
-    /// "1":"US$0.99",//计费点价格 
-    /// "2":"US$1.99"//计费点价格
-    /// }
+    /*
+{
+  "billid1" : {
+    "price": "本地价格",
+    "id" : "google sku"
+    "currency" : "USD",
+    "type" : "inapp or sub",
+    ...
+  },
+  "billId2" : {    
+    "price": "本地价格",
+    "id" : "google sku"
+    "currency" : "USD",
+    "type" : "inapp or sub",
+    ...
+  }
+}
+*/
     /// </returns>
     public string GetPaymentsPrices () {
 #if UNITY_EDITOR
